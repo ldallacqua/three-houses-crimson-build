@@ -74,7 +74,8 @@ export const UNITS = [
       'Byleth não tem Goals: as skills dele só sobem com Faculty Training e usando a arma em combate.',
       'Rota Punhos leva Brawl de E+ até A: 1.280 XP. Use manoplas em mapas fáceis. A Vajra-Mushti (Black Market Scheme, ou no inventário do Balthus — confira) ataca duas vezes, o que dobra o ganho; Byleth tem Crest, então não toma os 10 de dano da relíquia.',
       'Rota Espada é a confortável: Sword já está em C e ele tem a Sword of the Creator. Byleth também ganha uma classe própria mais tarde (sem spoiler) que favorece espada.',
-      'Recrutar vem antes de Brawl: no Part 1, gaste o Faculty Training dele nas skills que destravam recrutas (aba Recrutamento).',
+      'Recrutar vem antes de Brawl: no Part 1, gaste o Faculty Training dele nas skills que destravam recrutas (aba Recrutamento) e o que sobrar em Brawl. A ordem do domingo está na aba Mosteiro.',
+      'Pontos fortes dele: Sword, Brawl e Authority (30 XP por sessão em vez de 20). Faith é o budding talent: depois de 6 sessões de Faith, ela também passa a render 30.',
     ],
   },
   {

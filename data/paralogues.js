@@ -116,7 +116,7 @@ export const PARALOGUES = [
     name: 'Tales of the Red Canyon',
     units: ['byleth'],
     window: [8, 10],
-    star: 'Knowledge Gem (dobra o ganho de skill em combate) e +3 usos de Divine Pulse.',
+    star: 'Knowledge Gem (dobra o XP de skill e de maestria de classe em combate) e +3 usos de Divine Pulse.',
     rewards: ['Knowledge Gem: no baú', '+3 Divine Pulse e Umbral Steel: no fim'],
     tips: [
       'Prazo é o Cap. 10, não o 11.',

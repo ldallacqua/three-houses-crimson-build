@@ -1,6 +1,6 @@
 # FIRE EMBLEM: THREE HOUSES — GUIA MESTRE DO WAIFU SQUAD
 
-> **Versão 2.2 • atualizado em 18/10/2026 • estado real confirmado por 8 screenshots (Cap. 6)**
+> **Versão 2.3 • atualizado em 18/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relato do jogador (Death Blow ainda não liberada)**
 > **Progresso:** Parte 1, *White Clouds*, Capítulo 6 — **Rumors of a Reaper**, data **9/7** (antes de concluir a missão do mês).
 > **Casa:** Black Eagles; objetivo **Crimson Flower (Edelgard)**. **Byleth masculino**.
 > **DLC:** todas; *Cindered Shadows* concluída, Constance, Hapi e Anna já recrutadas.
@@ -46,6 +46,30 @@ Em **B+** cai mais um degrau (Ingrid Flying E+, Lysithea/Annette Faith D, Marian
 - [ ] **Marianne:** suporte + Riding rumo a D (**Hanneman ou Gilbert**).
 - [ ] **Não procurar Flying no Cap. 6:** Seteth e Manuela estão fora durante todo o mês (*fato*).
 
+### Domingo: em que ordem gastar os pontos
+
+*Recomendação:* até o fim do Cap. 11, suporte com as recrutas primeiro, depois o treino que fecha o recrutamento, e o que sobrar na classe do Byleth. Recrutamento tem prazo e suporte B derruba o requisito (Lysithea sem suporte: Faith B, ~24 sessões; em B: Faith D+, ~7); a classe do Byleth não some. *Fato:* Faculty Training não sobe atributo (Str, Mag, Dex, Cha), só rank de skill — e os atributos do Byleth já cumprem todos os requisitos em B.
+
+1. **Grátis primeiro:** presentes de que ela gosta e Lost Items, chá no aniversário (não gasta ponto) e **assistir logo as conversas de suporte** — com uma conversa pendente, a dupla não ganha ponto (*fato*).
+2. **Recruta em B a 1–2 treinos do requisito:** treine e recrute no mesmo dia.
+3. **Choir Practice com duas recrutas** (Lysithea + Ingrid): +30 com cada, sempre; um por dia; alunas de outras casas podem ir (não ganham Faith).
+4. **Refeição** (Full Menu, prato de que as duas gostem) ou **chá** com a que está perto do próximo rank.
+5. **Faculty Training de recrutamento:** Faith (Anna/Rhea; Manuela no 7) → Flying no Cap. 7 → Riding → Reason (só se quiser o Lorenz).
+6. **Sobrou ponto: Brawl** (Alois, Catherine, Rhea).
+
+*Fato:* pontos por domingo = Professor Level (1 no E, +1 por nível, 10 no A+). Suporte com o Byleth: **C a partir de 101 pontos, B a partir de 301**.
+
+| Atividade | Custo | Suporte com o Byleth |
+|---|---|---|
+| Presente de que ela gosta (neutro) | grátis | +20 (+10) |
+| Lost Item | grátis | +20 |
+| **Choir Practice**, duas pessoas | 1 ponto | **+30 com cada** |
+| Refeição Full Menu, prato que as duas gostam | 1 ponto | +30 com cada |
+| Refeição Today's Special | 1 ponto | metade |
+| Tea Time Perfect (Great / Nice) | 1 ponto | +30 (+20 / +10), uma pessoa |
+| Tea Time no aniversário | grátis | igual |
+| Faculty Training | 1 ponto | +7 com o instrutor |
+
 ### Classe / skills agora
 
 - [ ] **Constance (Lv 9 Monk) → Mage no Lv 10.** Dominar Mage (**Fiendish Blow**). Goals **Reason + Flying** (Dark Flier pede **Reason B+ e Flying C** no Lv 20).
@@ -53,10 +77,10 @@ Em **B+** cai mais um degrau (Ingrid Flying E+, Lysithea/Annette Faith D, Marian
 - [ ] **Edelgard (Lv 16 Brigand):** dominar Brigand (**Death Blow**), Goals **Axe** até B. No Lv 20: **Wyvern Rider (Axe B + Flying C)**. *Novo:* ela ganha uma **classe exclusiva** mais tarde, como os outros líderes de casa (sem spoiler). Axe sempre serve; Flying/Lance para Wyvern Lord só compensa se você preferir Wyvern Lord a essa classe quando ela aparecer.
 - [ ] **Petra (Lv 11 Brigand):** dominar Brigand, Goals **Axe** até B. Flying C já cumpre Wyvern Rider.
 - [ ] **Dorothea (Lv 13 Mage):** Reason como Goal (Meteor em **Reason A**); Fiendish Blow se der tempo antes do Cap. 9; **Dancer no Cap. 9**.
-- [ ] **Byleth (Lv 20 Brigand):** dominar Brigand. No Part 1, o Faculty Training dele vai para as skills de recrutamento acima; Brawl depois.
+- [ ] **Byleth (Lv 20 Brigand):** dominar Brigand. No Part 1, o Faculty Training dele vai primeiro para as skills de recrutamento acima; o que sobrar, em Brawl (ordem do domingo acima).
 - [ ] **Anna (Lv 9 Myrmidon):** Thief no Lv 10 (opcional).
 - [ ] **Group Tasks** (*fato*: Sky Watch = Flying, Stable Duty = Riding, Weeding = Heavy Armor): **Sky Watch com a Constance**; **Stable Duty com Hapi + Bernadetta**. Edelgard e Petra já têm Flying C.
-- [ ] Na aba **Abilities**, confirme se **Death Blow** está liberada **e equipada** (Byleth, Edelgard, Petra).
+- [ ] **Death Blow ainda não liberada em ninguém** (Byleth, Edelgard, Petra — relato de 18/10). *Fato:* é a maestria de Brigand: **100 de XP de classe**, +1 no fim de cada combate na classe (atacando ou sendo atacada, acertando ou não); aula e Faculty Training não contam. O menu de troca de classe mostra o progresso, que fica guardado se trocar de classe. Acelera: **Knowledge Gem** (Red Canyon, Cap. 8–10) dobra para quem equipa; **estátua da Cethleann** com 2.000 de Renown dá +1 por combate para todo mundo (disputa Renown com o Abyssian Exam Pass); domingos de Battle e linha de frente somam combates. Ao dominar, **equipe em Abilities**.
 - [ ] **Exames:** só faça com 100% de chance; o selo (ou o Abyssian Exam Pass) é gasto mesmo se reprovar (*fato*).
 
 ### Batalha principal do Cap. 6
@@ -115,9 +139,9 @@ Byleth e Edelgard estão adiantados; Petra e Constance têm bons atributos e ran
 ## 4. RECRUTAMENTO — MÉTODO
 
 1. Em dia livre, **Explore**, fale com a aluna e escolha **Recruit**. Se recusar, falta requisito; dá para melhorar no mesmo dia e tentar de novo.
-2. **Presentes e Lost Items não gastam ponto de atividade.** Refeição (Byleth + duas alunas) e Tea Time gastam 1 ponto cada. Junte duas recrutas na mesma refeição (ex.: Lysithea + Marianne).
+2. **Presentes e Lost Items não gastam ponto de atividade.** Choir Practice, refeição (Byleth + duas alunas) e Tea Time gastam 1 ponto cada. O coral rende +30 com cada uma das duas convidadas, sempre: é o melhor ponto de suporte. Ordem completa na seção 1.
 3. **Suporte B** = requisito menor + ~10% por semana de pedido espontâneo. **Suporte A** = entra sem requisito.
-4. Faculty Training do Byleth: só nas skills da tabela da seção 1, na ordem Flying (Cap. 7) → Faith → Riding → Reason.
+4. Faculty Training do Byleth: primeiro as skills da tabela da seção 1, na ordem Flying (Cap. 7) → Faith → Riding → Reason; o que sobrar em Brawl. *Fato:* Faith é o budding talent dele — depois de 6 sessões de Faith, ela passa a render 30 XP por sessão.
 5. Ao recrutar: configure Goals, classe e battalion no mesmo dia.
 6. **Prazo:** recrutamento de outras casas até o fim do **Cap. 11**.
 7. **Shamir e Manuela** pedem nível do Byleth (15; menos com suporte): Shamir desde o Cap. 6, Manuela desde o Cap. 8.
@@ -128,7 +152,7 @@ Byleth e Edelgard estão adiantados; Petra e Constance têm bons atributos e ran
 
 **Agora:** dominar Brigand (Death Blow, equipável em qualquer classe). No Part 1 o treino vai para recrutamento.
 
-**Rota Punhos (alvo do jogador):** Brigand → (Brawler opcional em Brawl C) → **Grappler (Brawl A)** → dominar para **Fierce Iron Fist** (só funciona dentro do Grappler) → **War Master (Lv 30, Axe A + Brawl A)**. Falta muito Brawl: E+ → A = 1.280 XP. Acelerador: **Vajra-Mushti** (manopla relíquia que ataca duas vezes ao iniciar; vem do paralogue **Black Market Scheme**, Cap. 7–11, e talvez no inventário do Balthus — *incerto*). Byleth tem Crest, então não toma os 10 de dano de relíquia.
+**Rota Punhos (alvo do jogador):** Brigand → (Brawler opcional em Brawl C) → **Grappler (Brawl A)** → dominar para **Fierce Iron Fist** (só funciona dentro do Grappler) → **War Master (Lv 30, Axe A + Brawl A)**. Falta muito Brawl: E+ → A = 1.280 XP. *Fato:* Brawl é ponto forte dele (Sword, Brawl e Authority rendem 30 XP por sessão), então são ~43 sessões, menos com Great; até C (Brawler), ~9. Instrutores: Alois, Catherine, Rhea. Na Parte 2 o Faculty Training vira *Advanced Drills*, que só treina com aliados de rank maior que o do Byleth: o Brawl com professores é agora, com os pontos que sobrarem. Acelerador: **Vajra-Mushti** (manopla relíquia que ataca duas vezes ao iniciar; vem do paralogue **Black Market Scheme**, Cap. 7–11, e talvez no inventário do Balthus — *incerto*). Byleth tem Crest, então não toma os 10 de dano de relíquia.
 
 **Rota Espada (confortável):** Brigand → **Hero (Sword B + Axe C, Lv 20)** → **Swordmaster (Sword A)**. Aproveita a Sword C e a Sword of the Creator; Byleth também ganha uma classe própria mais tarde. Decida no começo da Parte 2 conforme o Brawl que ele tiver.
 
@@ -212,7 +236,7 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 
 ## 7. REGRAS PARA NÃO DESPERDIÇAR
 
-1. **Maestria ≠ nível ≠ certificação.** Confira em Abilities se a habilidade foi liberada **e equipada**.
+1. **Maestria ≠ nível ≠ certificação.** Maestria só sobe em batalha: +1 de XP de classe por combate na classe atual (Beginner 60, Intermediate 100, Advanced 150, Master 200). Confira em Abilities se a habilidade foi liberada **e equipada**.
 2. **Rota atual > rota teórica.** Ficar na intermediária até dominar a classe está ok.
 3. **Masteries que valem:** Brigand (Death Blow), Mage (Fiendish Blow), Archer (Hit +20), Pegasus Knight (Darting Blow), Valkyrie (Uncanny Blow). Artes presas à classe: Hunter's Volley (Sniper), Fierce Iron Fist (Grappler), Astra (Swordmaster), War Master's Strike (War Master).
 4. **Brawl ≠ Axe; Black Magic ≠ Dark Magic** (Warlock e Dark Flier só dão bônus a Black).
@@ -225,6 +249,7 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 ## 8. CHECKLIST PARA O PRÓXIMO UPDATE
 
 - [ ] Dificuldade: ___ / Classic ou Casual: ___
+- [ ] Professor Level ___ (= pontos por domingo) · Renown ___
 - [ ] Shamir recrutada? ___ / Bernadetta em Archer? ___
 - [ ] Suportes do Byleth: Lysithea ___ · Ingrid ___ · Marianne ___ · Lorenz ___ · Edelgard ___
 - [ ] Byleth: Flying ___ · Faith ___ · Riding ___ · Reason ___ · Bow ___ · Lance ___ · Brawl ___
@@ -240,7 +265,13 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 - Classes e maestrias: https://www.fe3h.com/classes · DLC: https://www.fe3h.com/classes/dlc
 - Pegasus Knight (Lance C + Flying D), Falcon Knight, Wyvern Lord, Bishop, Gremory, Sniper, Brigand, Valkyrie, Dark Flier: https://fireemblemwiki.org (páginas das classes)
 - XP por rank de skill: https://fireemblemwiki.org/wiki/Skill_experience
-- Faculty Training (instrutores, ausências, 20/+10 XP, Great ×1,5): https://serenesforest.net/three-houses/monastery/faculty-training/
+- Faculty Training (instrutores, ausências, 20/+10 XP, Great ×1,5, Advanced Drills na Parte 2): https://serenesforest.net/three-houses/monastery/faculty-training/
+- Pontos de suporte por atividade e limiares de rank (C 101, B 301; conversa pendente bloqueia): https://www.fe3h.com/support_points · https://fireemblemwiki.org/wiki/Support
+- Choir Practice (duas pessoas, outras casas podem ir, 1 por dia): https://samurai-gamers.com/fire-emblem-three-houses/choir-practice-guide/
+- Pontos de atividade por Professor Level: https://samurai-gamers.com/fire-emblem-three-houses/professor-level-guide/
+- Refeição e Tea Time (custo, aniversário grátis): https://serenesforest.net/three-houses/monastery/dining-hall/ · https://serenesforest.net/three-houses/monastery/tea-party/
+- Pontos fortes e budding talent do Byleth (Sword, Brawl, Authority; Faith): https://fireemblemwiki.org/wiki/Byleth
+- Maestria de classe (XP por tier, +1 por combate, Knowledge Gem, estátua da Cethleann): https://fireemblemwiki.org/wiki/Class_mastery · https://www.fe3h.com/classes · https://www.fe3h.com/monastery/saint_statues
 - Abyssian Exam Pass (750 Renown, Pagan Altar, gasto mesmo reprovando): https://fireemblemwiki.org/wiki/Abyssian_Exam_Pass
 - Thyrsus, Fetters of Dromi, Luín, Vajra-Mushti: https://fireemblemwiki.org
 - Shamir na Crimson Flower: https://fireemblemwiki.org/wiki/Shamir
@@ -254,4 +285,5 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 - **v1.0 — 18/10/2026:** pesquisa inicial + equipe feminina de 10, sem screenshots reais.
 - **v2.0 — 18/10/2026:** baseada nas 8 telas reais do Cap. 6. Bernadetta Archer, Mage no Lv 10 para Hapi/Constance, Shamir, Flying/suporte para Ingrid, Lorenz/Thyrsus, March Ring, Byleth e maestrias não verificadas.
 - **v2.1 — 18/10/2026:** Seteth e Manuela fora do Faculty Training durante todo o Cap. 6; Ingrid via suporte B + pedido espontâneo; Flying fica para o Cap. 7.
+- **v2.3 — 18/10/2026:** ordem para gastar os pontos do domingo (suporte → treino de recrutamento → Brawl) e tabela de suporte por atividade, com o **Choir Practice** (+30 com cada convidada, também de outras casas); conversa de suporte pendente bloqueia ganho; Faculty Training não sobe atributo; pontos fortes do Byleth (Sword, Brawl, Authority) e **Faith como budding talent** (6 sessões); Advanced Drills na Parte 2; **Death Blow ainda não liberada** (relato do jogador) e como funciona a maestria (100 de XP de classe para Brigand, +1 por combate, Knowledge Gem, estátua da Cethleann).
 - **v2.2 — 18/10/2026:** criado o site (guia visual). Correções e acréscimos conferidos em fonte: **Shamir fica na Crimson Flower** (vira titular; Marianne vira 11ª); tabelas de recrutamento com **C+ e B+**; estratégia "suporte B primeiro" com o custo real em XP (tabela de XP por rank, 20/30 XP por sessão); **Pegasus Knight pede Lance C** (não D); relíquias ferem portadoras **sem Crest** (Fetters of Dromi na Dorothea só se ela não entrar em combate); **Abyssian Exam Pass** = 750 Renown, sem limite, gasto mesmo reprovando; Warlock não serve à Lysithea (Dark Magic); Edelgard tem classe exclusiva mais tarde; Vajra-Mushti para o Byleth; novos paralogues no plano (Sword and Shield of Seiros, Oil and Water, **Tales of the Red Canyon até o Cap. 10**, An Ocean View); Group Tasks por skill; Riding com Hanneman/Gilbert; Persecution Complex corrigido; aniversário da Petra em 9/7; Hilda, Catherine e Cyril não recrutáveis pelas Black Eagles no Part 1; Leonie/Rivalry.

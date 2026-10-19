@@ -1,7 +1,7 @@
 // Class reference: requirements, masteries and who in the squad could take each one today.
 
 import { html } from '../html.js';
-import { CLASSES, TIER_LABEL, ABILITY_TEXT } from '../../data/classes.js';
+import { CLASSES, TIER_LABEL, ABILITY_TEXT, MASTERY_XP } from '../../data/classes.js';
 import { UNITS } from '../../data/units.js';
 import { RANKS, RANK_XP, SKILL_NAME } from '../../data/skills.js';
 import { classCheck, isRecruited, unitState, roleOf, isStepUp } from '../logic.js';
@@ -26,6 +26,20 @@ function readyNow(c, state) {
     });
 }
 
+function masteryCard() {
+  const items = [
+    ['Como sobe', 'No fim de cada combate na classe atual: +1 de XP de classe, atacando ou sendo atacada, acertando ou não. Aula e Faculty Training não contam; só batalha.'],
+    ['Quanto falta', html`Beginner ${MASTERY_XP.beginner} · Intermediate ${MASTERY_XP.intermediate} · Advanced ${MASTERY_XP.advanced} · Master ${MASTERY_XP.master}. Brigand, por exemplo, pede ${MASTERY_XP.intermediate} combates. O menu de troca de classe mostra o progresso.`],
+    ['Trocar de classe', 'O progresso de cada classe fica guardado: dá para sair e voltar sem perder.'],
+    ['Acelerar', 'Knowledge Gem (Tales of the Red Canyon, Cap. 8–10) dobra para quem equipa. Estátua da Cethleann com 2.000 de Renown: +1 por combate para todo mundo. Domingos de Battle e unidades na linha de frente somam mais combates.'],
+    ['Depois de dominar', 'A habilidade aparece em Abilities: equipe. Habilidades valem em qualquer classe; artes com ⛓ só dentro da classe.'],
+  ];
+  return html`<section class="card">
+    <h2 class="card-title">Maestria de classe</h2>
+    <dl class="activities">${items.map(([k, v]) => html`<dt>${k}</dt><dd>${v}</dd>`)}</dl>
+  </section>`;
+}
+
 export function classes(state) {
   return html`<section class="view" aria-labelledby="v-title">
     <header class="view-head">
@@ -33,10 +47,11 @@ export function classes(state) {
       <h1 id="v-title">Classes</h1>
       <p class="lead">As classes úteis para este esquadrão. "Pode agora" usa o nível e os ranks que você informou. Uma arte com ⛓ só funciona dentro da própria classe; habilidades de maestria (Death Blow, Fiendish Blow, Hit +20…) podem ser equipadas em qualquer classe.</p>
     </header>
+    ${masteryCard()}
     ${TIERS.map((tier) => {
       const list = CLASSES.filter((c) => c.tier === tier);
       return html`<section class="card" aria-labelledby="t-${tier}">
-        <h2 class="card-title" id="t-${tier}">${TIER_LABEL[tier]} ${list[0]?.level ? html`<span class="muted">· Lv ${list[0].level}+ · ${list[0].item}</span>` : ''}</h2>
+        <h2 class="card-title" id="t-${tier}">${TIER_LABEL[tier]} ${list[0]?.level ? html`<span class="muted">· Lv ${list[0].level}+ · ${list[0].item}${MASTERY_XP[tier] ? ` · maestria ${MASTERY_XP[tier]} XP` : ''}</span>` : ''}</h2>
         <div class="table-wrap"><table class="data classes">
           <thead><tr><th scope="col">Classe</th><th scope="col">Requisitos</th><th scope="col">Maestria</th><th scope="col">Inatas</th><th scope="col">Pode agora</th></tr></thead>
           <tbody>${list.map((c) => {

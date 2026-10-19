@@ -1102,6 +1102,11 @@
   .gt-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
   .gt-head .skill { color: var(--ink-2); font-size: 0.93rem; }
 
+  .sunday-who { margin: 2px 0 12px; }
+  .sunday .step strong { color: var(--ink); }
+  .sunday .step { line-height: 1.5; }
+  .activities.more { margin-top: 14px; }
+
   .sources { padding-left: 1.2em; display: grid; gap: 4px; columns: 2 280px; }
   .danger-zone { padding-top: 10px; border-top: 1px dashed var(--line-soft); }
 }

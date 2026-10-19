@@ -3,7 +3,7 @@
 // data and the state, so the tests can run them in Node.
 
 import { RANKS, RANK_XP, SUPPORTS, TRAINING_XP, RECRUIT_DEADLINE, CHAPTER_MONTH } from '../data/skills.js';
-import { CLASS_BY_NAME } from '../data/classes.js';
+import { CLASS_BY_NAME, MASTERY_XP } from '../data/classes.js';
 import { UNITS, UNIT_BY_ID } from '../data/units.js';
 import { FACULTY } from '../data/faculty.js';
 import { PARALOGUES } from '../data/paralogues.js';
@@ -177,7 +177,9 @@ export function unitAdvice(def, st, status = planStatus(def, st)) {
 
   if (masteryPending) {
     const names = current.cls.mastery.map((m) => m.name).join(' e ');
-    out.push({ kind: 'master', priority: 2, cls: current.cls.name, text: `Dominar ${current.cls.name} para ${names} antes de trocar.` });
+    const xp = MASTERY_XP[current.cls.tier];
+    const how = xp ? ` (${xp} de XP de classe, +1 por combate)` : '';
+    out.push({ kind: 'master', priority: 2, cls: current.cls.name, text: `Dominar ${current.cls.name} para ${names} antes de trocar${how}.` });
   } else if (current?.mastered && current.cls?.mastery?.some((m) => !m.art)) {
     const names = current.cls.mastery.filter((m) => !m.art).map((m) => m.name).join(', ');
     out.push({ kind: 'info', priority: 4, text: `${names} já liberada: confirme que está equipada em Abilities.` });

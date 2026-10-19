@@ -73,6 +73,7 @@ test('snapshot: Edelgard and Petra master Brigand before Wyvern Rider and train 
   for (const id of ['edelgard', 'petra']) {
     const advice = unitAdvice(UNIT_BY_ID[id], s.units[id]);
     assert.equal(advice[0].kind, 'master');
+    assert.match(advice[0].text, /Death Blow .*100 de XP de classe, \+1 por combate/);
     assert.equal(suggestGoals(UNIT_BY_ID[id], s.units[id])[0].skill, 'axe');
   }
 });

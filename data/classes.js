@@ -120,6 +120,11 @@ export const TIER_LABEL = {
   unique: 'Única',
 };
 
+// Class experience needed to master a class (fe3h.com/classes, Fire Emblem Wiki "Class mastery").
+// Units gain 1 at the end of every combat in their current class; the Dancer needs 150. DLC classes
+// are left out because neither source lists them.
+export const MASTERY_XP = { beginner: 60, intermediate: 100, advanced: 150, master: 200 };
+
 // Starting or story classes that appear on units but are not certified by the player.
 export const OTHER_CLASSES = ['Commoner', 'Noble', 'Enlightened One'];
 

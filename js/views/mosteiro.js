@@ -1,10 +1,11 @@
-// Monastery: who teaches what this month, the free-day activities, gifts and birthdays.
+// Monastery: the order to spend a free day in, who teaches what this month, what each activity
+// is worth, gifts and birthdays.
 
 import { html } from '../html.js';
 import { FACULTY } from '../../data/faculty.js';
-import { SKILLS, SKILL_NAME } from '../../data/skills.js';
+import { SKILLS, SKILL_NAME, RECRUIT_DEADLINE } from '../../data/skills.js';
 import { UNITS, UNIT_BY_ID } from '../../data/units.js';
-import { roleOf, isRecruited, skillNeeds, unitState } from '../logic.js';
+import { roleOf, isRecruited, skillNeeds, unitState, recruitTargets, bylethTraining } from '../logic.js';
 import { currentNotes } from '../seal.js';
 import { avatar, skillIcon, emptyState } from './ui.js';
 
@@ -17,7 +18,7 @@ function facultyTable(state) {
   const taught = SKILLS.filter((s) => FACULTY.some((f) => f.skills.includes(s.id)));
   return html`<section class="card">
     <h2 class="card-title">Faculty Training neste capítulo</h2>
-    <p class="card-lead">1 ponto de atividade por sessão; o mesmo instrutor só uma vez por fim de semana. 20 XP (30 se for ponto forte do Byleth), ×1,5 quando sai "Great".</p>
+    <p class="card-lead">1 ponto de atividade por sessão; o mesmo instrutor só uma vez por fim de semana. 20 XP, ou 30 nos pontos fortes do Byleth (Sword, Brawl, Authority); ×1,5 quando sai "Great". Faith é o budding talent dele: depois de 6 sessões de Faith, ela também passa a render 30.</p>
     ${none ? emptyState('Sem Faculty Training com NPCs neste período.') : html`<div class="table-wrap"><table class="data faculty">
       <thead><tr><th scope="col">Instrutor</th>${taught.map((s) => html`<th scope="col" title="${s.name}">${skillIcon(s.id)}<span class="sr">${s.name}</span></th>`)}</tr></thead>
       <tbody>${FACULTY.map((f) => {
@@ -51,20 +52,86 @@ function groupTasks(state) {
   </section>`;
 }
 
+const nameList = (list) => list.map((u) => u.name).join(', ');
+
+/**
+ * The order to spend a free day's activity points in. Until the recruiting deadline, support with
+ * the recruits comes first (support B cuts the requirement and lets them ask to join), then the
+ * training that closes a recruitment, then Byleth's own class. Fills in names from the state.
+ */
+function sundayOrder(state) {
+  const notes = currentNotes(state.chapter);
+  const byleth = UNIT_BY_ID.byleth;
+  const classSkills = [...skillNeeds(byleth, unitState(state, 'byleth'))].map((s) => SKILL_NAME[s]);
+  const classNow = classSkills.length ? html` Agora: <strong>${classSkills.join(' e ')}</strong>.` : '';
+  const points = html`<p class="hint">Pontos por domingo: 1 no Professor Level E e +1 a cada nível, até 10 no A+. Faculty Training não sobe atributo (Str, Mag, Dex, Cha), só rank de skill.</p>`;
+
+  if (state.chapter > RECRUIT_DEADLINE) {
+    return html`<section class="card">
+      <h2 class="card-title">Domingo: em que ordem gastar os pontos</h2>
+      <ol class="steps">
+        <li class="step"><strong>Primeiro o que é grátis.</strong> Presentes, Lost Items e as conversas de suporte que aparecerem.</li>
+        <li class="step"><strong>Treino da classe do Byleth.</strong>${classNow}</li>
+        <li class="step"><strong>Refeição, Choir Practice ou chá</strong> com quem precisa de motivação para a próxima aula ou de suporte.</li>
+      </ol>
+      ${points}
+    </section>`;
+  }
+
+  const open = recruitTargets(state).filter((u) => u.recruit.kind === 'student');
+  const starters = open.filter((u) => ['titular', 'rotacao'].includes(roleOf(state, u.id)));
+  const recruits = starters.length ? starters : open;
+  // The most urgent skill someone can teach this chapter; a more urgent one with no instructor
+  // around is named so it is not forgotten.
+  const plan = bylethTraining(state, notes);
+  const train = plan.find((e) => e.instructors.length);
+  const waiting = plan[0] && plan[0] !== train ? plan[0] : null;
+  const trainNow = train
+    ? html` Agora: <strong>${SKILL_NAME[train.skill]}</strong> (${nameList(train.uses)}), com ${train.instructors.map((f) => f.name).join(', ')}.${waiting ? ` ${SKILL_NAME[waiting.skill]} (${nameList(waiting.uses)}) espera um instrutor voltar.` : ''}`
+    : html` A aba <a href="#/recrutamento">Recrutamento</a> mostra qual.`;
+  return html`<section class="card sunday">
+    <h2 class="card-title">Domingo: em que ordem gastar os pontos</h2>
+    <p class="card-lead">Até o fim do Cap. ${RECRUIT_DEADLINE}: suporte com as recrutas primeiro, depois o treino que fecha o recrutamento, e o que sobrar na classe do Byleth. Recrutamento tem prazo e suporte B derruba o requisito; a classe não some.</p>
+    ${recruits.length ? html`<p class="people sunday-who"><span class="muted">Recrutas em aberto:</span> ${recruits.map((u) => html`<a class="person" href="#/unidade/${u.id}">${avatar(u, 'xs')}${u.name}</a>`)}</p>` : ''}
+    <ol class="steps">
+      <li class="step"><strong>Primeiro o que é grátis.</strong> Presentes de que elas gostam e Lost Items (+20 de suporte cada), chá no aniversário (não gasta ponto). Assista logo as conversas de suporte: com uma conversa pendente, aquela dupla não ganha ponto.</li>
+      <li class="step"><strong>Alguém perto de fechar?</strong> Se a recruta já tem o suporte e faltam 1–2 treinos, treine e recrute no mesmo dia.</li>
+      <li class="step"><strong>Choir Practice com duas recrutas.</strong> +30 de suporte com cada, sempre. Um por dia; alunas de outras casas podem ir (só não ganham Faith).</li>
+      <li class="step"><strong>Refeição ou chá.</strong> Full Menu com um prato de que as duas gostem dá +30 com cada (o Today's Special dá metade). Chá Perfect dá +30 com uma só: use na que está perto do próximo rank.</li>
+      <li class="step"><strong>Faculty Training da skill que falta.</strong>${trainNow}</li>
+      <li class="step"><strong>Sobrou ponto: classe do Byleth.</strong>${classNow}</li>
+    </ol>
+    ${points}
+  </section>`;
+}
+
+const SUPPORT_GAIN = [
+  ['Presente de que ela gosta', 'grátis', '+20 (neutro +10)'],
+  ['Lost Item devolvido', 'grátis', '+20'],
+  ['Choir Practice, duas pessoas', '1 ponto', '+30 com cada'],
+  ['Refeição Full Menu, prato que as duas gostam', '1 ponto', '+30 com cada'],
+  ["Refeição Today's Special", '1 ponto', 'metade'],
+  ['Tea Time Perfect', '1 ponto', '+30, uma pessoa'],
+  ['Tea Time no aniversário', 'grátis', 'igual ao chá'],
+  ['Faculty Training', '1 ponto', '+7 com o instrutor'],
+];
+
 function activities() {
   const items = [
-    ['Presentes e Lost Items', 'Grátis. A forma mais barata de subir suporte com as recrutas de outras casas. O item perdido certo dá mais que um presente.'],
-    ['Refeição', '1 ponto. Byleth + duas alunas: suporte com as duas e motivação. Junte duas recrutas na mesma refeição (ex.: Lysithea + Marianne).'],
-    ['Tea Time', '1 ponto. Uma aluna; acertar os temas rende bastante suporte. Ótimo para a recruta prioritária.'],
-    ['Faculty Training', '1 ponto. Só para as skills do Byleth que destravam recrutas ou classe — veja a aba Recrutamento.'],
     ['Sauna (DLC)', '1 ponto. Vale quando várias aulas vêm logo depois; não troque refeição ou treino-chave por ela.'],
     ['Pagan Altar (Abismo)', 'Abyssian Exam Pass por 750 de Renown, sem limite. O passe é gasto mesmo se reprovar: só faça exame com 100%.'],
+    ['Estátuas dos santos', 'Recebem Renown depois do quest Tending to the Saints (Cap. 5). A da Cethleann, com 2.000 acumulados, dá +1 de XP de classe por combate para todo mundo: maestria duas vezes mais rápida. Disputa Renown com o Abyssian Exam Pass.'],
     ['Motivação', 'Aulas gastam motivação. Refeição, chá e presentes recuperam; não deixe as titulares sem motivação na semana de aula.'],
-    ['Dias de Battle', 'Cada paralogue gasta um dia livre. Explore cedo para recrutar, paralogues depois — mas antes dos prazos.'],
+    ['Dias de Battle', 'Gastam o domingo inteiro (sem Explore). Cada combate conta para a maestria de classe. Explore cedo para recrutar, paralogues depois — mas antes dos prazos.'],
   ];
   return html`<section class="card">
-    <h2 class="card-title">Atividades do dia livre</h2>
-    <dl class="activities">${items.map(([k, v]) => html`<dt>${k}</dt><dd>${v}</dd>`)}</dl>
+    <h2 class="card-title">Quanto rende cada atividade</h2>
+    <p class="card-lead">Suporte com o Byleth. Rank C a partir de 101 pontos, B a partir de 301.</p>
+    <div class="table-wrap"><table class="data compact">
+      <thead><tr><th scope="col">Atividade</th><th scope="col">Custo</th><th scope="col">Suporte</th></tr></thead>
+      <tbody>${SUPPORT_GAIN.map(([a, cost, gain]) => html`<tr><th scope="row">${a}</th><td>${cost}</td><td>${gain}</td></tr>`)}</tbody>
+    </table></div>
+    <dl class="activities more">${items.map(([k, v]) => html`<dt>${k}</dt><dd>${v}</dd>`)}</dl>
   </section>`;
 }
 
@@ -120,8 +187,9 @@ export function mosteiro(state) {
       <h1 id="v-title">Mosteiro</h1>
       <p class="lead">Onde gastar os pontos de atividade e o que dar para quem.</p>
     </header>
+    ${sundayOrder(state)}
     ${facultyTable(state)}
-    <div class="cols">${groupTasks(state)}${activities()}</div>
+    <div class="cols">${activities()}${groupTasks(state)}</div>
     <div class="cols">${giftIndex(state)}${teaIndex(state)}</div>
     ${birthdays(state)}
   </section>`;
