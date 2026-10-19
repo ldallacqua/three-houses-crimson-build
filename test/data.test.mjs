@@ -8,7 +8,7 @@ import { UNITS } from '../data/units.js';
 import { CLASSES, CLASS_BY_NAME } from '../data/classes.js';
 import { RANKS, SKILL_NAME, SUPPORTS } from '../data/skills.js';
 import { PARALOGUES } from '../data/paralogues.js';
-import { FACULTY_BY_ID } from '../data/faculty.js';
+import { FACULTY, FACULTY_BY_ID } from '../data/faculty.js';
 import { SNAPSHOT } from '../data/snapshot.js';
 import { SEALED } from '../data/chapters.js';
 import { NOTE_KEYS, openNotes } from '../js/seal.js';
@@ -92,10 +92,18 @@ test('sealed notes stay shut past the current chapter', () => {
 test('the offline copy lists every file the page loads', async () => {
   const sw = await readFile(new URL('../sw.js', import.meta.url), 'utf8');
   const listed = new Set([...sw.matchAll(/'([\w./-]+\.(?:js|css|html|svg|png|webmanifest))'/g)].map((m) => m[1]));
-  const dirs = ['js', 'js/views', 'data', 'css'];
+  const dirs = ['js', 'js/views', 'js/controls', 'data', 'css'];
   for (const dir of dirs) {
     for (const f of await readdir(new URL(`../${dir}/`, import.meta.url))) {
       if (/\.(js|css)$/.test(f)) assert.ok(listed.has(`${dir}/${f}`), `sw.js is missing ${dir}/${f}`);
     }
   }
+});
+
+test('everyone on the page has a portrait, and the offline copy has them all', async () => {
+  const files = new Set((await readdir(new URL('../img/portraits/', import.meta.url))).map((f) => f.replace(/\.webp$/, '')));
+  for (const id of [...UNITS.map((u) => u.id), ...FACULTY.map((f) => f.id)]) assert.ok(files.has(id), `no portrait for ${id}`);
+  const sw = await readFile(new URL('../sw.js', import.meta.url), 'utf8');
+  const listed = sw.match(/const PORTRAITS = \[([^\]]+)\]/)[1].match(/'([\w-]+)'/g).map((m) => m.slice(1, -1));
+  assert.deepEqual([...listed].sort(), [...files].sort());
 });

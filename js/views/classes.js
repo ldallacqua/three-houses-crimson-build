@@ -5,7 +5,7 @@ import { CLASSES, TIER_LABEL, ABILITY_TEXT } from '../../data/classes.js';
 import { UNITS } from '../../data/units.js';
 import { RANKS, RANK_XP, SKILL_NAME } from '../../data/skills.js';
 import { classCheck, isRecruited, unitState, roleOf, isStepUp } from '../logic.js';
-import { medal, abilityChip, skillIcon } from './ui.js';
+import { avatar, abilityChip, skillIcon, icon } from './ui.js';
 
 const TIERS = ['beginner', 'intermediate', 'advanced', 'master', 'dlc', 'unique'];
 
@@ -42,11 +42,11 @@ export function classes(state) {
           <tbody>${list.map((c) => {
             const ready = readyNow(c, state);
             return html`<tr>
-              <th scope="row">${c.name}${c.gender ? html` <span class="gender" title="${c.gender === 'f' ? 'só feminino' : 'só masculino'}">${c.gender === 'f' ? '♀' : '♂'}</span>` : ''}${c.flying ? html` <span class="muted" title="voadora">✈</span>` : ''}</th>
+              <th scope="row">${c.name}${c.gender ? html` <span class="gender" data-tip="${c.gender === 'f' ? 'Só personagens femininas' : 'Só personagens masculinos'}" tabindex="0">${c.gender === 'f' ? '♀' : '♂'}</span>` : ''}${c.flying ? html` <span class="flag" data-tip="Voadora: ignora terreno, fraca contra arco" tabindex="0">${icon('flying', 'voadora')}</span>` : ''}</th>
               <td>${reqText(c)}</td>
-              <td>${c.mastery.length ? c.mastery.map(abilityChip) : html`<span class="muted">—</span>`}</td>
+              <td>${c.mastery.length ? html`<span class="chips">${c.mastery.map(abilityChip)}</span>` : html`<span class="muted">—</span>`}</td>
               <td class="innate">${c.innate.join(', ') || '—'}</td>
-              <td>${ready.length ? html`<span class="ready-list">${ready.map((u) => html`<a href="#/unidade/${u.id}" title="${u.name}">${medal(u, 'sm')}</a>`)}</span>` : ''}</td>
+              <td>${ready.length ? html`<span class="ready-list">${ready.map((u) => html`<a href="#/unidade/${u.id}" data-tip="${u.name}" aria-label="${u.name}">${avatar(u, 'sm')}</a>`)}</span>` : ''}</td>
             </tr>`;
           })}</tbody>
         </table></div>

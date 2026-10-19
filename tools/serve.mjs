@@ -17,6 +17,7 @@ const TYPES = {
   '.webmanifest': 'application/manifest+json',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
+  '.webp': 'image/webp',
   '.md': 'text/markdown; charset=utf-8',
 };
 

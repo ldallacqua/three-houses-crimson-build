@@ -8,6 +8,9 @@ import { chapterLabel } from './views/ui.js';
 import { currentNotes } from './seal.js';
 import { parseDate, monthOfChapter } from './logic.js';
 import { summaryMarkdown } from './summary.js';
+import { initSelects } from './controls/select.js';
+import { initTooltips, hide as hideTooltip } from './controls/tooltip.js';
+import { initDialog, confirmDialog } from './controls/dialog.js';
 import { painel } from './views/painel.js';
 import { esquadrao } from './views/esquadrao.js';
 import { unidade } from './views/unidade.js';
@@ -42,7 +45,7 @@ function route() {
 }
 
 function toast(message) {
-  toastEl.textContent = message;
+  toastEl.querySelector('.toast-text').textContent = message;
   toastEl.classList.add('show');
   clearTimeout(toast.timer);
   toast.timer = setTimeout(() => toastEl.classList.remove('show'), 2600);
@@ -55,6 +58,7 @@ function render({ keepFocus = true } = {}) {
   const focusId = keepFocus && !changedRoute ? document.activeElement?.id : null;
   const scroll = changedRoute ? 0 : window.scrollY;
 
+  hideTooltip();
   main.innerHTML = r.view(state, r.arg).toString();
   main.classList.toggle('enter', changedRoute);
   document.title = `${typeof r.title === 'function' ? r.title(r.arg) : r.title} · Crimson Flower`;
@@ -97,9 +101,14 @@ function coerce(el) {
   return el.value;
 }
 
-function setChapter(chapter) {
+async function setChapter(chapter) {
   if (chapter === state.chapter) return;
-  if (chapter > state.chapter && !confirm(`Abrir as notas até ${chapterLabel(chapter)}? Elas podem mostrar o que vem pela frente nesse mês.`)) {
+  if (chapter > state.chapter && !(await confirmDialog({
+    title: `Ir para ${chapterLabel(chapter)}?`,
+    body: 'As notas lacradas até esse capítulo vão abrir. Elas podem mostrar o que acontece nesse mês.',
+    confirm: 'Abrir as notas',
+    cancel: 'Ainda não',
+  }))) {
     render();
     return;
   }
@@ -145,16 +154,34 @@ const actions = {
   'copy-summary': async () => {
     toast((await copy(summaryMarkdown(state))) ? 'Resumo copiado. Cole no chat.' : 'Não deu para copiar.');
   },
-  'reset-snapshot': () => {
-    if (!confirm('Voltar ao snapshot do guia mestre? Tudo o que você marcou neste aparelho será substituído.')) return;
+  'reset-snapshot': async () => {
+    const ok = await confirmDialog({
+      title: 'Voltar ao snapshot?',
+      body: 'Tudo o que você marcou neste aparelho será substituído pelo estado do guia mestre. Exporte um backup antes se quiser guardar.',
+      confirm: 'Substituir',
+      danger: true,
+    });
+    if (!ok) return;
     state = snapshotState();
     commit('Snapshot restaurado.');
+  },
+  // The − and + beside a number field.
+  step: (btn) => {
+    const input = document.getElementById(btn.dataset.for);
+    if (!input) return;
+    const min = Number(input.min || 0);
+    const max = Number(input.max || 99);
+    const now = Number.parseInt(input.value, 10);
+    const next = Math.min(max, Math.max(min, (Number.isFinite(now) ? now : min) + Number(btn.dataset.step)));
+    if (next === now) return;
+    input.value = String(next);
+    input.dispatchEvent(new Event('change', { bubbles: true }));
   },
 };
 
 main.addEventListener('click', (e) => {
   const btn = e.target.closest('button[data-act]');
-  if (btn && actions[btn.dataset.act]) actions[btn.dataset.act]();
+  if (btn && actions[btn.dataset.act]) actions[btn.dataset.act](btn);
 });
 
 main.addEventListener('change', async (e) => {
@@ -205,6 +232,14 @@ window.addEventListener('storage', (e) => {
   }
 });
 
+// A portrait that does not load leaves the initial drawn under it.
+document.addEventListener('error', (e) => {
+  if (e.target instanceof HTMLImageElement && e.target.closest('.avatar')) e.target.remove();
+}, true);
+
+initSelects();
+initTooltips();
+initDialog();
 render({ keepFocus: false });
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') {

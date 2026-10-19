@@ -1,10 +1,10 @@
 // The squad: who starts, who rotates, who waits, with the one thing each needs next.
 
 import { html } from '../html.js';
-import { UNITS, HOUSES, ROLES } from '../../data/units.js';
+import { UNITS, HOUSES } from '../../data/units.js';
 import { SKILL_NAME } from '../../data/skills.js';
 import { unitState, roleOf, isRecruited, planStatus, unitAdvice, suggestGoals, recruitStatus, composition } from '../logic.js';
-import { medal, roleChip, rank } from './ui.js';
+import { avatar, roleChip, roleSelect, rank, icon } from './ui.js';
 
 const ORDER = ['titular', 'rotacao', 'reserva', 'utilitario', 'temporaria', 'ignorar'];
 const GROUP_NOTE = {
@@ -28,11 +28,16 @@ const RECRUIT_TEXT = {
 function compositionBar(state) {
   const c = composition(state);
   const cells = [
-    ['Físico', c.physical], ['Magia', c.magic], ['Cura', c.healers], ['Voo', c.fliers], ['Arco', c.ranged], ['Dança', c.dancer],
+    ['Físico', c.physical, 'sword'], ['Magia', c.magic, 'reason'], ['Cura', c.healers, 'faith'],
+    ['Voo', c.fliers, 'flying'], ['Arco', c.ranged, 'bow'], ['Dança', c.dancer, 'spark'],
   ];
   return html`<section class="card comp">
     <h2 class="card-title">Composição das titulares <span class="count">${c.total}/10</span></h2>
-    <ul class="comp-cells">${cells.map(([label, n]) => html`<li><span class="n">${n}</span><span class="l">${label}</span></li>`)}</ul>
+    <ul class="lineup" aria-label="Titulares">${c.starters.map((u) => {
+      const ok = isRecruited(state, u.id);
+      return html`<li><a href="#/unidade/${u.id}" data-tip="${u.name}${ok ? '' : ' · não recrutada'}" aria-label="${u.name}${ok ? '' : ', não recrutada'}">${avatar(u, 'md', { dim: !ok })}</a></li>`;
+    })}</ul>
+    <ul class="comp-cells">${cells.map(([label, n, ico]) => html`<li>${icon(ico)}<span class="n">${n}</span><span class="l">${label}</span></li>`)}</ul>
     <p class="card-lead">Recomendação deste guia: Shamir entra já como titular (pronta e fica na Crimson Flower); Marianne começa como 11ª porque Dorothea e Hapi já curam com Physic. Troque o papel no seletor de cada carta.</p>
   </section>`;
 }
@@ -53,22 +58,20 @@ function card(def, state) {
     const rs = recruitStatus(def, state);
     line = `Recrutamento: ${RECRUIT_TEXT[rs.state] ?? rs.state}.`;
   }
-  return html`<article class="unit-card ${recruited ? '' : 'pending'}">
+  return html`<article class="unit-card ${recruited ? '' : 'pending'}" data-house="${house.color}">
     <header class="unit-head">
-      ${medal(def)}
+      <a class="unit-portrait" href="#/unidade/${def.id}" tabindex="-1" aria-hidden="true">${avatar(def, 'lg', { dim: !recruited })}</a>
       <div class="unit-id">
         <h3><a href="#/unidade/${def.id}">${def.name}</a></h3>
-        <p class="unit-meta">${recruited ? html`${st.cls ?? 'classe ?'} · Lv ${st.level ?? '?'}` : html`${house.name} · não recrutada`}</p>
+        <p class="unit-meta">${recruited
+          ? html`<span>${st.cls ?? 'classe ?'}</span><span class="sep" aria-hidden="true"></span><span>Lv ${st.level ?? '?'}</span>`
+          : html`<span>${house.name}</span><span class="sep" aria-hidden="true"></span><span class="pending-note">não recrutada</span>`}</p>
       </div>
-      <label class="role-pick" for="role-${def.id}"><span class="sr">Papel de ${def.name}</span>
-        <select id="role-${def.id}" data-bind="units.${def.id}.role" data-type="text">
-          ${ORDER.map((r) => html`<option value="${r}" ${r === role ? 'selected' : ''}>${ROLES[r] ?? 'Fora do plano'}</option>`)}
-        </select>
-      </label>
+      ${roleSelect(`role-${def.id}`, def, role, { compact: true })}
     </header>
     <p class="unit-line">${line || def.summary}</p>
-    ${goals.length ? html`<p class="goals"><span class="goals-label">Goals</span>${goals.map((g) => html`<span class="goal">${SKILL_NAME[g.skill]} ${rank(g.have)}→${rank(g.need, 'need')}</span>`)}</p>` : ''}
-    <a class="unit-open" href="#/unidade/${def.id}">Abrir ficha <span aria-hidden="true">→</span></a>
+    ${goals.length ? html`<p class="goals"><span class="goals-label">Goals</span>${goals.map((g) => html`<span class="goal">${SKILL_NAME[g.skill]} ${rank(g.have)}<span class="arrow" aria-hidden="true">→</span>${rank(g.need, 'need')}</span>`)}</p>` : ''}
+    <a class="unit-open" href="#/unidade/${def.id}">Abrir ficha ${icon('arrow')}</a>
   </article>`;
 }
 

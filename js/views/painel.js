@@ -9,7 +9,7 @@ import {
   monthOfChapter, isRecruited, roleOf,
 } from '../logic.js';
 import { currentNotes } from '../seal.js';
-import { checkItem, chapterLabel, tagChip, skillIcon, rank, emptyState } from './ui.js';
+import { avatar, checkItem, chapterLabel, tagChip, skillIcon, rank, emptyState, icon } from './ui.js';
 
 function deadlines(state) {
   const ch = state.chapter;
@@ -49,7 +49,9 @@ function tiles(state, notes) {
     <div class="tile">
       <p class="tile-label">Recrutas prioritárias</p>
       <p class="tile-value">${pending.length}</p>
-      <p class="tile-sub">${pending.length ? pending.map((u) => u.name).join(' · ') : 'nenhuma pendente'}</p>
+      ${pending.length
+        ? html`<p class="tile-sub stack">${pending.map((u) => html`<a href="#/unidade/${u.id}" data-tip="${u.name}" aria-label="${u.name}">${avatar(u, 'sm')}</a>`)}</p>`
+        : html`<p class="tile-sub">nenhuma pendente</p>`}
     </div>
     <div class="tile">
       <p class="tile-label">Checklist do capítulo</p>
@@ -78,7 +80,7 @@ function checklistCard(state, notes) {
     <ul class="checks">
       ${notes.tasks.map((t) => checkItem(`pc-${t.id}`, state.checks[t.id], html`${tagChip(t.tag)} ${md(t.text)}`, html`data-check="${t.id}"`))}
     </ul>
-    <p class="more"><a href="#/capitulos">Notas completas do capítulo →</a></p>
+    <p class="more"><a href="#/capitulos">Notas completas do capítulo ${icon('arrow')}</a></p>
   </section>`;
 }
 
@@ -96,7 +98,7 @@ function trainingCard(state, notes) {
             : html`<span class="warn">Ninguém ensina ${SKILL_NAME[r.skill]} neste capítulo.</span>`}</p>
         </li>`)}</ul>`
       : emptyState('Nenhum treino pendente para recrutamento.')}
-    <p class="more"><a href="#/recrutamento">Recrutamento →</a></p>
+    <p class="more"><a href="#/recrutamento">Recrutamento ${icon('arrow')}</a></p>
   </section>`;
 }
 
@@ -128,7 +130,7 @@ function birthdaysCard(state) {
       const def = UNIT_BY_ID[b.id];
       const when = today && today.month === month ? (b.day === today.day ? 'hoje' : b.day < today.day ? 'passou' : '') : '';
       return html`<li class="${when === 'hoje' ? 'today' : when === 'passou' ? 'past' : ''}">
-        <span class="date">${b.date}</span><a href="#/unidade/${b.id}">${b.name}</a>
+        <span class="date">${b.date}</span><a class="person" href="#/unidade/${b.id}">${avatar(def, 'xs')}${b.name}</a>
         ${when ? html`<span class="tag ${when === 'hoje' ? 'tag-rota' : 'tag-info'}">${when}</span>` : ''}
         <span class="gifts">${def.likes?.gifts?.slice(0, 4).join(' · ')}</span>
       </li>`;

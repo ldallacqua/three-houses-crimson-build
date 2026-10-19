@@ -20,7 +20,7 @@
 <body>
   <a class="skip" href="#main">Pular para o conteúdo</a>
 
-  <!-- Drawn icons: no game art is shipped. -->
+  <!-- Drawn icons. The only game art on the page is the character portraits in img/portraits. -->
   <svg class="sprite" aria-hidden="true" focusable="false">
     <defs>
       <linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1">
@@ -47,6 +47,12 @@
       <symbol id="i-armor" viewBox="0 0 24 24"><path d="M12 3.2 19 6v5.2c0 4.7-3 8.2-7 9.8-4-1.6-7-5.1-7-9.8V6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 7v10" stroke="currentColor" stroke-width="1.4"/></symbol>
       <symbol id="i-riding" viewBox="0 0 24 24"><path d="M7 20v-8.5a5 5 0 0 1 10 0V20M4.8 20h4.4M14.8 20h4.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
       <symbol id="i-flying" viewBox="0 0 24 24"><path d="M2.8 15.5c5.5.3 9.5-2.7 12.6-9 1 4 .8 7-.9 9.6 2.3.1 4.3-1 6.3-3-1 4.6-5.3 7.4-10.6 7.4-3.2 0-5.6-1.8-7.4-5z" fill="currentColor"/></symbol>
+      <symbol id="i-chevrons" viewBox="0 0 24 24"><path d="m7.5 9.5 4.5-4.5 4.5 4.5M7.5 14.5l4.5 4.5 4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M19.5 6.5 9.5 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5.5 12h13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2.8c.7 4.6 3 6.9 7.6 7.6-4.6.7-6.9 3-7.6 7.6-.7-4.6-3-6.9-7.6-7.6 4.6-.7 6.9-3 7.6-7.6zM18.6 15.6c.3 1.9 1.2 2.8 3.1 3.1-1.9.3-2.8 1.2-3.1 3.1-.3-1.9-1.2-2.8-3.1-3.1 1.9-.3 2.8-1.2 3.1-3.1z" fill="currentColor"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     </defs>
   </svg>
 
@@ -85,11 +91,24 @@
 
   <footer class="foot">
     <div class="wrap">
-      <p>Guia de fã, sem afiliação com Nintendo, Intelligent Systems ou Koei Tecmo. Nenhuma arte do jogo é usada: tudo é desenhado em CSS e SVG.</p>
+      <p>Guia de fã, sem afiliação com Nintendo, Intelligent Systems ou Koei Tecmo. Retratos dos personagens © Nintendo / Intelligent Systems / Koei Tecmo, via <a href="https://fireemblemwiki.org/">Fire Emblem Wiki</a>; o resto é desenhado em CSS e SVG.</p>
       <p>Seu progresso fica só neste navegador. <a href="#/dados">Backup e fontes</a> · <a href="https://github.com/ldallacqua/three-houses-crimson-build">Código</a></p>
     </div>
   </footer>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-mark" aria-hidden="true"></span><span class="toast-text"></span></div>
+
+  <div class="tip" id="tip" role="tooltip" popover="manual"></div>
+
+  <dialog class="dialog" id="dialog" aria-labelledby="dialog-title" aria-describedby="dialog-body">
+    <div class="dialog-box">
+      <h2 class="dialog-title" id="dialog-title"></h2>
+      <p class="dialog-body" id="dialog-body"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn ghost" data-dialog="cancel">Cancelar</button>
+        <button type="button" class="btn primary" data-dialog="ok">Confirmar</button>
+      </div>
+    </div>
+  </dialog>
 </body>
 </html>

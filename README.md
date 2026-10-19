@@ -32,6 +32,14 @@ O jogo roda no Switch e o save não dá para ler, então o estado é digitado: n
 - **Resumo para o chat.** Um botão copia o estado inteiro em Markdown, para revisar o plano numa conversa ou atualizar o [guia mestre](docs/guia-mestre.md).
 - **No celular, offline.** Instalável como app; abre sem internet ao lado do console.
 
+## Interface
+
+Cada unidade aparece com o retrato do jogo num anel na cor da casa; quem ainda não foi recrutada fica em cinza. Os controles são componentes próprios, sem biblioteca:
+
+- **Selects** no lugar do `<select>` nativo: lista com dicas por opção, grupos (as classes vêm separadas por tier), busca por letra e navegação completa pelo teclado, seguindo o padrão *select-only combobox* da WAI-ARIA. A lista abre para cima quando falta espaço embaixo.
+- **Switches** para "recrutada" e "concluído", **− / +** para o nível e losangos como marcadores de checklist.
+- **Tooltips** que funcionam também no toque (as artes e habilidades explicam o que fazem) e **diálogos** de confirmação no estilo da página, em vez do `confirm()` do navegador.
+
 ## Telas
 
 <p align="center">
@@ -48,8 +56,12 @@ O jogo roda no Switch e o save não dá para ler, então o estado é digitado: n
 
 <p align="center">
   <img src="docs/capitulos.png" alt="Capítulos: a página de caderno do Cap. 6 aberta e os meses seguintes lacrados" width="900">
-  <br><br>
-  <img src="docs/phone-painel.jpg" alt="O painel no celular" width="300">
+</p>
+
+<p align="center">
+  <img src="docs/phone-painel.jpg" alt="O painel no celular" width="260">
+  <img src="docs/phone-ficha.jpg" alt="A ficha da Edelgard no celular, com o retrato no topo" width="260">
+  <img src="docs/phone-select.jpg" alt="O seletor de papel aberto no celular, com uma dica em cada opção" width="260">
 </p>
 
 ## Sem spoilers por construção
@@ -63,7 +75,7 @@ O jogo roda no Switch e o save não dá para ler, então o estado é digitado: n
 
 Requisitos de classe e de recrutamento, magias e artes por rank, presentes, chás, aniversários, janelas de paralogue e disponibilidade de instrutores foram conferidos em [fe3h.com](https://www.fe3h.com), [Serenes Forest](https://serenesforest.net/three-houses/) e na [Fire Emblem Wiki](https://fireemblemwiki.org). Os planos de build e as prioridades são recomendação deste guia — estão marcados como tal no [guia mestre](docs/guia-mestre.md), junto com o que ainda é incerto.
 
-Os testes (`node --test`) checam que cada classe citada num plano existe, que os ranks são válidos, que as tabelas de recrutamento ficam mais fáceis a cada rank de suporte, que as notas lacradas abrem e citam instrutores reais, que o cache offline lista todos os arquivos e que o estado importado é limpo antes de entrar.
+Os testes (`node --test`) checam que cada classe citada num plano existe, que todo personagem na página tem retrato, que os ranks são válidos, que as tabelas de recrutamento ficam mais fáceis a cada rank de suporte, que as notas lacradas abrem e citam instrutores reais, que o cache offline lista todos os arquivos e que o estado importado é limpo antes de entrar.
 
 ## Rodar localmente
 
@@ -79,11 +91,15 @@ Abre em http://localhost:8790. Testes: `node --test`.
 
 Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos em `notes/chapters/` (fora do git); depois de editar, `node tools/seal.mjs` valida e lacra de novo.
 
+Para refazer ou acrescentar retratos (precisa de `curl` e `ffmpeg`): `bash tools/portraits.sh petra hapi`. Um personagem novo também entra na lista `PORTRAITS` do `sw.js`.
+
 ## O que tem no repositório
 
 | Caminho | O que é |
 |---|---|
-| `index.html`, `css/styles.css` | A página. Todo o visual é CSS e SVG desenhados à mão; nenhuma arte do jogo. |
+| `index.html`, `css/styles.css` | A página. O visual é CSS e SVG desenhados à mão; a única arte do jogo são os retratos. |
+| `js/controls/` | Select, tooltip e diálogo, e o posicionamento das listas flutuantes. |
+| `img/portraits/` | Retratos dos personagens (WebP, 224 px), gerados por `tools/portraits.sh`. |
 | `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, próximos passos. Funções puras. |
 | `js/store.js` | Estado no `localStorage`, exportar/importar JSON e a limpeza de tudo que entra. |
 | `js/views/` | Uma tela por arquivo, renderizada com um template que escapa tudo. |
@@ -91,10 +107,10 @@ Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos
 | `docs/guia-mestre.md` | O guia mestre em texto, com histórico de versões. |
 | `sw.js`, `manifest.webmanifest` | Cópia offline e instalação como app. |
 | `test/` | Testes com o runner do próprio Node. |
-| `tools/` | Servidor local, lacre das notas e screenshots. |
+| `tools/` | Servidor local, lacre das notas, retratos e screenshots. |
 
 Sem framework, sem pacotes, sem etapa de build: o GitHub Actions roda os testes e publica a pasta como está no GitHub Pages.
 
 ---
 
-Guia de fã, sem afiliação com Nintendo, Intelligent Systems ou Koei Tecmo.
+Guia de fã, sem afiliação com Nintendo, Intelligent Systems ou Koei Tecmo. Os retratos dos personagens são © Nintendo / Intelligent Systems / Koei Tecmo Games, obtidos na [Fire Emblem Wiki](https://fireemblemwiki.org/) e usados aqui sem fins comerciais.

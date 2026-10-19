@@ -2,7 +2,7 @@
 
 import { html } from '../html.js';
 import { SNAPSHOT_LABEL } from '../../data/snapshot.js';
-import { chapterLabel } from './ui.js';
+import { chapterLabel, select } from './ui.js';
 
 const SOURCES = [
   ['Recrutamento e efeito do suporte', 'https://www.fe3h.com/recruitment'],
@@ -30,22 +30,25 @@ export function dados(state) {
       <section class="card">
         <h2 class="card-title">Campanha</h2>
         <div class="form-row">
-          <label class="field" for="d-chapter"><span class="field-label">Capítulo</span>
-            <select id="d-chapter" data-act="set-chapter">
-              ${chapters.map((c) => html`<option value="${c}" ${c === state.chapter ? 'selected' : ''}>${chapterLabel(c)}</option>`)}
-            </select></label>
+          ${select({
+            id: 'd-chapter', label: 'Capítulo', value: String(state.chapter), cls: 'grow',
+            options: chapters.map((c) => ({ value: String(c), label: chapterLabel(c), hint: c > state.chapter ? 'lacrado' : '' })),
+            attrs: html`data-act="set-chapter"`,
+          })}
           <label class="field" for="d-date"><span class="field-label">Data (mês/dia)</span>
             <input id="d-date" type="text" inputmode="numeric" value="${state.date}" data-bind="date" data-type="text" placeholder="9/7"></label>
         </div>
         <div class="form-row">
-          <label class="field" for="d-diff"><span class="field-label">Dificuldade</span>
-            <select id="d-diff" data-bind="difficulty" data-type="text">
-              ${['', 'Normal', 'Hard', 'Maddening'].map((d) => html`<option value="${d}" ${d === state.difficulty ? 'selected' : ''}>${d || 'não informada'}</option>`)}
-            </select></label>
-          <label class="field" for="d-mode"><span class="field-label">Modo</span>
-            <select id="d-mode" data-bind="mode" data-type="text">
-              ${['', 'Casual', 'Classic'].map((d) => html`<option value="${d}" ${d === state.mode ? 'selected' : ''}>${d || 'não informado'}</option>`)}
-            </select></label>
+          ${select({
+            id: 'd-diff', label: 'Dificuldade', value: state.difficulty ?? '', cls: 'grow',
+            options: [['', 'Não informada'], ['Normal', 'Normal'], ['Hard', 'Hard'], ['Maddening', 'Maddening']].map(([value, label]) => ({ value, label })),
+            attrs: html`data-bind="difficulty" data-type="text"`,
+          })}
+          ${select({
+            id: 'd-mode', label: 'Modo', value: state.mode ?? '', cls: 'grow',
+            options: [['', 'Não informado'], ['Casual', 'Casual', 'unidades voltam após a batalha'], ['Classic', 'Classic', 'unidade caída se perde']].map(([value, label, hint]) => ({ value, label, hint })),
+            attrs: html`data-bind="mode" data-type="text"`,
+          })}
         </div>
         <p class="hint">O plano assume Normal ou Hard. Em Maddening as prioridades mudam (mais cura, menos risco); em Classic, Vengeance com HP baixo pede mais cuidado.</p>
       </section>

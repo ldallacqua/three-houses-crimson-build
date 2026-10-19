@@ -7,6 +7,13 @@ const BUILD = '__BUILD__';
 const CACHE = `fe3h-crimson-${BUILD}`;
 const FONTS = 'fe3h-crimson-fonts';
 
+// Everyone with a portrait: the units and the instructors.
+const PORTRAITS = [
+  'alois', 'anna', 'annette', 'balthus', 'bernadetta', 'byleth', 'catherine', 'constance', 'dorothea',
+  'edelgard', 'flayn', 'gilbert', 'hanneman', 'hapi', 'ingrid', 'jeralt', 'leonie', 'lorenz', 'lysithea',
+  'manuela', 'marianne', 'mercedes', 'petra', 'rhea', 'seteth', 'shamir', 'yuri',
+];
+
 const FILES = [
   './',
   'index.html',
@@ -20,6 +27,10 @@ const FILES = [
   'js/seal.js',
   'js/store.js',
   'js/summary.js',
+  'js/controls/place.js',
+  'js/controls/select.js',
+  'js/controls/tooltip.js',
+  'js/controls/dialog.js',
   'js/views/ui.js',
   'js/views/painel.js',
   'js/views/esquadrao.js',
@@ -37,6 +48,7 @@ const FILES = [
   'data/skills.js',
   'data/snapshot.js',
   'data/units.js',
+  ...PORTRAITS.map((id) => `img/portraits/${id}.webp`),
 ];
 
 self.addEventListener('install', (event) => {

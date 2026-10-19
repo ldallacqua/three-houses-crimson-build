@@ -1,39 +1,47 @@
 // One unit's sheet: the state you type in, the class plan laid against it, and what it learns.
 
 import { html, md } from '../html.js';
-import { UNIT_BY_ID, HOUSES, ROLES } from '../../data/units.js';
+import { UNIT_BY_ID, HOUSES } from '../../data/units.js';
 import { SKILLS, STATS } from '../../data/skills.js';
 import { CLASSES, OTHER_CLASSES, TIER_LABEL } from '../../data/classes.js';
 import {
   unitState, roleOf, isRecruited, planStatus, unitAdvice, suggestGoals, meetsRank, recruitStatus,
 } from '../logic.js';
 import { currentNotes } from '../seal.js';
-import { medal, rank, reqItem, abilityChip, rankSelect, numberField, supportSelect, skillLabel } from './ui.js';
+import {
+  avatar, rank, reqItem, abilityChip, rankSelect, numberField, supportSelect, roleSelect, roleChip, select, switchField, skillLabel,
+} from './ui.js';
 import { recruitBlock, trainingTable } from './recrutamento.js';
 
 function stateForm(def, st) {
   const p = `units.${def.id}`;
-  const classOptions = [...CLASSES.map((c) => c.name), ...OTHER_CLASSES];
+  const mastered = new Set(st.mastered ?? []);
+  const classOptions = [
+    { value: '', label: '?', hint: 'não sei' },
+    ...CLASSES.filter((c) => !c.gender || c.gender === def.gender || c.name === st.cls).map((c) => ({
+      value: c.name, label: c.name, group: TIER_LABEL[c.tier], hint: mastered.has(c.name) ? 'dominada' : '',
+    })),
+    ...OTHER_CLASSES.map((c) => ({ value: c, label: c, group: 'Outras' })),
+  ];
   return html`<section class="card" aria-labelledby="f-title">
     <h2 class="card-title" id="f-title">Estado atual</h2>
     <p class="card-lead">Copie da tela de status do jogo. Ranks em branco contam como desconhecidos.</p>
     <div class="form-row">
-      ${numberField(`f-${def.id}-level`, `${p}.level`, st.level, 'Nível', { min: 1, max: 99 })}
-      <label class="field grow" for="f-${def.id}-cls"><span class="field-label">Classe atual</span>
-        <select id="f-${def.id}-cls" data-bind="${p}.cls" data-type="text">
-          <option value="" ${!st.cls ? 'selected' : ''}>?</option>
-          ${classOptions.map((c) => html`<option ${c === st.cls ? 'selected' : ''}>${c}</option>`)}
-        </select>
-      </label>
-      ${def.plans?.length > 1 ? html`<label class="field grow" for="f-${def.id}-plan"><span class="field-label">Plano</span>
-        <select id="f-${def.id}-plan" data-bind="${p}.plan" data-type="text">
-          ${def.plans.map((pl) => html`<option value="${pl.id}" ${pl.id === (st.plan ?? def.plans[0].id) ? 'selected' : ''}>${pl.label}</option>`)}
-        </select></label>` : ''}
+      ${numberField(`f-${def.id}-level`, `${p}.level`, st.level, 'Nível', { min: 1, max: 99, stepper: true })}
+      ${select({
+        id: `f-${def.id}-cls`, label: 'Classe atual', value: st.cls ?? '', options: classOptions, cls: 'grow',
+        attrs: html`data-bind="${p}.cls" data-type="text"`,
+      })}
+      ${def.plans?.length > 1 ? select({
+        id: `f-${def.id}-plan`, label: 'Plano', value: st.plan ?? def.plans[0].id, cls: 'grow',
+        options: def.plans.map((pl) => ({ value: pl.id, label: pl.label })),
+        attrs: html`data-bind="${p}.plan" data-type="text"`,
+      }) : ''}
     </div>
     <h3 class="sub">Atributos</h3>
     <div class="form-grid stats">${STATS.map((s) => numberField(`f-${def.id}-${s.id}`, `${p}.stats.${s.id}`, st.stats?.[s.id], s.name, { max: 255 }))}</div>
     <h3 class="sub">Skills</h3>
-    <div class="form-grid ranks">${SKILLS.map((s) => rankSelect(`f-${def.id}-r-${s.id}`, `${p}.ranks.${s.id}`, st.ranks?.[s.id], s.name))}</div>
+    <div class="form-grid ranks">${SKILLS.map((s) => rankSelect(`f-${def.id}-r-${s.id}`, `${p}.ranks.${s.id}`, st.ranks?.[s.id], s.id))}</div>
   </section>`;
 }
 
@@ -133,28 +141,27 @@ export function unidade(state, id) {
   const house = HOUSES[def.house];
   const rs = def.recruit ? recruitStatus(def, state) : null;
   return html`<section class="view" aria-labelledby="v-title">
-    <p class="crumb"><a href="#/esquadrao">← Esquadrão</a></p>
-    <header class="view-head unit-hero">
-      ${medal(def, 'xl')}
-      <div>
-        <p class="kicker">${house.name}${def.crest ? ' · tem Crest' : ' · sem Crest'} · ${ROLES[role]}</p>
-        <h1 id="v-title">${def.name}</h1>
-        <p class="lead">${def.summary}</p>
+    <nav class="crumb" aria-label="Caminho"><a href="#/esquadrao">Esquadrão</a><span aria-hidden="true">/</span><span aria-current="page">${def.name}</span></nav>
+    <header class="hero" data-house="${house.color}">
+      <div class="hero-main">
+        ${avatar(def, 'xl', { dim: !recruited })}
+        <div class="hero-text">
+          <p class="kicker">${house.name} · ${def.crest ? 'tem Crest' : 'sem Crest'}</p>
+          <h1 id="v-title">${def.name}</h1>
+          <p class="hero-meta">${recruited
+            ? html`<span class="chip">${st.cls ?? 'classe ?'}</span><span class="chip">Lv ${st.level ?? '?'}</span>`
+            : html`<span class="badge info">não recrutada</span>`}${roleChip(role)}</p>
+          <p class="lead">${def.summary}</p>
+        </div>
+      </div>
+      <div class="hero-controls">
+        ${roleSelect('u-role', def, role)}
+        ${def.recruit?.kind === 'student' || id === 'edelgard' ? supportSelect('u-sup', `units.${id}.support`, st.support) : ''}
+        ${def.recruit && def.recruit.kind !== 'auto' ? switchField('u-rec', st.recruited, 'Já está no meu exército', html`data-bind="units.${id}.recruited" data-type="bool"`) : ''}
       </div>
     </header>
-    <div class="toolbar">
-      <label class="field" for="u-role"><span class="field-label">Papel</span>
-        <select id="u-role" data-bind="units.${id}.role" data-type="text">
-          ${Object.entries(ROLES).map(([k, v]) => html`<option value="${k}" ${k === role ? 'selected' : ''}>${v}</option>`)}
-        </select>
-      </label>
-      ${def.recruit && def.recruit.kind !== 'auto' ? html`<label class="toggle" for="u-rec">
-        <input id="u-rec" type="checkbox" data-bind="units.${id}.recruited" data-type="bool" ${st.recruited ? 'checked' : ''}>
-        <span>Já está no meu exército</span></label>` : ''}
-      ${def.recruit?.kind === 'student' || id === 'edelgard' ? supportSelect(`u-sup`, `units.${id}.support`, st.support) : ''}
-    </div>
     ${def.notes?.length ? html`<section class="card notes"><h2 class="card-title">Notas</h2><ul class="note-list">${def.notes.map((n) => html`<li>${md(n)}</li>`)}</ul></section>` : ''}
-    ${rs && rs.state !== 'recruited' ? recruitBlock(def, state, rs) : ''}
+    ${rs && rs.state !== 'recruited' ? recruitBlock(def, state, rs, { controls: false }) : ''}
     ${id === 'byleth' ? trainingTable(state, currentNotes(state.chapter)) : ''}
     ${recruited || id === 'byleth' ? html`${planCard(def, st)}<div class="cols">${stateForm(def, st)}${masteryList(def, st)}</div>` : planCard(def, st)}
     <div class="cols">${learnCard(def, st)}${likesCard(def)}</div>

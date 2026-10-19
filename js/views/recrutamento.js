@@ -5,7 +5,7 @@ import { UNITS, HOUSES, ROLES } from '../../data/units.js';
 import { SKILL_NAME, STAT_NAME, RECRUIT_DEADLINE } from '../../data/skills.js';
 import { recruitStatus, roleOf, unitState, bylethTraining, isRecruited } from '../logic.js';
 import { currentNotes } from '../seal.js';
-import { medal, rank, supportSelect, skillIcon, roleChip, emptyState } from './ui.js';
+import { avatar, rank, supportSelect, switchField, skillIcon, roleChip, emptyState } from './ui.js';
 
 const TIER_NAME = { none: 'Sem suporte', C: 'C', 'C+': 'C+', B: 'B', 'B+': 'B+' };
 const ROLE_ORDER = ['titular', 'rotacao', 'utilitario', 'reserva', 'temporaria', 'ignorar'];
@@ -41,8 +41,11 @@ function studentTable(def, rs) {
   </table>`;
 }
 
-/** The recruitment box for one target: status, support, requirement table, what to do. */
-export function recruitBlock(def, state, rs = recruitStatus(def, state), { bare = false } = {}) {
+/**
+ * The recruitment box for one target: status, support, requirement table, what to do.
+ * `controls: false` leaves out the support select and the switch (the unit sheet has them on top).
+ */
+export function recruitBlock(def, state, rs = recruitStatus(def, state), { bare = false, controls = true } = {}) {
   const st = unitState(state, def.id);
   const r = def.recruit;
   let body;
@@ -66,8 +69,8 @@ export function recruitBlock(def, state, rs = recruitStatus(def, state), { bare 
     body = html`<p>${rs.state === 'later' ? `Entra sozinha no Cap. ${rs.from}.` : 'Entra sozinha.'}</p>`;
   }
   const inner = html`
-    ${r.kind === 'student' ? html`<div class="toolbar">${supportSelect(`rs-${def.id}`, `units.${def.id}.support`, st.support)}
-      <label class="toggle" for="rr-${def.id}"><input id="rr-${def.id}" type="checkbox" data-bind="units.${def.id}.recruited" data-type="bool" ${st.recruited ? 'checked' : ''}><span>Recrutada</span></label></div>` : ''}
+    ${r.kind === 'student' && controls ? html`<div class="toolbar">${supportSelect(`rs-${def.id}`, `units.${def.id}.support`, st.support)}
+      ${switchField(`rr-${def.id}`, st.recruited, 'Recrutada', html`data-bind="units.${def.id}.recruited" data-type="bool"`)}</div>` : ''}
     ${body}
     ${r.kind === 'student' ? html`<p class="hint">Prazo: até o Cap. ${RECRUIT_DEADLINE}. ${def.likes?.gifts?.length ? `Presentes: ${def.likes.gifts.join(', ')}.` : ''}${def.likes?.teas?.length ? ` Chás: ${def.likes.teas.join(', ')}.` : ''}${def.birthday ? ` Aniversário: ${def.birthday}.` : ''}</p>` : ''}`;
   if (bare) return inner;
@@ -98,10 +101,11 @@ export function trainingTable(state, notes) {
 function targetCard(def, state) {
   const rs = recruitStatus(def, state);
   const role = roleOf(state, def.id);
-  return html`<article class="recruit-card">
-    <header class="unit-head">${medal(def)}
+  return html`<article class="recruit-card" data-house="${HOUSES[def.house].color}">
+    <header class="unit-head">
+      <a class="unit-portrait" href="#/unidade/${def.id}" tabindex="-1" aria-hidden="true">${avatar(def, 'lg', { dim: true })}</a>
       <div class="unit-id"><h3><a href="#/unidade/${def.id}">${def.name}</a></h3>
-        <p class="unit-meta">${HOUSES[def.house].name} · ${roleChip(role)}</p></div>
+        <p class="unit-meta"><span>${HOUSES[def.house].name}</span>${roleChip(role)}</p></div>
       ${stateBadge(rs)}
     </header>
     <p class="unit-line">${def.summary}</p>
@@ -123,6 +127,6 @@ export function recrutamento(state) {
     ${trainingTable(state, notes)}
     <div class="recruit-grid">${targets.map((u) => targetCard(u, state))}</div>
     ${done.length ? html`<section class="card"><h2 class="card-title">Já no exército</h2>
-      <ul class="inline-list">${done.map((u) => html`<li>${medal(u, 'sm')}<a href="#/unidade/${u.id}">${u.name}</a> <small class="muted">${ROLES[roleOf(state, u.id)]}</small></li>`)}</ul></section>` : ''}
+      <ul class="roster">${done.map((u) => html`<li><a href="#/unidade/${u.id}">${avatar(u, 'md')}<span class="roster-name">${u.name}</span><small>${ROLES[roleOf(state, u.id)]}</small></a></li>`)}</ul></section>` : ''}
   </section>`;
 }

@@ -3,10 +3,12 @@
 import { html } from '../html.js';
 import { FACULTY } from '../../data/faculty.js';
 import { SKILLS, SKILL_NAME } from '../../data/skills.js';
-import { UNITS } from '../../data/units.js';
+import { UNITS, UNIT_BY_ID } from '../../data/units.js';
 import { roleOf, isRecruited, skillNeeds, unitState } from '../logic.js';
 import { currentNotes } from '../seal.js';
-import { skillIcon, emptyState } from './ui.js';
+import { avatar, skillIcon, emptyState } from './ui.js';
+
+const person = (def) => html`<span class="person">${avatar(def, 'xs')}${def.name}</span>`;
 
 function facultyTable(state) {
   const notes = currentNotes(state.chapter);
@@ -21,8 +23,8 @@ function facultyTable(state) {
       <tbody>${FACULTY.map((f) => {
         const off = away.has(f.id);
         return html`<tr class="${off ? 'off' : ''}">
-          <th scope="row">${f.name}${off ? html` <span class="tag tag-info">fora</span>` : ''}${f.note ? html`<small class="muted note">${f.note}</small>` : ''}</th>
-          ${taught.map((s) => html`<td>${f.skills.includes(s.id) ? html`<span class="dot" aria-label="ensina ${s.name}">●</span>` : ''}</td>`)}
+          <th scope="row"><span class="person">${avatar(UNIT_BY_ID[f.id] ?? { ...f, house: 'church' }, 'sm')}<span>${f.name}${off ? html` <span class="tag tag-info">fora</span>` : ''}${f.note ? html`<small class="muted note">${f.note}</small>` : ''}</span></span></th>
+          ${taught.map((s) => html`<td>${f.skills.includes(s.id) ? html`<span class="pip" role="img" aria-label="ensina ${s.name}"></span>` : ''}</td>`)}
         </tr>`;
       })}</tbody>
     </table></div>`}
@@ -37,15 +39,14 @@ function groupTasks(state) {
     { name: 'Weeding', skill: 'heavyArmor' },
   ];
   const wants = (skill) => UNITS.filter((u) => isRecruited(state, u.id) && ['titular', 'rotacao'].includes(roleOf(state, u.id)) && u.id !== 'byleth')
-    .filter((u) => skillNeeds(u, unitState(state, u.id)).has(skill))
-    .map((u) => u.name);
+    .filter((u) => skillNeeds(u, unitState(state, u.id)).has(skill));
   return html`<section class="card">
     <h2 class="card-title">Group Tasks</h2>
     <p class="card-lead">Duplas ganham XP na skill da tarefa e suporte entre si. Use em quem o plano ainda pede essa skill e forme duplas que já se dão bem (suporte entre elas ajuda o resultado).</p>
     <ul class="gt">${tasks.map((t) => {
       const names = wants(t.skill);
-      return html`<li><strong>${t.name}</strong> ${skillIcon(t.skill)} ${SKILL_NAME[t.skill]}
-        <span class="muted">${names.length ? `— combina com: ${names.join(', ')}` : '— ninguém precisa agora'}</span></li>`;
+      return html`<li><p class="gt-head"><strong>${t.name}</strong><span class="skill">${skillIcon(t.skill)}${SKILL_NAME[t.skill]}</span></p>
+        <p class="people">${names.length ? names.map(person) : html`<span class="muted">ninguém precisa agora</span>`}</p></li>`;
     })}</ul>
   </section>`;
 }
@@ -71,14 +72,14 @@ function giftIndex(state) {
   const map = new Map();
   for (const u of UNITS) {
     if (roleOf(state, u.id) === 'ignorar') continue;
-    for (const g of u.likes?.gifts ?? []) map.set(g, [...(map.get(g) ?? []), u.name]);
+    for (const g of u.likes?.gifts ?? []) map.set(g, [...(map.get(g) ?? []), u]);
   }
   const rows = [...map.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
   return html`<section class="card">
     <h2 class="card-title">Presentes: quem gosta</h2>
     <div class="table-wrap"><table class="data compact">
       <thead><tr><th scope="col">Presente</th><th scope="col">Quem gosta</th></tr></thead>
-      <tbody>${rows.map(([g, names]) => html`<tr><th scope="row">${g}</th><td>${names.join(', ')}</td></tr>`)}</tbody>
+      <tbody>${rows.map(([g, who]) => html`<tr><th scope="row">${g}</th><td class="people">${who.map(person)}</td></tr>`)}</tbody>
     </table></div>
   </section>`;
 }
@@ -87,14 +88,14 @@ function teaIndex(state) {
   const map = new Map();
   for (const u of UNITS) {
     if (roleOf(state, u.id) === 'ignorar') continue;
-    for (const t of u.likes?.teas ?? []) map.set(t, [...(map.get(t) ?? []), u.name]);
+    for (const t of u.likes?.teas ?? []) map.set(t, [...(map.get(t) ?? []), u]);
   }
   const rows = [...map.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
   return html`<section class="card">
     <h2 class="card-title">Chás: quem gosta</h2>
     <div class="table-wrap"><table class="data compact">
       <thead><tr><th scope="col">Chá</th><th scope="col">Quem gosta</th></tr></thead>
-      <tbody>${rows.map(([t, names]) => html`<tr><th scope="row">${t}</th><td>${names.join(', ')}</td></tr>`)}</tbody>
+      <tbody>${rows.map(([t, who]) => html`<tr><th scope="row">${t}</th><td class="people">${who.map(person)}</td></tr>`)}</tbody>
     </table></div>
   </section>`;
 }
@@ -108,7 +109,7 @@ function birthdays(state) {
     .sort((a, b) => a.order - b.order);
   return html`<section class="card">
     <h2 class="card-title">Aniversários (ano letivo)</h2>
-    <ul class="bday-all">${list.map(({ u }) => html`<li><span class="date">${u.birthday}</span><a href="#/unidade/${u.id}">${u.name}</a></li>`)}</ul>
+    <ul class="bday-all">${list.map(({ u }) => html`<li><span class="date">${u.birthday}</span><a class="person" href="#/unidade/${u.id}">${avatar(u, 'xs')}${u.name}</a></li>`)}</ul>
   </section>`;
 }
 
