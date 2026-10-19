@@ -3,7 +3,7 @@
 import { html, md } from '../html.js';
 import { FACULTY_BY_ID } from '../../data/faculty.js';
 import { NOTE_KEYS, openNotes, chapterOfKey, keyForChapter } from '../seal.js';
-import { checkItem, tagChip, noteKeyLabel } from './ui.js';
+import { taskItem, noteKeyLabel } from './ui.js';
 
 function away(note) {
   if (!note.away?.length) return html`<p class="away ok">Todos os instrutores de Faculty Training disponíveis.</p>`;
@@ -20,7 +20,7 @@ function page(note, state, current) {
     <p class="nb-intro">${md(note.intro)}</p>
     ${away(note)}
     ${note.tasks?.length ? html`<h3>Lista</h3><ul class="checks">
-      ${note.tasks.map((t) => checkItem(`cc-${t.id}`, state.checks[t.id], html`${tagChip(t.tag)} ${md(t.text)}`, html`data-check="${t.id}"`))}
+      ${note.tasks.map((t) => taskItem('cc', t, state, chapterOfKey(note.key)))}
     </ul>` : ''}
     ${note.battle ? html`<h3>${note.battle.title}</h3><ul class="nb-points">${note.battle.points.map((p) => html`<li>${md(p)}</li>`)}</ul>` : ''}
     ${note.paralogues?.length ? html`<h3>Paralogues desta parte</h3><div class="table-wrap"><table class="data light">

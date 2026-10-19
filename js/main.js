@@ -6,12 +6,13 @@ import { RANKS } from '../data/skills.js';
 import { UNIT_BY_ID } from '../data/units.js';
 import { chapterLabel } from './views/ui.js';
 import { currentNotes } from './seal.js';
-import { parseDate, monthOfChapter } from './logic.js';
+import { parseDate, monthOfChapter, reviewStatus } from './logic.js';
 import { summaryMarkdown } from './summary.js';
 import { initSelects } from './controls/select.js';
 import { initTooltips, hide as hideTooltip } from './controls/tooltip.js';
 import { initDialog, confirmDialog } from './controls/dialog.js';
 import { painel } from './views/painel.js';
+import { atualizar } from './views/atualizar.js';
 import { esquadrao } from './views/esquadrao.js';
 import { unidade } from './views/unidade.js';
 import { recrutamento } from './views/recrutamento.js';
@@ -23,6 +24,7 @@ import { dados } from './views/dados.js';
 
 const ROUTES = {
   painel: { view: painel, title: 'Painel' },
+  atualizar: { view: atualizar, title: 'Atualizar' },
   esquadrao: { view: esquadrao, title: 'Esquadrão' },
   unidade: { view: unidade, title: (id) => UNIT_BY_ID[id]?.name ?? 'Unidade', tab: 'esquadrao' },
   recrutamento: { view: recrutamento, title: 'Recrutamento' },
@@ -35,6 +37,7 @@ const ROUTES = {
 
 const main = document.getElementById('main');
 const chip = document.getElementById('chapter-chip');
+const reviewBadge = document.getElementById('review-badge');
 const toastEl = document.getElementById('toast');
 let state = load();
 let lastRoute = '';
@@ -67,6 +70,10 @@ function render({ keepFocus = true } = {}) {
     if (on) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   }
+  const pending = reviewStatus(state).pending.length;
+  reviewBadge.hidden = !pending;
+  reviewBadge.textContent = String(pending);
+  reviewBadge.title = pending ? `${pending} para conferir neste capítulo` : '';
   const notes = currentNotes(state.chapter);
   chip.textContent = `${chapterLabel(state.chapter)}${state.date ? ` · ${state.date}` : ''}`;
   chip.title = notes?.title ?? '';
@@ -115,7 +122,7 @@ async function setChapter(chapter) {
   state.chapter = chapter;
   // A date from another month would put the wrong birthdays on the overview.
   if (parseDate(state.date)?.month !== monthOfChapter(chapter)) state.date = '';
-  commit(`Agora em ${chapterLabel(chapter)}.`);
+  commit(`Agora em ${chapterLabel(chapter)}. Confira o esquadrão na aba Atualizar.`);
 }
 
 function download(name, textContent, type) {
@@ -144,8 +151,24 @@ async function copy(textContent) {
   }
 }
 
+// Game data of a unit: changing any of it means the unit was just checked against the game.
+const UNIT_DATA = /^units\.([\w-]+)\.(level|cls|ranks|stats|support|recruited|mastered)\b/;
+
+function markReviewed(path) {
+  const id = UNIT_DATA.exec(path)?.[1];
+  if (id) state.reviewed[id] = state.chapter;
+}
+
 const actions = {
   'advance-chapter': () => setChapter(state.chapter + 1),
+  reviewed: (btn) => {
+    state.reviewed[btn.dataset.unit] = state.chapter;
+    commit();
+  },
+  'review-all': () => {
+    for (const u of reviewStatus(state).pending) state.reviewed[u.id] = state.chapter;
+    commit('Tudo conferido neste capítulo.');
+  },
   export: () => {
     const day = new Date().toISOString().slice(0, 10);
     download(`fe3h-crimson-${day}.json`, JSON.stringify(state, null, 2), 'application/json');
@@ -193,12 +216,14 @@ main.addEventListener('change', async (e) => {
       return;
     }
     setPath(state, el.dataset.bind, typeof value === 'string' ? value.trim() : value);
+    markReviewed(el.dataset.bind);
     commit();
   } else if (el.dataset.bindList) {
     const list = new Set(getPath(state, el.dataset.bindList) ?? []);
     if (el.checked) list.add(el.value);
     else list.delete(el.value);
     setPath(state, el.dataset.bindList, [...list]);
+    markReviewed(el.dataset.bindList);
     commit();
   } else if (el.dataset.check) {
     if (el.checked) state.checks[el.dataset.check] = true;

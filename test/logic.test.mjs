@@ -173,3 +173,67 @@ test('calendar helpers', () => {
   const sept = birthdaysInMonth(9).map((b) => b.id);
   assert.deepEqual(sept, ['petra', 'dorothea']);
 });
+
+test('review: everyone is pending in a new chapter, and a confirmed unit drops off', async () => {
+  const { reviewStatus } = await import('../js/logic.js');
+  const s = snap();
+  const first = reviewStatus(s);
+  assert.equal(first.pending.length, first.all.length);
+  assert.ok(first.army.some((u) => u.id === 'byleth') && first.recruits.some((u) => u.id === 'lysithea'));
+  s.reviewed.byleth = s.chapter;
+  assert.equal(reviewStatus(s).pending.length, first.all.length - 1);
+  assert.equal(reviewStatus({ ...s, chapter: s.chapter + 1 }).pending.some((u) => u.id === 'byleth'), true);
+  assert.equal(reviewStatus({ ...s, chapter: 12 }).recruits.length, 0);
+});
+
+test('review: Byleth is asked for the stats and ranks recruits and his plan need', async () => {
+  const { keySkills, keyStats } = await import('../js/logic.js');
+  const s = snap();
+  const skills = keySkills(UNIT_BY_ID.byleth, s.units.byleth, s);
+  for (const k of ['brawl', 'faith', 'flying', 'riding']) assert.ok(skills.includes(k), k);
+  // Leonie asks Str, Ingrid Dex, Lysithea/Marianne/Mercedes/Annette Mag, Lorenz Cha.
+  assert.deepEqual(keyStats(s), ['str', 'mag', 'dex', 'cha']);
+});
+
+test('chapter tasks settle themselves from the state', async () => {
+  const { taskAuto } = await import('../js/logic.js');
+  const s = snap();
+  const abyss = { id: 't', auto: { recruited: ['balthus', 'yuri'] } };
+  assert.equal(taskAuto(abyss, s, 6), null);
+  s.units.balthus.recruited = true;
+  s.units.yuri.recruited = true;
+  assert.match(taskAuto(abyss, s, 6).why, /Balthus e Yuri/);
+  s.units.lorenz.role = 'ignorar';
+  assert.match(taskAuto({ auto: { recruited: ['lorenz'] } }, s, 7).why, /fora do plano/);
+  const archer = { auto: { reached: { bernadetta: 'Archer' } } };
+  assert.equal(taskAuto(archer, s, 6), null);
+  s.units.bernadetta.cls = 'Sniper';
+  assert.ok(taskAuto(archer, s, 6));
+  const mage = { auto: { mastered: { constance: 'Mage' } } };
+  s.units.constance.cls = 'Mage';
+  assert.equal(taskAuto(mage, s, 7), null);
+  s.units.constance.cls = 'Dark Flier';
+  assert.ok(taskAuto(mage, s, 7), 'moving past Mage settles it');
+  const bday = { auto: { after: '9/7' } };
+  assert.equal(taskAuto(bday, { ...s, date: '9/7' }, 6), null);
+  assert.ok(taskAuto(bday, { ...s, date: '9/14' }, 6));
+  assert.ok(taskAuto(bday, { ...s, chapter: 7, date: '' }, 6));
+  const edel = { auto: { support: { edelgard: 'B' } } };
+  s.units.edelgard.support = 'C';
+  assert.equal(taskAuto(edel, s, 10), null);
+  s.units.edelgard.support = 'B';
+  assert.ok(taskAuto(edel, s, 10));
+  const canyon = { auto: { paralogues: ['red-canyon'] } };
+  assert.equal(taskAuto(canyon, s, 8), null);
+  s.paralogues['red-canyon'] = true;
+  assert.ok(taskAuto(canyon, s, 8));
+});
+
+test('the Edelgard reminder asks for B, the rank the game shows', () => {
+  const s = snap();
+  s.units.edelgard.support = 'C';
+  const step = nextSteps({ ...s, chapter: 10 }, null).find((x) => x.kind === 'rota');
+  assert.match(step.text, /chegue a B/);
+  s.units.edelgard.support = 'B';
+  assert.equal(nextSteps({ ...s, chapter: 10 }, null).some((x) => x.kind === 'rota'), false);
+});

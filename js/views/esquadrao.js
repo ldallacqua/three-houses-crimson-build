@@ -81,7 +81,7 @@ export function esquadrao(state) {
     <header class="view-head">
       <p class="kicker">Byleth + esquadrão</p>
       <h1 id="v-title">Esquadrão</h1>
-      <p class="lead">Cada carta mostra a próxima coisa que a unidade precisa. Abra a ficha para atualizar nível, classe, ranks e maestrias.</p>
+      <p class="lead">Cada carta mostra a próxima coisa que a unidade precisa. Para atualizar todo mundo de uma vez, use a aba <a href="#/atualizar">Atualizar</a>; a ficha de cada uma tem todos os campos.</p>
     </header>
     ${compositionBar(state)}
     ${groups.map((g) => html`<section class="group" aria-labelledby="g-${g.role}">

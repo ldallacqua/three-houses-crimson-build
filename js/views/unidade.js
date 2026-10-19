@@ -3,36 +3,25 @@
 import { html, md } from '../html.js';
 import { UNIT_BY_ID, HOUSES } from '../../data/units.js';
 import { SKILLS, STATS } from '../../data/skills.js';
-import { CLASSES, OTHER_CLASSES, TIER_LABEL } from '../../data/classes.js';
+import { CLASSES, TIER_LABEL } from '../../data/classes.js';
 import {
   unitState, roleOf, isRecruited, planStatus, unitAdvice, suggestGoals, meetsRank, recruitStatus, prefsOf,
 } from '../logic.js';
 import { TEA_GISTS } from '../../data/tea-gists.js';
 import { currentNotes } from '../seal.js';
 import {
-  avatar, rank, reqItem, abilityChip, rankSelect, numberField, supportSelect, roleSelect, roleChip, select, switchField, skillLabel,
+  avatar, rank, reqItem, abilityChip, rankSelect, numberField, supportSelect, roleSelect, roleChip, select, switchField, skillLabel, classSelect,
 } from './ui.js';
 import { recruitBlock, trainingTable } from './recrutamento.js';
 
 function stateForm(def, st) {
   const p = `units.${def.id}`;
-  const mastered = new Set(st.mastered ?? []);
-  const classOptions = [
-    { value: '', label: '?', hint: 'não sei' },
-    ...CLASSES.filter((c) => !c.gender || c.gender === def.gender || c.name === st.cls).map((c) => ({
-      value: c.name, label: c.name, group: TIER_LABEL[c.tier], hint: mastered.has(c.name) ? 'dominada' : '',
-    })),
-    ...OTHER_CLASSES.map((c) => ({ value: c, label: c, group: 'Outras' })),
-  ];
   return html`<section class="card" aria-labelledby="f-title">
     <h2 class="card-title" id="f-title">Estado atual</h2>
     <p class="card-lead">Copie da tela de status do jogo. Ranks em branco contam como desconhecidos.</p>
     <div class="form-row">
       ${numberField(`f-${def.id}-level`, `${p}.level`, st.level, 'Nível', { min: 1, max: 99, stepper: true })}
-      ${select({
-        id: `f-${def.id}-cls`, label: 'Classe atual', value: st.cls ?? '', options: classOptions, cls: 'grow',
-        attrs: html`data-bind="${p}.cls" data-type="text"`,
-      })}
+      ${classSelect(`f-${def.id}-cls`, def, st)}
       ${def.plans?.length > 1 ? select({
         id: `f-${def.id}-plan`, label: 'Plano', value: st.plan ?? def.plans[0].id, cls: 'grow',
         options: def.plans.map((pl) => ({ value: pl.id, label: pl.label })),

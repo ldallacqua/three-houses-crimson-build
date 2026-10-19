@@ -6,10 +6,10 @@ import { PARALOGUES } from '../../data/paralogues.js';
 import { SKILL_NAME, RECRUIT_DEADLINE } from '../../data/skills.js';
 import {
   nextSteps, bylethTraining, paralogueStatus, composition, recruitTargets, birthdaysInMonth, parseDate,
-  monthOfChapter, isRecruited, roleOf,
+  monthOfChapter, isRecruited, roleOf, reviewStatus, taskDone,
 } from '../logic.js';
 import { currentNotes } from '../seal.js';
-import { avatar, checkItem, chapterLabel, tagChip, skillIcon, rank, emptyState, icon } from './ui.js';
+import { avatar, taskItem, tagChip, chapterLabel, skillIcon, rank, emptyState, icon } from './ui.js';
 
 function deadlines(state) {
   const ch = state.chapter;
@@ -34,7 +34,7 @@ function tiles(state, notes) {
   const ready = comp.starters.filter((u) => isRecruited(state, u.id)).length;
   const pending = recruitTargets(state).filter((u) => ['titular', 'rotacao'].includes(roleOf(state, u.id)));
   const tasks = notes?.tasks ?? [];
-  const done = tasks.filter((t) => state.checks[t.id]).length;
+  const done = tasks.filter((t) => taskDone(t, state)).length;
   return html`<div class="tiles">
     <div class="tile">
       <p class="tile-label">Capítulo</p>
@@ -78,9 +78,25 @@ function checklistCard(state, notes) {
     <h2 class="card-title">Checklist do capítulo</h2>
     <p class="card-lead">${md(notes.intro)}</p>
     <ul class="checks">
-      ${notes.tasks.map((t) => checkItem(`pc-${t.id}`, state.checks[t.id], html`${tagChip(t.tag)} ${md(t.text)}`, html`data-check="${t.id}"`))}
+      ${notes.tasks.map((t) => taskItem('pc', t, state, state.chapter))}
     </ul>
+    <p class="hint">Itens com ✓ automático se marcam sozinhos pelo que você informou (quem já entrou, classe, maestria, suporte, paralogue, data).</p>
     <p class="more"><a href="#/capitulos">Notas completas do capítulo ${icon('arrow')}</a></p>
+  </section>`;
+}
+
+/** Once per chapter: the army and the recruits checked against the game. */
+function reviewCard(state) {
+  const r = reviewStatus(state);
+  if (!r.pending.length) return '';
+  const fresh = r.pending.length === r.all.length;
+  return html`<section class="card callout" aria-labelledby="rv-title">
+    <div class="callout-body">
+      <h2 class="card-title" id="rv-title">${fresh ? `${chapterLabel(state.chapter)}: atualize o esquadrão` : 'Faltam algumas fichas'}</h2>
+      <p class="card-lead">${r.pending.length} de ${r.all.length} ainda não foram conferidas neste capítulo. Nível, classe, ranks e suportes mudam a cada mês, e as recomendações saem deles.</p>
+      <p class="tile-sub stack">${r.pending.slice(0, 12).map((u) => html`<a href="#/atualizar" data-tip="${u.name}" aria-label="${u.name}">${avatar(u, 'sm')}</a>`)}</p>
+    </div>
+    <a class="btn primary" href="#/atualizar">Atualizar agora ${icon('arrow')}</a>
   </section>`;
 }
 
@@ -158,8 +174,9 @@ export function painel(state) {
     <header class="view-head">
       <p class="kicker">${chapterLabel(state.chapter)}${state.date ? ` · ${state.date}` : ''}</p>
       <h1 id="v-title">Painel</h1>
-      <p class="lead">O que fazer agora, com base no estado que você marcou. Este site não lê o save: atualize níveis, ranks e suportes nas fichas quando mudarem.</p>
+      <p class="lead">O que fazer agora, com base no estado que você marcou. Este site não lê o save: uma vez por capítulo, confira níveis, classes, ranks e suportes na aba <a href="#/atualizar">Atualizar</a>.</p>
     </header>
+    ${reviewCard(state)}
     ${tiles(state, notes)}
     <div class="cols">${stepsCard(state, notes)}${checklistCard(state, notes)}</div>
     <div class="cols">${trainingCard(state, notes)}${deadlinesCard(state)}</div>

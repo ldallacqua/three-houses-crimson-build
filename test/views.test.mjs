@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mosteiro } from '../js/views/mosteiro.js';
 import { classes } from '../js/views/classes.js';
-import { snapshotState } from '../js/store.js';
+import { snapshotState, normalize } from '../js/store.js';
 
 const text = (markup) => markup.toString().replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 const sunday = (state) => {
@@ -61,4 +61,22 @@ test('the support select offers the ranks the game shows', async () => {
   const { supportSelect } = await import('../js/views/ui.js');
   const values = [...supportSelect('s', 'units.x.support', 'C').toString().matchAll(/data-value="([^"]*)"/g)].map((m) => m[1]);
   assert.deepEqual(values, ['none', 'C', 'B', 'A', 'S']);
+});
+
+test('the overview and the review page render and point at what is left', async () => {
+  const { painel } = await import('../js/views/painel.js');
+  const { atualizar } = await import('../js/views/atualizar.js');
+  const s = snapshotState();
+  assert.match(text(painel(s)), /atualize o esquadrão \d+ de \d+ ainda não foram conferidas/);
+  const page = text(atualizar(s));
+  assert.match(page, /0 de \d+ conferidas/);
+  assert.match(page, /Recrutas .*Lysithea/);
+  for (const u of Object.keys(s.units)) s.reviewed[u] = s.chapter;
+  assert.doesNotMatch(text(painel(s)), /atualize o esquadrão/);
+  assert.match(text(atualizar(s)), /Tudo em dia/);
+});
+
+test('a reviewed chapter survives a save and reload', () => {
+  const s = normalize({ ...snapshotState(), reviewed: { byleth: 6, nobody: 6, petra: 'x' } });
+  assert.deepEqual(s.reviewed, { byleth: 6 });
 });

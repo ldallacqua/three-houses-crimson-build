@@ -1,10 +1,10 @@
 // Small pieces every view uses: portraits, rank badges, requirement rows, form controls.
 
-import { html } from '../html.js';
+import { html, md } from '../html.js';
 import { SKILL_NAME, STAT_NAME, RANKS, SUPPORTS, MONTHS } from '../../data/skills.js';
 import { HOUSES, ROLES } from '../../data/units.js';
-import { ABILITY_TEXT } from '../../data/classes.js';
-import { monthOfChapter } from '../logic.js';
+import { ABILITY_TEXT, CLASSES, OTHER_CLASSES, TIER_LABEL } from '../../data/classes.js';
+import { monthOfChapter, taskAuto } from '../logic.js';
 
 export const icon = (id, label) =>
   html`<svg class="ico" ${label ? html`role="img" aria-label="${label}"` : html`aria-hidden="true"`}><use href="#i-${id}"></use></svg>`;
@@ -146,6 +146,33 @@ export function numberField(id, path, value, label, { min = 0, max = 99, stepper
 
 export function switchField(id, checked, label, attrs) {
   return html`<label class="switch" for="${id}"><input id="${id}" type="checkbox" role="switch" ${checked ? 'checked' : ''} ${attrs}><span>${label}</span></label>`;
+}
+
+/** The unit's class, grouped by tier; classes it has mastered say so. */
+export function classSelect(id, def, st, { label = 'Classe atual', cls = 'grow' } = {}) {
+  const mastered = new Set(st.mastered ?? []);
+  const options = [
+    { value: '', label: '?', hint: 'não sei' },
+    ...CLASSES.filter((c) => !c.gender || c.gender === def.gender || c.name === st.cls).map((c) => ({
+      value: c.name, label: c.name, group: TIER_LABEL[c.tier], hint: mastered.has(c.name) ? 'dominada' : '',
+    })),
+    ...OTHER_CLASSES.map((c) => ({ value: c, label: c, group: 'Outras' })),
+  ];
+  return select({ id, label, value: st.cls ?? '', options, cls, attrs: html`data-bind="units.${def.id}.cls" data-type="text"` });
+}
+
+/**
+ * One chapter task. A task whose rule the state already meets is checked and locked, with the reason;
+ * the others are ticked by hand.
+ */
+export function taskItem(prefix, task, state, chapter) {
+  const auto = taskAuto(task, state, chapter);
+  const id = `${prefix}-${task.id}`;
+  const done = Boolean(auto || state.checks[task.id]);
+  return html`<li class="check ${done ? 'done' : ''}${auto ? ' auto' : ''}">
+    <input type="checkbox" id="${id}" ${done ? 'checked' : ''} ${auto ? 'disabled' : ''} data-check="${task.id}">
+    <label for="${id}">${tagChip(task.tag)} ${md(task.text)}${auto ? html`<span class="auto-note">${icon('check')}automático: ${auto.why}</span>` : ''}</label>
+  </li>`;
 }
 
 export function checkItem(id, checked, body, attrs) {

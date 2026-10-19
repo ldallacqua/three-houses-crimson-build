@@ -23,11 +23,12 @@ Guias dizem a build ideal. Não sabem em que ponto o seu save está. Este guia s
 O jogo roda no Switch e o save não dá para ler, então o estado é digitado: nível, classe, ranks de skill, maestrias e suporte com cada recruta, copiados da tela de status. A partir disso a página calcula o resto e atualiza na hora.
 
 - **O que fazer agora.** Recrutar quem já cumpre o requisito, certificar quem já pode, terminar a maestria antes de trocar, os paralogues que fecham neste capítulo.
+- **Atualizar, uma vez por capítulo.** Uma página com o exército e as recrutas, só com os campos que as recomendações usam (nível, classe, maestria, os ranks que o plano ainda pede, suportes). Mexer numa personagem marca ela como conferida; ao avançar de capítulo, todas voltam a pendentes e o painel avisa.
 - **Goals para cada aluna.** As duas skills que mais aproximam a próxima classe do plano — ou o breakpoint que vale mais (Vengeance da Bernadetta, Physic da Hapi), com o XP que falta.
-- **Recrutamento com a conta feita.** Para cada recruta, o que o Byleth precisa em cada rank de suporte (nenhum, C, C+, B, B+, A), o que ele já tem e quantas sessões de Faculty Training faltam — e quem ensina essa skill **neste capítulo** (no Cap. 6, por exemplo, ninguém ensina Flying).
+- **Recrutamento com a conta feita.** Para cada recruta, o que o Byleth precisa em cada rank de suporte (nenhum, C, C+, B, B+, A — o C+ e o B+ o jogo não mostra), o que ele já tem e quantas sessões de Faculty Training faltam — e quem ensina essa skill **neste capítulo** (no Cap. 6, por exemplo, ninguém ensina Flying).
 - **Plano de classe por unidade.** Cada etapa com requisitos, nível, selo, maestria e se ela já pode certificar. Dá para trocar de plano (Sniper ou Bow Knight, Dancer ou maga) e o resto se ajusta.
 - **Paralogues e prazos.** Janela, quem abre, a recompensa que importa e quem precisa estar recrutada para ela vir.
-- **Notas por capítulo, lacradas.** Do Cap. 6 em diante, um caderno por mês com checklist, a missão do mês e avisos de coisas perdíveis.
+- **Notas por capítulo, lacradas.** Do Cap. 6 em diante, um caderno por mês com checklist, a missão do mês e avisos de coisas perdíveis. Itens que o estado já resolve (quem entrou, classe, maestria, suporte, paralogue feito, data passada) se marcam sozinhos e dizem por quê.
 - **Mosteiro.** Quem dá Faculty Training este mês, Group Tasks que combinam com o plano, quem gosta de qual presente e chá, aniversários.
 - **Resumo para o chat.** Um botão copia o estado inteiro em Markdown, para revisar o plano numa conversa ou atualizar o [guia mestre](docs/guia-mestre.md).
 - **No celular, offline.** Instalável como app; abre sem internet ao lado do console.
@@ -89,7 +90,7 @@ node tools/serve.mjs
 
 Abre em http://localhost:8790. Testes: `node --test`.
 
-Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos em `notes/chapters/` (fora do git); depois de editar, `node tools/seal.mjs` valida e lacra de novo.
+Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos em `notes/chapters/` (fora do git); depois de editar, `node tools/seal.mjs` valida e lacra de novo. Uma tarefa pode ter `auto` (regras em `taskAuto`, `js/logic.js`: `recruited`, `recruits`, `reached`, `mastered`, `support`, `paralogues`, `after`) para se marcar sozinha; o lacre recusa nomes que não existem.
 
 Para refazer ou acrescentar retratos (precisa de `curl` e `ffmpeg`): `bash tools/portraits.sh petra hapi`. Um personagem novo também entra na lista `PORTRAITS` do `sw.js`.
 

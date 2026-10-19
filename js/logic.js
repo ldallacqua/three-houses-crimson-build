@@ -2,11 +2,11 @@
 // missing to recruit someone, which Goals to set, what is due this chapter. Pure functions over the
 // data and the state, so the tests can run them in Node.
 
-import { RANKS, RANK_XP, SUPPORTS, HIDDEN_SUPPORT, TRAINING_XP, RECRUIT_DEADLINE, CHAPTER_MONTH } from '../data/skills.js';
+import { RANKS, RANK_XP, SKILLS, SUPPORTS, HIDDEN_SUPPORT, TRAINING_XP, RECRUIT_DEADLINE, CHAPTER_MONTH } from '../data/skills.js';
 import { CLASS_BY_NAME, MASTERY_XP } from '../data/classes.js';
 import { UNITS, UNIT_BY_ID } from '../data/units.js';
 import { FACULTY } from '../data/faculty.js';
-import { PARALOGUES } from '../data/paralogues.js';
+import { PARALOGUES, PARALOGUE_BY_ID } from '../data/paralogues.js';
 import { SOCIAL } from '../data/social.js';
 
 // ---------- ranks ----------
@@ -429,16 +429,133 @@ export function nextSteps(state, notes) {
     }
   }
   const edel = unitState(state, 'edelgard');
-  if (state.chapter <= 11 && supportIndex(edel.support) < supportIndex('C+')) {
+  if (state.chapter <= 11 && supportIndex(edel.support) < supportIndex('B')) {
+    const why = 'a rota pede C+, que o jogo não mostra; B garante';
     steps.push({
       priority: state.chapter >= 10 ? 1 : 5,
       kind: 'rota',
-      text: edel.support ? `Suporte com Edelgard está em ${edel.support}: precisa C+ antes do Cap. 11.` : 'Informe o suporte com a Edelgard: precisa C+ antes do Cap. 11.',
+      text: edel.support && edel.support !== 'none'
+        ? `Suporte com a Edelgard está em ${edel.support}: chegue a B antes do Cap. 11 (${why}).`
+        : `Informe o suporte com a Edelgard: chegue a B antes do Cap. 11 (${why}).`,
       link: '#/unidade/edelgard',
     });
   }
   return steps.sort((a, b) => a.priority - b.priority);
 }
+
+// ---------- keeping the state current ----------
+
+const REVIEW_ROLES = ['titular', 'rotacao', 'reserva'];
+
+/**
+ * Who to check against the game this chapter: Byleth and the army that gets trained (starters,
+ * rotation, reserves) and, until the recruiting deadline, the recruits still wanted. A unit counts
+ * as seen once any of its game data changes or it is confirmed in this chapter.
+ */
+export function reviewStatus(state) {
+  const army = UNITS.filter((u) => isRecruited(state, u.id) && (u.id === 'byleth' || REVIEW_ROLES.includes(roleOf(state, u.id))));
+  const recruits = state.chapter <= RECRUIT_DEADLINE ? recruitTargets(state) : [];
+  const all = [...army, ...recruits];
+  const seen = (id) => (state.reviewed?.[id] ?? 0) >= state.chapter;
+  return { army, recruits, all, pending: all.filter((u) => !seen(u.id)), seen };
+}
+
+/** The skill ranks worth confirming: what the plan and Goals still ask and, for Byleth, what recruits ask. */
+export function keySkills(def, st, state) {
+  const status = planStatus(def, st);
+  const set = new Set([...suggestGoals(def, st, status).map((g) => g.skill), ...skillNeeds(def, st, status)]);
+  for (const item of status?.next?.check.items ?? []) if (!item.any) set.add(item.skill);
+  if (def.id === 'byleth') for (const e of bylethTraining(state)) set.add(e.skill);
+  const cls = CLASS_BY_NAME[st.cls];
+  if (!set.size && cls) for (const skill of Object.keys(cls.reqs)) set.add(skill);
+  return SKILLS.map((s) => s.id).filter((id) => set.has(id));
+}
+
+/** Byleth's stats that open recruits ask for. */
+export function keyStats(state) {
+  const stats = new Set(recruitTargets(state).filter((u) => u.recruit.kind === 'student').map((u) => u.recruit.stat));
+  return ['str', 'mag', 'dex', 'spd', 'cha'].filter((s) => stats.has(s));
+}
+
+// ---------- chapter tasks that settle themselves ----------
+
+/** Whether a unit is in a class, has mastered it, or has moved past it in its plan (or to a higher tier). */
+function passedClass(def, st, name) {
+  const cur = CLASS_BY_NAME[st.cls];
+  const target = CLASS_BY_NAME[name];
+  if (!cur || !target || cur === target) return false;
+  const stages = planOf(def, st)?.stages.map((s) => s.cls) ?? [];
+  const from = stages.indexOf(target.name);
+  const now = stages.indexOf(cur.name);
+  if (from >= 0 && now >= 0) return now > from;
+  return TIER_ORDER[cur.tier] > TIER_ORDER[target.tier];
+}
+
+const reachedClass = (def, st, name) => st.cls === name || st.mastered?.includes(name) || passedClass(def, st, name);
+const masteredClass = (def, st, name) => st.mastered?.includes(name) || passedClass(def, st, name);
+
+const nameList = (ids) => {
+  const names = ids.map((id) => UNIT_BY_ID[id]?.name ?? id);
+  return names.length > 1 ? `${names.slice(0, -1).join(', ')} e ${names.at(-1)}` : names[0];
+};
+
+/**
+ * A chapter task's own rule, read against the state. Returns null while the task still makes sense,
+ * or { why } once the state shows it is done or moot. Rules (all must hold):
+ *   recruited: [ids]        with you (units marked 'ignorar' are skipped)
+ *   recruits: 'starters'|'all'  no student or faculty recruit of those roles left
+ *   reached: { id: class }  in that class or past it
+ *   mastered: { id: class } mastered it or moved past it
+ *   support: { id: rank }   support with Byleth at least that rank
+ *   paralogues: [ids]       marked done
+ *   after: 'M/D'            the game date is past it, or the chapter is
+ */
+export function taskAuto(task, state, chapter = state.chapter) {
+  const a = task.auto;
+  if (!a) return null;
+  const why = [];
+  const st = (id) => unitState(state, id);
+  if (a.recruited) {
+    const wanted = a.recruited.filter((id) => roleOf(state, id) !== 'ignorar');
+    if (!wanted.every((id) => isRecruited(state, id))) return null;
+    why.push(wanted.length ? `${nameList(wanted)} no exército` : 'fora do plano');
+  }
+  if (a.recruits) {
+    const roles = a.recruits === 'all' ? ['titular', 'rotacao', 'reserva', 'utilitario'] : ['titular', 'rotacao'];
+    const open = recruitTargets(state).filter((u) => ['student', 'faculty'].includes(u.recruit.kind) && roles.includes(roleOf(state, u.id)));
+    if (open.length) return null;
+    why.push(a.recruits === 'all' ? 'todas as recrutas no exército' : 'titulares e rotação recrutadas');
+  }
+  if (a.reached) {
+    const entries = Object.entries(a.reached);
+    if (!entries.every(([id, cls]) => reachedClass(UNIT_BY_ID[id], st(id), cls))) return null;
+    why.push(`${nameList(entries.map(([id]) => id))} em ${[...new Set(entries.map(([, cls]) => cls))].join('/')} ou além`);
+  }
+  if (a.mastered) {
+    const entries = Object.entries(a.mastered);
+    if (!entries.every(([id, cls]) => masteredClass(UNIT_BY_ID[id], st(id), cls))) return null;
+    why.push(`${nameList(entries.map(([id]) => id))}: ${[...new Set(entries.map(([, cls]) => cls))].join('/')} dominada`);
+  }
+  if (a.support) {
+    const entries = Object.entries(a.support);
+    if (!entries.every(([id, need]) => supportIndex(st(id).support) >= supportIndex(need))) return null;
+    why.push(entries.map(([id, need]) => `suporte ${need} com ${UNIT_BY_ID[id]?.name ?? id}`).join(', '));
+  }
+  if (a.paralogues) {
+    if (!a.paralogues.every((id) => state.paralogues[id])) return null;
+    why.push(`${a.paralogues.map((id) => PARALOGUE_BY_ID[id]?.name ?? id).join(', ')} feito`);
+  }
+  if (a.after) {
+    const [month, day] = a.after.split('/').map(Number);
+    const today = parseDate(state.date);
+    const passed = state.chapter > chapter || (today && today.month === month && today.day > day);
+    if (!passed) return null;
+    why.push('a data já passou');
+  }
+  return why.length ? { why: why.join(' · ') } : null;
+}
+
+export const taskDone = (task, state, chapter) => Boolean(state.checks[task.id] || taskAuto(task, state, chapter));
 
 /** How the chosen starters split by job. */
 export function composition(state) {

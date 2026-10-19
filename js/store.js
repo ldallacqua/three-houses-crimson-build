@@ -16,6 +16,7 @@ const SKILL_IDS = new Set(SKILLS.map((s) => s.id));
 const STAT_IDS = new Set(STATS.map((s) => s.id));
 const CLASS_NAMES = new Set([...Object.keys(CLASS_BY_NAME), ...OTHER_CLASSES]);
 const PARALOGUE_IDS = new Set(PARALOGUES.map((p) => p.id));
+const UNIT_IDS = new Set(UNITS.map((u) => u.id));
 
 const isObj = (v) => v != null && typeof v === 'object' && !Array.isArray(v);
 const int = (v, min, max) => {
@@ -58,6 +59,7 @@ export function normalize(raw) {
     units: {},
     checks: {},
     paralogues: {},
+    reviewed: {},
     updated: text(s.updated, 40),
   };
   for (const def of UNITS) {
@@ -66,6 +68,8 @@ export function normalize(raw) {
   }
   if (isObj(s.checks)) for (const [k, v] of Object.entries(s.checks)) if (/^[\w-]{1,60}$/.test(k) && v) state.checks[k] = true;
   if (isObj(s.paralogues)) for (const [k, v] of Object.entries(s.paralogues)) if (PARALOGUE_IDS.has(k) && v) state.paralogues[k] = true;
+  // The chapter each unit was last checked against the game.
+  if (isObj(s.reviewed)) for (const [k, v] of Object.entries(s.reviewed)) if (UNIT_IDS.has(k) && int(v, 1, 17) != null) state.reviewed[k] = int(v, 1, 17);
   return state;
 }
 

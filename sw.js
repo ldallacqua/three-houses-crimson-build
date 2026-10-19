@@ -33,6 +33,7 @@ const FILES = [
   'js/controls/dialog.js',
   'js/views/ui.js',
   'js/views/painel.js',
+  'js/views/atualizar.js',
   'js/views/esquadrao.js',
   'js/views/unidade.js',
   'js/views/recrutamento.js',

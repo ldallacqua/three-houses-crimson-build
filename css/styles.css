@@ -1119,6 +1119,58 @@
   .chip.answer { font-weight: 800; }
   .hidden-rank { font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px dotted currentColor; cursor: help; }
 
+  /* Atualizar: once-per-chapter review */
+  .tabs a .nav-badge {
+    display: inline-grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    margin-left: 6px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--crimson);
+    color: #fff3d6;
+    font-family: var(--font);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    vertical-align: 1px;
+  }
+  .tabs a .nav-badge[hidden] { display: none; }
+  .callout { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; border-color: rgb(226 86 108 / 0.55); background: linear-gradient(135deg, rgb(179 32 58 / 0.16), transparent 60%), var(--panel); }
+  .callout-body { flex: 1 1 320px; display: grid; gap: 6px; }
+  .callout .btn { flex: none; }
+  .review-top { display: grid; gap: 14px; }
+  .review-progress { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .review-progress progress { flex: 1 1 180px; height: 8px; appearance: none; border: 0; border-radius: 999px; background: var(--panel-2); overflow: hidden; }
+  .review-progress progress::-webkit-progress-bar { background: var(--panel-2); border-radius: 999px; }
+  .review-progress progress::-webkit-progress-value { background: linear-gradient(90deg, var(--crimson), var(--gold)); border-radius: 999px; }
+  .review-progress progress::-moz-progress-bar { background: linear-gradient(90deg, var(--crimson), var(--gold)); border-radius: 999px; }
+  .review-progress .good { color: var(--ok); font-weight: 700; }
+  .review-grid { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); align-items: start; }
+  .review-card {
+    display: grid;
+    gap: 12px;
+    padding: 14px 16px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--c, var(--line-strong));
+    background: var(--panel);
+  }
+  .review-card.seen { border-color: var(--line-soft); border-left-color: color-mix(in srgb, var(--c, var(--line-strong)) 45%, transparent); background: color-mix(in srgb, var(--panel) 80%, transparent); }
+  .review-head { display: flex; align-items: center; gap: 12px; }
+  .review-head .unit-id { flex: 1; min-width: 0; }
+  .review-head h3 { font-size: 1.05rem; }
+  .review-head h3 a { color: var(--gold-hi); text-decoration: none; }
+  .review-head .badge .ico { width: 0.9em; height: 0.9em; margin-right: 4px; }
+  .review-card .form-grid.ranks { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+  .btn.sm { min-height: 34px; padding: 5px 14px; font-size: 0.86rem; }
+  .check.auto input:disabled { opacity: 0.85; cursor: default; }
+  .check.auto label { cursor: default; }
+  .auto-note { display: flex; align-items: center; gap: 5px; margin-top: 4px; font-size: 0.8rem; font-weight: 700; color: var(--ok); }
+  .auto-note .ico { width: 0.95em; height: 0.95em; }
+  .notebook .auto-note { color: #2f7d5c; }
+
   .sources { padding-left: 1.2em; display: grid; gap: 4px; columns: 2 280px; }
   .danger-zone { padding-top: 10px; border-top: 1px dashed var(--line-soft); }
 }

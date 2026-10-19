@@ -8,6 +8,12 @@ import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { FACULTY } from '../data/faculty.js';
+import { UNIT_BY_ID } from '../data/units.js';
+import { CLASS_BY_NAME } from '../data/classes.js';
+import { PARALOGUE_BY_ID } from '../data/paralogues.js';
+import { SUPPORTS } from '../data/skills.js';
+
+const AUTO_KEYS = new Set(['recruited', 'recruits', 'reached', 'mastered', 'support', 'paralogues', 'after']);
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const notesDir = path.join(root, 'notes', 'chapters');
@@ -29,7 +35,30 @@ function check(note, file, seenIds) {
     if (!TAGS.has(t.tag)) fail(`tag desconhecida: ${t.tag}`);
     if (seenIds.has(t.id)) fail(`id de tarefa repetido: ${t.id}`);
     seenIds.add(t.id);
+    if (t.auto) checkAuto(t, fail);
   }
+}
+
+// The rule that settles a task by itself (js/logic.js, taskAuto). Every name has to exist.
+function checkAuto(t, fail) {
+  const where = `tarefa ${t.id}`;
+  const unit = (id) => UNIT_BY_ID[id] || fail(`${where}: unidade desconhecida ${id}`);
+  for (const key of Object.keys(t.auto)) if (!AUTO_KEYS.has(key)) fail(`${where}: regra desconhecida ${key}`);
+  const a = t.auto;
+  for (const id of a.recruited ?? []) unit(id);
+  if (a.recruits && !['starters', 'all'].includes(a.recruits)) fail(`${where}: recruits deve ser starters ou all`);
+  for (const map of [a.reached, a.mastered]) {
+    for (const [id, cls] of Object.entries(map ?? {})) {
+      unit(id);
+      if (!CLASS_BY_NAME[cls]) fail(`${where}: classe desconhecida ${cls}`);
+    }
+  }
+  for (const [id, rank] of Object.entries(a.support ?? {})) {
+    unit(id);
+    if (!SUPPORTS.includes(rank)) fail(`${where}: suporte ${rank} não aparece no jogo`);
+  }
+  for (const id of a.paralogues ?? []) if (!PARALOGUE_BY_ID[id]) fail(`${where}: paralogue desconhecido ${id}`);
+  if (a.after && !/^\d{1,2}\/\d{1,2}$/.test(a.after)) fail(`${where}: after deve ser mês/dia`);
 }
 
 async function seal() {

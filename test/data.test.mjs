@@ -107,3 +107,23 @@ test('everyone on the page has a portrait, and the offline copy has them all', a
   const listed = sw.match(/const PORTRAITS = \[([^\]]+)\]/)[1].match(/'([\w-]+)'/g).map((m) => m.slice(1, -1));
   assert.deepEqual([...listed].sort(), [...files].sort());
 });
+
+test('every sealed task rule names things that exist', async () => {
+  const { SEALED } = await import('../data/chapters.js');
+  const { UNIT_BY_ID } = await import('../data/units.js');
+  const { CLASS_BY_NAME } = await import('../data/classes.js');
+  const { PARALOGUE_BY_ID } = await import('../data/paralogues.js');
+  let rules = 0;
+  for (const b64 of Object.values(SEALED)) {
+    const note = JSON.parse(Buffer.from(b64, 'base64').toString('utf8'));
+    for (const t of note.tasks ?? []) {
+      if (!t.auto) continue;
+      rules++;
+      const a = t.auto;
+      for (const id of [...(a.recruited ?? []), ...Object.keys(a.reached ?? {}), ...Object.keys(a.mastered ?? {}), ...Object.keys(a.support ?? {})]) assert.ok(UNIT_BY_ID[id], `${t.id}: ${id}`);
+      for (const cls of [...Object.values(a.reached ?? {}), ...Object.values(a.mastered ?? {})]) assert.ok(CLASS_BY_NAME[cls], `${t.id}: ${cls}`);
+      for (const id of a.paralogues ?? []) assert.ok(PARALOGUE_BY_ID[id], `${t.id}: ${id}`);
+    }
+  }
+  assert.ok(rules >= 25);
+});
