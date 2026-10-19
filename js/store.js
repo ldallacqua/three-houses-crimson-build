@@ -33,7 +33,9 @@ function normalizeUnit(raw, def) {
   if (CLASS_NAMES.has(u.cls)) out.cls = u.cls;
   if (typeof u.plan === 'string' && def.plans?.some((p) => p.id === u.plan)) out.plan = u.plan;
   if (ROLE_KEYS.includes(u.role)) out.role = u.role;
-  if (SUPPORTS.includes(u.support)) out.support = u.support;
+  // C+ and B+ were options before the select matched the game; they read as the rank shown.
+  const support = { 'C+': 'C', 'B+': 'B' }[u.support] ?? u.support;
+  if (SUPPORTS.includes(support)) out.support = support;
   out.mastered = Array.isArray(u.mastered) ? [...new Set(u.mastered.filter((c) => CLASS_NAMES.has(c)))] : [];
   out.stats = {};
   if (isObj(u.stats)) for (const [k, v] of Object.entries(u.stats)) if (STAT_IDS.has(k) && int(v, 0, 255) != null) out.stats[k] = int(v, 0, 255);

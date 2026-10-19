@@ -102,12 +102,14 @@ export function rankSelect(id, path, value, skill) {
   });
 }
 
-const SUPPORT_LABEL = { none: 'Nenhum / D', C: 'C', 'C+': 'C+', B: 'B', 'B+': 'B+', A: 'A' };
+const SUPPORT_LABEL = { none: 'Nenhum', C: 'C', B: 'B', A: 'A', S: 'S' };
+const SUPPORT_HINT = { none: 'ainda sem rank', S: 'só no fim do jogo' };
 
+/** The ranks as the game shows them; the hidden C+ and B+ are worked out in the recruitment box. */
 export function supportSelect(id, path, value, label = 'Suporte com o Byleth') {
   return select({
     id, label, value: value ?? 'none', cls: 'support-field',
-    options: SUPPORTS.map((s) => ({ value: s, label: SUPPORT_LABEL[s] })),
+    options: SUPPORTS.map((s) => ({ value: s, label: SUPPORT_LABEL[s], hint: SUPPORT_HINT[s] })),
     attrs: html`data-bind="${path}" data-type="text"`,
   });
 }

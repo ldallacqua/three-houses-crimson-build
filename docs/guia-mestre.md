@@ -1,6 +1,6 @@
 # FIRE EMBLEM: THREE HOUSES — GUIA MESTRE DO WAIFU SQUAD
 
-> **Versão 2.3 • atualizado em 18/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relato do jogador (Death Blow ainda não liberada)**
+> **Versão 2.4 • atualizado em 19/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relatos do jogador (Death Blow ainda não liberada; o jogo só mostra suporte C/B/A/S)**
 > **Progresso:** Parte 1, *White Clouds*, Capítulo 6 — **Rumors of a Reaper**, data **9/7** (antes de concluir a missão do mês).
 > **Casa:** Black Eagles; objetivo **Crimson Flower (Edelgard)**. **Byleth masculino**.
 > **DLC:** todas; *Cindered Shadows* concluída, Constance, Hapi e Anna já recrutadas.
@@ -24,7 +24,7 @@ Este é o documento de referência. **A seção 1 é o plano atual; a seção 2 
 
 ### Recrutamento — estratégia corrigida: suporte B primeiro
 
-*Fato:* cada rank de suporte baixa o requisito do Byleth (C, **C+**, B, **B+** — a v2.1 só listava C e B). Em **B**, a aluna tem ~10% de chance **por semana** de pedir para entrar sozinha, sem requisito. Em **A**, entra sem requisito. Do Cap. 6 ao 11 são cerca de 20 semanas: com B cedo, a chance acumulada é alta, e o treino do Byleth fica só como garantia.
+*Fato:* cada rank de suporte baixa o requisito do Byleth (C, **C+**, B, **B+** — a v2.1 só listava C e B). *Correção v2.4:* o jogo só mostra **C, B, A e S**; o C+ (201 pontos) e o B+ (451) são **ocultos**, no meio do caminho entre C e B e entre B e A. Na prática: com C, se o requisito de C+ já estiver cumprido, vale tentar o Recruit. Em **B**, a aluna tem ~10% de chance **por semana** de pedir para entrar sozinha, sem requisito. Em **A**, entra sem requisito. Do Cap. 6 ao 11 são cerca de 20 semanas: com B cedo, a chance acumulada é alta, e o treino do Byleth fica só como garantia.
 
 *Fato:* XP total por rank de skill — E+ 40 · D 100 · D+ 180 · C 300 · C+ 460 · B 680 · B+ 960 · A 1320. Faculty Training dá **20 XP** por sessão (30 se for ponto forte do Byleth; ×1,5 quando sai "Great"), 1 ponto de atividade, mesmo instrutor uma vez por fim de semana.
 
@@ -40,7 +40,7 @@ Este é o documento de referência. **A seção 1 é o plano atual; a seção 2 
 
 Em **B+** cai mais um degrau (Ingrid Flying E+, Lysithea/Annette Faith D, Marianne Riding E+, Lorenz Reason E+). Tabelas completas no site (aba Recrutamento) e em fe3h.com.
 
-- [ ] **Ingrid:** presentes (Legend of Chivalry, Riding Boots, Smoked Meat), chá (Mint Leaves, Chamomile), Lost Items dela (Pegasus Horseshoes, Jousting Almanac, Curry Comb). Meta: **B**. No Cap. 7, 2 sessões de Flying com Seteth/Manuela fecham o requisito de B.
+- [ ] **Ingrid:** presentes (Legends of Chivalry, Riding Boots, Smoked Meat), chá (Mint Leaves, Chamomile), Lost Items dela (Pegasus Horseshoes, Jousting Almanac, Curry Comb). Meta: **B**. No Cap. 7, 2 sessões de Flying com Seteth/Manuela fecham o requisito de B.
 - [ ] **Lysithea:** prioridade social nº 1 (presentes: Arithmetic Textbook, Armored Bear Stuffy, Book of Crest Designs, Tasty Baked Treat; chás: Sweet-Apple, Southern Fruit, Crescent-Moon, Honeyed-Fruit). Byleth: Faith rumo a **D+**. A mesma Faith serve para a Annette.
 - [ ] **Lorenz** (utilitário): suporte + Reason rumo a D. Só para **Land of the Golden Deer (Cap. 7–11) → Thyrsus**.
 - [ ] **Marianne:** suporte + Riding rumo a D (**Hanneman ou Gilbert**).
@@ -53,7 +53,7 @@ Em **B+** cai mais um degrau (Ingrid Flying E+, Lysithea/Annette Faith D, Marian
 1. **Grátis primeiro:** presentes de que ela gosta e Lost Items, chá no aniversário (não gasta ponto) e **assistir logo as conversas de suporte** — com uma conversa pendente, a dupla não ganha ponto (*fato*).
 2. **Recruta em B a 1–2 treinos do requisito:** treine e recrute no mesmo dia.
 3. **Choir Practice com duas recrutas** (Lysithea + Ingrid): +30 com cada, sempre; um por dia; alunas de outras casas podem ir (não ganham Faith).
-4. **Refeição** (Full Menu, prato de que as duas gostem) ou **chá** com a que está perto do próximo rank.
+4. **Refeição** (Full Menu, prato de que as duas gostem) ou **chá** com a que está perto do próximo rank. *Fato:* **Sweet Bun Trio** agrada Ingrid, Lysithea e Marianne (Albinean Berries + Noa Fruit); Lysithea + Marianne também gostam de Saghert and Cream, Peach Sorbet e Two-Fish Saute. Chá: chá favorito + assuntos certos — a lista completa de assuntos e as respostas do comentário final de cada personagem estão na ficha dela no site.
 5. **Faculty Training de recrutamento:** Faith (Anna/Rhea; Manuela no 7) → Flying no Cap. 7 → Riding → Reason (só se quiser o Lorenz).
 6. **Sobrou ponto: Brawl** (Alois, Catherine, Rhea).
 
@@ -65,9 +65,14 @@ Em **B+** cai mais um degrau (Ingrid Flying E+, Lysithea/Annette Faith D, Marian
 | Lost Item | grátis | +20 |
 | **Choir Practice**, duas pessoas | 1 ponto | **+30 com cada** |
 | Refeição Full Menu, prato que as duas gostam | 1 ponto | +30 com cada |
-| Refeição Today's Special | 1 ponto | metade |
+| Refeição Today's Special | 1 ponto | metade; um por domingo |
+| Cozinhar junto (Cooking) | 1 ponto + ingredientes | com uma pessoa; dobra com quem cozinha bem |
 | Tea Time Perfect (Great / Nice) | 1 ponto | +30 (+20 / +10), uma pessoa |
 | Tea Time no aniversário | grátis | igual |
+
+**As três refeições (*fato*):** *Today's Special* = prato do dia, sem gastar ingredientes, um por domingo, suporte pela metade. *Full Menu* = qualquer prato, gasta ingredientes, suporte cheio (+30 com cada se as duas gostam). *Cozinhar junto* = com uma pessoa; o prato dá bônus de atributo ao exército no resto do mês; Mercedes, Manuela, Anna, Bernadetta, Yuri e Gilbert cozinham bem (suporte em dobro), Constance, Hapi, Flayn e Hanneman mal (metade). Cada aluna come com você uma vez por domingo. *Recomendação:* para recrutas, Full Menu com prato que as duas gostam; Today's Special só se o prato do dia agradar às duas; cozinhar no começo do mês, antes de uma batalha difícil.
+
+**Sauna (*fato*):** quest *Sauna Time* (a partir do Cap. 5). 1 ponto, só com quem já está na sua turma (não serve para recrutas), cada pessoa uma vez por mês. Saindo "refrescados", Byleth e a parceira ganham mais XP de skill no resto do mês (Faculty Training dele, aulas dela); o suporte sobe de qualquer jeito. *Recomendação:* só no começo do mês, com ponto sobrando depois das recrutas.
 | Faculty Training | 1 ponto | +7 com o instrutor |
 
 ### Classe / skills agora
@@ -140,7 +145,7 @@ Byleth e Edelgard estão adiantados; Petra e Constance têm bons atributos e ran
 
 1. Em dia livre, **Explore**, fale com a aluna e escolha **Recruit**. Se recusar, falta requisito; dá para melhorar no mesmo dia e tentar de novo.
 2. **Presentes e Lost Items não gastam ponto de atividade.** Choir Practice, refeição (Byleth + duas alunas) e Tea Time gastam 1 ponto cada. O coral rende +30 com cada uma das duas convidadas, sempre: é o melhor ponto de suporte. Ordem completa na seção 1.
-3. **Suporte B** = requisito menor + ~10% por semana de pedido espontâneo. **Suporte A** = entra sem requisito.
+3. **Suporte B** = requisito menor + ~10% por semana de pedido espontâneo. **Suporte A** = entra sem requisito. C+ e B+ também baixam o requisito, mas o jogo não os mostra.
 4. Faculty Training do Byleth: primeiro as skills da tabela da seção 1, na ordem Flying (Cap. 7) → Faith → Riding → Reason; o que sobrar em Brawl. *Fato:* Faith é o budding talent dele — depois de 6 sessões de Faith, ela passa a render 30 XP por sessão.
 5. Ao recrutar: configure Goals, classe e battalion no mesmo dia.
 6. **Prazo:** recrutamento de outras casas até o fim do **Cap. 11**.
@@ -228,11 +233,11 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 - 12/12 aniversário da Bernadetta.
 
 ### Cap. 10 — Guardian Moon
-- Último mês do Red Canyon. Revisar quem falta recrutar. Suporte C+ com a Edelgard antes do 11.
+- Último mês do Red Canyon. Revisar quem falta recrutar. Suporte **B** com a Edelgard antes do 11 (a rota pede C+, que o jogo não mostra; B garante).
 
 ### Cap. 11 — Pegasus Moon
 - **Última janela** para recrutar e para os paralogues do Part 1.
-- **Crimson Flower — aviso sem spoiler:** suporte **C+** com a Edelgard; no Explore, fale com ela e **aceite ir com ela** (encerra o dia e custa a aula seguinte; recusar ou ignorar fecha a rota). Saves separados antes da conversa e antes da batalha. Na escolha durante a batalha do mês, **proteja a Edelgard**.
+- **Crimson Flower — aviso sem spoiler:** suporte **C+** com a Edelgard (oculto no jogo: chegue a **B** para garantir); no Explore, fale com ela e **aceite ir com ela** (encerra o dia e custa a aula seguinte; recusar ou ignorar fecha a rota). Saves separados antes da conversa e antes da batalha. Na escolha durante a batalha do mês, **proteja a Edelgard**.
 
 ## 7. REGRAS PARA NÃO DESPERDIÇAR
 
@@ -268,6 +273,10 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 - Faculty Training (instrutores, ausências, 20/+10 XP, Great ×1,5, Advanced Drills na Parte 2): https://serenesforest.net/three-houses/monastery/faculty-training/
 - Pontos de suporte por atividade e limiares de rank (C 101, B 301; conversa pendente bloqueia): https://www.fe3h.com/support_points · https://fireemblemwiki.org/wiki/Support
 - Choir Practice (duas pessoas, outras casas podem ir, 1 por dia): https://samurai-gamers.com/fire-emblem-three-houses/choir-practice-guide/
+- C+ e B+ ocultos (pontos por rank: 101 C, 201 C+, 301 B, 451 B+, 601 A): https://fireemblemwiki.org/wiki/Support
+- Refeições (Today's Special pela metade, uma por domingo, pratos e quem gosta, cozinheiros bons e ruins): https://www.fe3h.com/monastery/dining_hall · https://serenesforest.net/three-houses/monastery/dining-hall/
+- Chás, assuntos e respostas do comentário final por personagem: https://www.fe3h.com/characters (conferido com https://serenesforest.net/three-houses/monastery/tea-party/lysithea/)
+- Sauna (quest Sauna Time, só com quem está na turma, uma vez por mês por pessoa, mais XP de skill no mês): https://fireemblemwiki.org/wiki/Sauna
 - Pontos de atividade por Professor Level: https://samurai-gamers.com/fire-emblem-three-houses/professor-level-guide/
 - Refeição e Tea Time (custo, aniversário grátis): https://serenesforest.net/three-houses/monastery/dining-hall/ · https://serenesforest.net/three-houses/monastery/tea-party/
 - Pontos fortes e budding talent do Byleth (Sword, Brawl, Authority; Faith): https://fireemblemwiki.org/wiki/Byleth
@@ -285,5 +294,6 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 - **v1.0 — 18/10/2026:** pesquisa inicial + equipe feminina de 10, sem screenshots reais.
 - **v2.0 — 18/10/2026:** baseada nas 8 telas reais do Cap. 6. Bernadetta Archer, Mage no Lv 10 para Hapi/Constance, Shamir, Flying/suporte para Ingrid, Lorenz/Thyrsus, March Ring, Byleth e maestrias não verificadas.
 - **v2.1 — 18/10/2026:** Seteth e Manuela fora do Faculty Training durante todo o Cap. 6; Ingrid via suporte B + pedido espontâneo; Flying fica para o Cap. 7.
+- **v2.4 — 19/10/2026:** **suporte no jogo é C/B/A/S** — C+ e B+ existem, mas são ocultos (seletor do site corrigido; Edelgard: chegar a B garante o C+ da rota); as três opções de refeição e qual escolher; pratos que as recrutas gostam (Sweet Bun Trio agrada Ingrid, Lysithea e Marianne); sauna explicada; chás, assuntos e respostas do comentário final de cada personagem no site; presente da Ingrid corrigido para *Legends of Chivalry*.
 - **v2.3 — 18/10/2026:** ordem para gastar os pontos do domingo (suporte → treino de recrutamento → Brawl) e tabela de suporte por atividade, com o **Choir Practice** (+30 com cada convidada, também de outras casas); conversa de suporte pendente bloqueia ganho; Faculty Training não sobe atributo; pontos fortes do Byleth (Sword, Brawl, Authority) e **Faith como budding talent** (6 sessões); Advanced Drills na Parte 2; **Death Blow ainda não liberada** (relato do jogador) e como funciona a maestria (100 de XP de classe para Brigand, +1 por combate, Knowledge Gem, estátua da Cethleann).
 - **v2.2 — 18/10/2026:** criado o site (guia visual). Correções e acréscimos conferidos em fonte: **Shamir fica na Crimson Flower** (vira titular; Marianne vira 11ª); tabelas de recrutamento com **C+ e B+**; estratégia "suporte B primeiro" com o custo real em XP (tabela de XP por rank, 20/30 XP por sessão); **Pegasus Knight pede Lance C** (não D); relíquias ferem portadoras **sem Crest** (Fetters of Dromi na Dorothea só se ela não entrar em combate); **Abyssian Exam Pass** = 750 Renown, sem limite, gasto mesmo reprovando; Warlock não serve à Lysithea (Dark Magic); Edelgard tem classe exclusiva mais tarde; Vajra-Mushti para o Byleth; novos paralogues no plano (Sword and Shield of Seiros, Oil and Water, **Tales of the Red Canyon até o Cap. 10**, An Ocean View); Group Tasks por skill; Riding com Hanneman/Gilbert; Persecution Complex corrigido; aniversário da Petra em 9/7; Hilda, Catherine e Cyril não recrutáveis pelas Black Eagles no Part 1; Leonie/Rivalry.

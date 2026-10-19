@@ -1,5 +1,6 @@
 // Everyone the plan counts on, with their build paths, what they learn by rank, what they like and
-// how Byleth recruits them. Facts come from fe3h.com character pages and the Fire Emblem Wiki; the
+// how Byleth recruits them. Teas, tea topics, meals (and the full gift lists) are in data/social.js.
+// supports: false = no support with anyone, so social activities only buy motivation. Facts come from fe3h.com character pages and the Fire Emblem Wiki; the
 // plans and notes are this guide's advice. Nothing here goes past Chapter 6 of the story except the
 // planning facts the master guide already lists (paralogue windows, the Dancer, route deadlines).
 //
@@ -107,7 +108,7 @@ export const UNITS = [
       ['authority', 'C', 'Battalion Vantage', 'ability'],
       ['reason', 'budding', 'Black Magic Crit +10', 'ability'],
     ),
-    likes: { gifts: ['Armored Bear Stuffy', 'Board Game', 'Monarch Studies Book', 'Carnation'], teas: ['Bergamot'] },
+    likes: { gifts: ['Armored Bear Stuffy', 'Board Game', 'Monarch Studies Book', 'Carnation'] },
     birthday: '6/22',
     notes: [
       'Como os outros líderes de casa, ela recebe uma classe exclusiva mais tarde (sem spoiler). Axe sempre serve; Flying só compensa se você preferir Wyvern Lord a essa classe quando ela aparecer.',
@@ -143,7 +144,7 @@ export const UNITS = [
       ['faith', 'D', 'Heal'], ['faith', 'D+', 'Nosferatu'], ['faith', 'C', 'Restore'],
       ['authority', 'C', 'Battalion Wrath', 'ability'],
     ),
-    likes: { gifts: ['Exotic Spices', 'Hunting Dagger', 'Smoked Meat', 'Sunflower'], teas: ['Four-Spice Blend', 'Ginger Tea'] },
+    likes: { gifts: ['Exotic Spices', 'Hunting Dagger', 'Smoked Meat', 'Sunflower'] },
     birthday: '9/7',
     notes: [
       'Res 3: mantenha longe de magos inimigos.',
@@ -194,7 +195,6 @@ export const UNITS = [
     ),
     likes: {
       gifts: ['Armored Bear Stuffy', 'Book of Sheet Music', 'Dapper Handkerchief', 'Landscape Painting', 'Watering Can', 'Pitcher Plant'],
-      teas: [],
     },
     birthday: '12/12',
     notes: [
@@ -229,7 +229,7 @@ export const UNITS = [
       ['bow', 'C+', 'Heavy Draw', 'art'], ['bow', 'A', 'Monster Blast', 'art'],
     ),
     goals: [{ skill: 'authority', rank: 'B', why: 'battalions' }, { skill: 'bow', rank: 'S', why: 'dano de arco' }],
-    likes: { gifts: ['Book of Sheet Music', 'Coffee Beans', 'Exotic Spices', 'Hunting Dagger', 'Sunflower'], teas: ['Crescent-Moon Tea', 'Chamomile'] },
+    likes: { gifts: ['Book of Sheet Music', 'Coffee Beans', 'Exotic Spices', 'Hunting Dagger', 'Sunflower'] },
     birthday: '3/27',
     notes: [
       'Survival Instinct (pessoal): kill na player phase dá +4 de Str, Mag, Dex e Spd.',
@@ -266,8 +266,7 @@ export const UNITS = [
       ['authority', 'D', 'Rally Magic', 'ability'], ['authority', 'C', 'Battalion Desperation', 'ability'],
     ),
     likes: {
-      gifts: ['Legend of Chivalry', 'Riding Boots', 'Smoked Meat'],
-      teas: ['Mint Leaves', 'Chamomile'],
+      gifts: ['Legends of Chivalry', 'Riding Boots', 'Smoked Meat'],
       lost: ['Pegasus Horseshoes', 'Jousting Almanac', 'Curry Comb'],
     },
     birthday: '1/4',
@@ -311,7 +310,7 @@ export const UNITS = [
       ['authority', 'D', 'Rally Charm', 'ability'], ['authority', 'C', 'Battalion Desperation', 'ability'],
       ['faith', 'budding', 'White Magic Avo +20', 'ability'],
     ),
-    likes: { gifts: ['Book of Sheet Music', 'Gemstone Beads', 'Stylish Hair Clip'], teas: ['Sweet-Apple Blend', 'Albinean Berry Blend'] },
+    likes: { gifts: ['Book of Sheet Music', 'Gemstone Beads', 'Stylish Hair Clip'] },
     birthday: '9/29',
     notes: [
       'White Heron Cup: cada treino de dança com a representante dá +5 de Cha (uma vez por semana). Cerca de 13+ costuma bastar; salve antes do evento.',
@@ -363,7 +362,6 @@ export const UNITS = [
     ),
     likes: {
       gifts: ['Arithmetic Textbook', 'Book of Crest Designs', 'Tea Leaves', 'Lily of the Valley'],
-      teas: ['Bergamot', 'Rose Petal Blend', 'Sweet-Apple Blend', 'Albinean Berry Blend'],
     },
     birthday: '3/20',
     notes: [
@@ -414,7 +412,6 @@ export const UNITS = [
     ),
     likes: {
       gifts: ['Coffee Beans', 'Exotic Spices', 'Hunting Dagger', 'Smoked Meat', 'Tasty Baked Treat', 'Pitcher Plant'],
-      teas: ['Cinnamon Blend', 'Dagda Fruit Blend', 'Four-Spice Blend'],
     },
     birthday: '1/15',
     notes: [
@@ -467,7 +464,6 @@ export const UNITS = [
     ),
     likes: {
       gifts: ['Arithmetic Textbook', 'Armored Bear Stuffy', 'Book of Crest Designs', 'Tasty Baked Treat'],
-      teas: ['Sweet-Apple Blend', 'Southern Fruit Blend', 'Crescent-Moon Tea', 'Honeyed-Fruit Blend'],
     },
     birthday: '2/28',
     notes: [
@@ -517,7 +513,6 @@ export const UNITS = [
     ),
     likes: {
       gifts: ['Armored Bear Stuffy', 'Dapper Handkerchief', 'Floral Adornment', 'Lily of the Valley'],
-      teas: ['Dagda Fruit Blend', 'Cinnamon Blend', 'Lavender Blend'],
     },
     birthday: '11/23',
     notes: [
@@ -547,7 +542,6 @@ export const UNITS = [
     ),
     likes: {
       gifts: ['Armored Bear Stuffy', 'Gemstone Beads', 'Goddess Statuette', 'Tasty Baked Treat', 'Lavender'],
-      teas: ['Albinean Berry Blend', 'Southern Fruit Blend', 'Crescent-Moon Tea'],
     },
     birthday: '5/27',
   },
@@ -570,7 +564,7 @@ export const UNITS = [
       ['reason', 'D', 'Wind'], ['reason', 'C', 'Cutting Gale'], ['reason', 'B', 'Sagittae'], ['reason', 'A', 'Excalibur'],
       ['faith', 'D', 'Heal'], ['faith', 'D+', 'Nosferatu'], ['faith', 'C', 'Recover'], ['faith', 'A', 'Abraxas'],
     ),
-    likes: { gifts: ['Arithmetic Textbook', 'Book of Sheet Music', 'Stylish Hair Clip'], teas: ['Sweet-Apple Blend', 'Rose Petal Blend', 'Almond Blend'] },
+    likes: { gifts: ['Arithmetic Textbook', 'Book of Sheet Music', 'Stylish Hair Clip'] },
     birthday: '5/9',
     notes: ['Disputa a mesma função de Constance, Hapi e Lysithea.'],
   },
@@ -593,7 +587,7 @@ export const UNITS = [
       ['lance', 'C+', 'Monster Piercer', 'art'], ['lance', 'A', 'Lance Jab', 'art'],
       ['bow', 'C+', 'Break Shot', 'art'], ['bow', 'A', 'Point-Blank Volley', 'art'],
     ),
-    likes: { gifts: ['Fishing Float', 'Hunting Dagger', 'Training Weight'], teas: ['Four-Spice Blend', 'Angelica Tea'] },
+    likes: { gifts: ['Fishing Float', 'Hunting Dagger', 'Training Weight'] },
     birthday: '2/21',
     notes: ['Rivalry (pessoal) só funciona ao lado de um homem: num time quase todo feminino, basicamente ao lado do Byleth.'],
   },
@@ -612,7 +606,7 @@ export const UNITS = [
       ['reason', 'D', 'Thunder'], ['reason', 'C', 'Bolganone'], ['reason', 'A', 'Bolting'],
       ['faith', 'D', 'Heal'], ['faith', 'D+', 'Nosferatu'], ['faith', 'C', 'Ward'], ['faith', 'B', 'Silence'], ['faith', 'A', 'Warp'],
     ),
-    likes: { gifts: ['Blue Cheese', 'Book of Sheet Music', 'Gemstone Beads', 'Goddess Statuette'], teas: [] },
+    likes: { gifts: ['Blue Cheese', 'Book of Sheet Music', 'Gemstone Beads', 'Goddess Statuette'] },
     birthday: '8/3',
   },
   {
@@ -621,6 +615,7 @@ export const UNITS = [
     house: 'dlc',
     gender: 'f',
     crest: false,
+    supports: false,
     role: 'reserva',
     tags: ['físico'],
     summary: 'Reserva utilitária. Sem supports: não gaste refeições nem chá esperando suporte.',
@@ -641,7 +636,7 @@ export const UNITS = [
       ['faith', 'D', 'Heal'], ['faith', 'D+', 'Nosferatu'], ['faith', 'C', 'Ward'], ['faith', 'B', 'Rescue'],
       ['riding', 'budding', 'Pass', 'ability'],
     ),
-    likes: { gifts: ['Blue Cheese', 'Coffee Beans', 'Exotic Spices', 'Goddess Statuette', 'Landscape Painting', 'Forget-me-nots'], teas: [] },
+    likes: { gifts: ['Blue Cheese', 'Coffee Beans', 'Exotic Spices', 'Goddess Statuette', 'Landscape Painting', 'Forget-me-nots'] },
     birthday: '6/9',
     notes: ['O paralogue dela (The Secret Merchant) fica na Parte 2 nesta rota.'],
   },
@@ -669,7 +664,7 @@ export const UNITS = [
     recruit: studentTiers('cha', 'reason', {
       none: [20, 'C'], C: [16, 'C'], 'C+': [12, 'D+'], B: [8, 'D'], 'B+': [4, 'E+'],
     }),
-    likes: { gifts: ['Book of Sheet Music', 'Floral Adornment', 'Tea Leaves', 'Rose'], teas: ['Bergamot', 'Rose Petal Blend', 'Seiros Tea'] },
+    likes: { gifts: ['Book of Sheet Music', 'Floral Adornment', 'Tea Leaves', 'Rose'] },
     birthday: '6/13',
     notes: ['Ele é obrigatório no mapa do paralogue, mas não precisa de treino nem de vaga depois.'],
   },

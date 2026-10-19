@@ -34,8 +34,12 @@ export const STATS = [
 
 export const STAT_NAME = Object.fromEntries(STATS.map((s) => [s.id, s.name]));
 
-// Support ranks Byleth can hold with a student, lowest first. 'none' means no rank yet.
-export const SUPPORTS = ['none', 'C', 'C+', 'B', 'B+', 'A'];
+// Support ranks the game shows for Byleth and a student, lowest first. 'none' means no rank yet.
+export const SUPPORTS = ['none', 'C', 'B', 'A', 'S'];
+
+// C+ and B+ also exist and lower what a recruit asks, but the game never shows them: C+ sits
+// between C and B, B+ between B and A (Fire Emblem Wiki, Support: 101 C, 201 C+, 301 B, 451 B+).
+export const HIDDEN_SUPPORT = { C: 'C+', B: 'B+' };
 
 // Faculty Training: 20 skill experience a session, +10 when the skill is one of Byleth's strengths,
 // and a "Great" result multiplies it by 1.5 (Serenes Forest, Faculty Training).

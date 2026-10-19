@@ -43,7 +43,7 @@ test('every unit plan names real classes and real ranks', () => {
 
 test('student recruitment tables cover every support rank below A and get easier', () => {
   for (const u of UNITS.filter((x) => x.recruit?.kind === 'student')) {
-    const keys = SUPPORTS.filter((s) => s !== 'A');
+    const keys = ['none', 'C', 'C+', 'B', 'B+'];
     let prev = null;
     for (const k of keys) {
       const t = u.recruit.tiers[k];

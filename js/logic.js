@@ -2,11 +2,12 @@
 // missing to recruit someone, which Goals to set, what is due this chapter. Pure functions over the
 // data and the state, so the tests can run them in Node.
 
-import { RANKS, RANK_XP, SUPPORTS, TRAINING_XP, RECRUIT_DEADLINE, CHAPTER_MONTH } from '../data/skills.js';
+import { RANKS, RANK_XP, SUPPORTS, HIDDEN_SUPPORT, TRAINING_XP, RECRUIT_DEADLINE, CHAPTER_MONTH } from '../data/skills.js';
 import { CLASS_BY_NAME, MASTERY_XP } from '../data/classes.js';
 import { UNITS, UNIT_BY_ID } from '../data/units.js';
 import { FACULTY } from '../data/faculty.js';
 import { PARALOGUES } from '../data/paralogues.js';
+import { SOCIAL } from '../data/social.js';
 
 // ---------- ranks ----------
 
@@ -206,12 +207,11 @@ export function unitAdvice(def, st, status = planStatus(def, st)) {
 
 // ---------- recruitment ----------
 
+// Requirement tiers, hidden ranks included. A shown rank uses its own tier; the hidden one above it
+// (C+ over C, B+ over B) may already apply without the game saying so.
 const TIER_KEYS = ['none', 'C', 'C+', 'B', 'B+'];
 
-function tierFor(support) {
-  const i = supportIndex(support);
-  return TIER_KEYS[Math.min(Math.max(i, 0), TIER_KEYS.length - 1)];
-}
+const tierFor = (support) => (TIER_KEYS.includes(support) ? support : 'none');
 
 /**
  * Where a recruit stands. state: 'recruited' | 'ready' | 'missing' | 'later' | 'auto' | 'missed'.
@@ -240,7 +240,9 @@ export function recruitStatus(def, state) {
     if (chapter < r.from) return { state: 'later', from: r.from };
     const need = r.levels[tierFor(support)];
     const ok = (byleth.level ?? 0) >= need;
-    return { state: ok ? 'ready' : 'missing', support, level: { need, have: byleth.level ?? null, ok } };
+    const hidden = HIDDEN_SUPPORT[support];
+    const maybe = !ok && hidden && (byleth.level ?? 0) >= r.levels[hidden] ? { key: hidden, level: r.levels[hidden] } : null;
+    return { state: ok ? 'ready' : 'missing', support, maybe, level: { need, have: byleth.level ?? null, ok } };
   }
 
   // student
@@ -253,6 +255,8 @@ export function recruitStatus(def, state) {
     return { key, ...t, statOk, rankOk, ok: statOk && rankOk, xp: xpToRank(rankHave, t.rank) };
   });
   const tier = tiers.find((t) => t.key === tierFor(support));
+  const hidden = tiers.find((t) => t.key === HIDDEN_SUPPORT[support]);
+  const maybe = !tier.ok && hidden?.ok ? hidden : null;
   const spontaneous = supportIndex(support) >= supportIndex('B');
   return {
     state: tier.ok ? 'ready' : 'missing',
@@ -263,6 +267,7 @@ export function recruitStatus(def, state) {
     rankHave,
     tier,
     tiers,
+    maybe,
     spontaneous,
   };
 }
@@ -325,6 +330,28 @@ export function bylethTraining(state, notes) {
 }
 
 const ROLE_PRIORITY = { titular: 0, rotacao: 1, utilitario: 2, reserva: 3, temporaria: 4 };
+
+// ---------- social ----------
+
+/** What a character likes: gifts, lost items, teas, tea topics, final-comment answers and meals. */
+export function prefsOf(def) {
+  const s = SOCIAL[def.id];
+  return {
+    gifts: s?.gifts?.length ? s.gifts : def.likes?.gifts ?? [],
+    lost: s?.lostItems?.length ? s.lostItems : def.likes?.lost ?? [],
+    teas: s?.teas ?? [],
+    topics: s?.topics ?? [],
+    answers: (s?.answers ?? []).map((list) => list.filter((a) => a !== '—')),
+    meals: s?.meals ?? [],
+    mealsDisliked: s?.mealsDisliked ?? [],
+  };
+}
+
+/** Dishes every one of the given characters likes, in menu order. */
+export function sharedMeals(defs) {
+  const lists = defs.map((d) => new Set(prefsOf(d).meals));
+  return lists.length ? [...lists[0]].filter((m) => lists.every((l) => l.has(m))) : [];
+}
 
 // ---------- paralogues ----------
 

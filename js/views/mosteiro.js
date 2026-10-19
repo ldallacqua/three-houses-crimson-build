@@ -1,11 +1,12 @@
 // Monastery: the order to spend a free day in, who teaches what this month, what each activity
-// is worth, gifts and birthdays.
+// is worth, and who likes which gift, tea and dish.
 
 import { html } from '../html.js';
 import { FACULTY } from '../../data/faculty.js';
 import { SKILLS, SKILL_NAME, RECRUIT_DEADLINE } from '../../data/skills.js';
 import { UNITS, UNIT_BY_ID } from '../../data/units.js';
-import { roleOf, isRecruited, skillNeeds, unitState, recruitTargets, bylethTraining } from '../logic.js';
+import { roleOf, isRecruited, skillNeeds, unitState, recruitTargets, bylethTraining, prefsOf, sharedMeals } from '../logic.js';
+import { MEALS } from '../../data/social.js';
 import { currentNotes } from '../seal.js';
 import { avatar, skillIcon, emptyState } from './ui.js';
 
@@ -83,6 +84,16 @@ function sundayOrder(state) {
   const recruits = starters.length ? starters : open;
   // The most urgent skill someone can teach this chapter; a more urgent one with no instructor
   // around is named so it is not forgotten.
+  const pairs = [];
+  for (let i = 0; i < recruits.length; i++) {
+    for (let j = i + 1; j < recruits.length; j++) {
+      const both = sharedMeals([recruits[i], recruits[j]]);
+      if (both.length) pairs.push({ who: [recruits[i], recruits[j]], both });
+    }
+  }
+  const mealPairs = pairs.length
+    ? html`<ul class="meal-pairs">${pairs.slice(0, 3).map((p) => html`<li><strong>${p.who.map((u) => u.name).join(' + ')}:</strong> ${p.both.slice(0, 4).join(', ')}${p.both.length > 4 ? '…' : ''}</li>`)}</ul>`
+    : '';
   const plan = bylethTraining(state, notes);
   const train = plan.find((e) => e.instructors.length);
   const waiting = plan[0] && plan[0] !== train ? plan[0] : null;
@@ -97,7 +108,7 @@ function sundayOrder(state) {
       <li class="step"><strong>Primeiro o que é grátis.</strong> Presentes de que elas gostam e Lost Items (+20 de suporte cada), chá no aniversário (não gasta ponto). Assista logo as conversas de suporte: com uma conversa pendente, aquela dupla não ganha ponto.</li>
       <li class="step"><strong>Alguém perto de fechar?</strong> Se a recruta já tem o suporte e faltam 1–2 treinos, treine e recrute no mesmo dia.</li>
       <li class="step"><strong>Choir Practice com duas recrutas.</strong> +30 de suporte com cada, sempre. Um por dia; alunas de outras casas podem ir (só não ganham Faith).</li>
-      <li class="step"><strong>Refeição ou chá.</strong> Full Menu com um prato de que as duas gostem dá +30 com cada (o Today's Special dá metade). Chá Perfect dá +30 com uma só: use na que está perto do próximo rank.</li>
+      <li class="step"><strong>Refeição ou chá.</strong> Full Menu com um prato de que as duas gostem dá +30 com cada (o Today's Special dá metade). Chá Perfect dá +30 com uma só: use na que está perto do próximo rank; os assuntos certos estão na ficha dela.${mealPairs ? html` Pratos que as duas gostam:${mealPairs}` : ''}</li>
       <li class="step"><strong>Faculty Training da skill que falta.</strong>${trainNow}</li>
       <li class="step"><strong>Sobrou ponto: classe do Byleth.</strong>${classNow}</li>
     </ol>
@@ -110,7 +121,8 @@ const SUPPORT_GAIN = [
   ['Lost Item devolvido', 'grátis', '+20'],
   ['Choir Practice, duas pessoas', '1 ponto', '+30 com cada'],
   ['Refeição Full Menu, prato que as duas gostam', '1 ponto', '+30 com cada'],
-  ["Refeição Today's Special", '1 ponto', 'metade'],
+  ["Refeição Today's Special", '1 ponto', 'metade; um por domingo'],
+  ['Cozinhar junto (Cooking)', '1 ponto + ingredientes', 'com uma pessoa: dobra com quem cozinha bem'],
   ['Tea Time Perfect', '1 ponto', '+30, uma pessoa'],
   ['Tea Time no aniversário', 'grátis', 'igual ao chá'],
   ['Faculty Training', '1 ponto', '+7 com o instrutor'],
@@ -118,7 +130,8 @@ const SUPPORT_GAIN = [
 
 function activities() {
   const items = [
-    ['Sauna (DLC)', '1 ponto. Vale quando várias aulas vêm logo depois; não troque refeição ou treino-chave por ela.'],
+    ['As três refeições', html`<strong>Today's Special</strong>: o prato do dia, sem gastar ingredientes, só um por domingo e com suporte pela metade. <strong>Full Menu</strong>: qualquer prato, gasta ingredientes, suporte cheio: escolha um de que as duas gostem (tabela de pratos abaixo). <strong>Cozinhar junto</strong>: com uma pessoa; o prato dá um bônus de atributo para todo o exército no resto do mês. Mercedes, Manuela, Anna, Bernadetta, Yuri e Gilbert cozinham bem (suporte em dobro); Constance, Hapi, Flayn e Hanneman, mal (metade). Cada aluna come com você uma vez por domingo.`],
+    ['Sauna (DLC)', 'Desbloqueia com o quest Sauna Time (a partir do Cap. 5). 1 ponto, com alguém que já está na sua turma (não serve para recrutas), cada pessoa uma vez por mês. Se vocês saírem "refrescados", os dois ganham mais XP de skill no resto do mês (Faculty Training do Byleth, aulas da parceira); o suporte sobe de qualquer jeito. Vale no começo do mês, com ponto sobrando e muito treino pela frente.'],
     ['Pagan Altar (Abismo)', 'Abyssian Exam Pass por 750 de Renown, sem limite. O passe é gasto mesmo se reprovar: só faça exame com 100%.'],
     ['Estátuas dos santos', 'Recebem Renown depois do quest Tending to the Saints (Cap. 5). A da Cethleann, com 2.000 acumulados, dá +1 de XP de classe por combate para todo mundo: maestria duas vezes mais rápida. Disputa Renown com o Abyssian Exam Pass.'],
     ['Motivação', 'Aulas gastam motivação. Refeição, chá e presentes recuperam; não deixe as titulares sem motivação na semana de aula.'],
@@ -139,7 +152,7 @@ function giftIndex(state) {
   const map = new Map();
   for (const u of UNITS) {
     if (roleOf(state, u.id) === 'ignorar') continue;
-    for (const g of u.likes?.gifts ?? []) map.set(g, [...(map.get(g) ?? []), u]);
+    for (const g of prefsOf(u).gifts) map.set(g, [...(map.get(g) ?? []), u]);
   }
   const rows = [...map.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
   return html`<section class="card">
@@ -155,7 +168,7 @@ function teaIndex(state) {
   const map = new Map();
   for (const u of UNITS) {
     if (roleOf(state, u.id) === 'ignorar') continue;
-    for (const t of u.likes?.teas ?? []) map.set(t, [...(map.get(t) ?? []), u]);
+    for (const t of prefsOf(u).teas) map.set(t, [...(map.get(t) ?? []), u]);
   }
   const rows = [...map.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
   return html`<section class="card">
@@ -163,6 +176,20 @@ function teaIndex(state) {
     <div class="table-wrap"><table class="data compact">
       <thead><tr><th scope="col">Chá</th><th scope="col">Quem gosta</th></tr></thead>
       <tbody>${rows.map(([t, who]) => html`<tr><th scope="row">${t}</th><td class="people">${who.map(person)}</td></tr>`)}</tbody>
+    </table></div>
+  </section>`;
+}
+
+function mealIndex(state) {
+  const people = UNITS.filter((u) => u.id !== 'byleth' && u.supports !== false && roleOf(state, u.id) !== 'ignorar');
+  const rows = MEALS.map((m) => ({ ...m, who: people.filter((u) => prefsOf(u).meals.includes(m.name)) }))
+    .sort((a, b) => b.who.length - a.who.length || a.name.localeCompare(b.name));
+  return html`<section class="card">
+    <h2 class="card-title">Pratos: quem gosta</h2>
+    <p class="card-lead">Para o Full Menu. Um prato de que as duas convidadas gostam dá +30 de suporte com cada; ingredientes vêm de pesca, jardim, mercado e batalhas.</p>
+    <div class="table-wrap"><table class="data compact meals">
+      <thead><tr><th scope="col">Prato</th><th scope="col">Ingredientes</th><th scope="col">Quem gosta</th></tr></thead>
+      <tbody>${rows.map((m) => html`<tr><th scope="row">${m.name}<small class="muted note">${m.category}</small></th><td>${m.ingredients.join(', ')}</td><td class="people">${m.who.map(person)}</td></tr>`)}</tbody>
     </table></div>
   </section>`;
 }
@@ -191,6 +218,7 @@ export function mosteiro(state) {
     ${facultyTable(state)}
     <div class="cols">${activities()}${groupTasks(state)}</div>
     <div class="cols">${giftIndex(state)}${teaIndex(state)}</div>
+    ${mealIndex(state)}
     ${birthdays(state)}
   </section>`;
 }

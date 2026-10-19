@@ -1106,6 +1106,18 @@
   .sunday .step strong { color: var(--ink); }
   .sunday .step { line-height: 1.5; }
   .activities.more { margin-top: 14px; }
+  .meal-pairs { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 3px; color: var(--ink-2); }
+  .meals td { min-width: 140px; }
+  .meals th small { display: block; font-weight: 600; margin-top: 2px; }
+
+  .tea-sub { margin: 16px 0 8px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+  .tea-sub .muted { text-transform: none; letter-spacing: 0; font-weight: 600; }
+  .topics { list-style: none; columns: 3 200px; column-gap: 24px; color: var(--ink-2); }
+  .topics li { break-inside: avoid; padding: 3px 0 3px 14px; position: relative; }
+  .topics li::before { content: ''; position: absolute; left: 2px; top: 0.85em; width: 5px; height: 5px; transform: rotate(45deg); background: var(--gold); opacity: 0.7; }
+  .finals td:first-child { color: var(--ink); }
+  .chip.answer { font-weight: 800; }
+  .hidden-rank { font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px dotted currentColor; cursor: help; }
 
   .sources { padding-left: 1.2em; display: grid; gap: 4px; columns: 2 280px; }
   .danger-zone { padding-top: 10px; border-top: 1px dashed var(--line-soft); }

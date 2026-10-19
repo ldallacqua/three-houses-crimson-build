@@ -93,6 +93,8 @@ Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos
 
 Para refazer ou acrescentar retratos (precisa de `curl` e `ffmpeg`): `bash tools/portraits.sh petra hapi`. Um personagem novo também entra na lista `PORTRAITS` do `sw.js`.
 
+Chás, assuntos do chá, respostas do comentário final, pratos e presentes vêm do fe3h.com: `node tools/social.mjs` refaz `data/social.js`. Os comentários finais não são publicados (são falas do jogo); `data/tea-gists.js` traz um resumo em português de cada um, na mesma ordem, e os testes avisam se a contagem mudar.
+
 ## O que tem no repositório
 
 | Caminho | O que é |
@@ -103,11 +105,11 @@ Para refazer ou acrescentar retratos (precisa de `curl` e `ffmpeg`): `bash tools
 | `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, próximos passos. Funções puras. |
 | `js/store.js` | Estado no `localStorage`, exportar/importar JSON e a limpeza de tudo que entra. |
 | `js/views/` | Uma tela por arquivo, renderizada com um template que escapa tudo. |
-| `data/` | Classes, unidades, instrutores, paralogues, o snapshot inicial e as notas lacradas. |
+| `data/` | Classes, unidades, instrutores, paralogues, chás e pratos (`social.js`, gerado), o snapshot inicial e as notas lacradas. |
 | `docs/guia-mestre.md` | O guia mestre em texto, com histórico de versões. |
 | `sw.js`, `manifest.webmanifest` | Cópia offline e instalação como app. |
 | `test/` | Testes com o runner do próprio Node. |
-| `tools/` | Servidor local, lacre das notas, retratos e screenshots. |
+| `tools/` | Servidor local, lacre das notas, retratos, dados de chá e pratos, e screenshots. |
 
 Sem framework, sem pacotes, sem etapa de build: o GitHub Actions roda os testes e publica a pasta como está no GitHub Pages.
 

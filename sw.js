@@ -47,6 +47,8 @@ const FILES = [
   'data/paralogues.js',
   'data/skills.js',
   'data/snapshot.js',
+  'data/social.js',
+  'data/tea-gists.js',
   'data/units.js',
   ...PORTRAITS.map((id) => `img/portraits/${id}.webp`),
 ];

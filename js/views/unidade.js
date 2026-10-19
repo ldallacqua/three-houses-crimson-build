@@ -5,8 +5,9 @@ import { UNIT_BY_ID, HOUSES } from '../../data/units.js';
 import { SKILLS, STATS } from '../../data/skills.js';
 import { CLASSES, OTHER_CLASSES, TIER_LABEL } from '../../data/classes.js';
 import {
-  unitState, roleOf, isRecruited, planStatus, unitAdvice, suggestGoals, meetsRank, recruitStatus,
+  unitState, roleOf, isRecruited, planStatus, unitAdvice, suggestGoals, meetsRank, recruitStatus, prefsOf,
 } from '../logic.js';
+import { TEA_GISTS } from '../../data/tea-gists.js';
 import { currentNotes } from '../seal.js';
 import {
   avatar, rank, reqItem, abilityChip, rankSelect, numberField, supportSelect, roleSelect, roleChip, select, switchField, skillLabel,
@@ -119,16 +120,39 @@ function learnCard(def, st) {
 }
 
 function likesCard(def) {
-  if (!def.likes && !def.birthday) return '';
-  const l = def.likes ?? {};
+  const p = prefsOf(def);
+  if (!p.gifts.length && !p.meals.length && !def.birthday) return '';
   return html`<section class="card">
     <h2 class="card-title">Social</h2>
+    ${def.supports === false ? html`<p class="hint">${def.name} não tem supports: presente, refeição e chá só rendem motivação.</p>` : ''}
     <dl class="likes">
-      ${def.birthday ? html`<dt>Aniversário</dt><dd>${def.birthday}</dd>` : ''}
-      ${l.gifts?.length ? html`<dt>Presentes</dt><dd>${l.gifts.join(' · ')}</dd>` : ''}
-      ${l.teas?.length ? html`<dt>Chás</dt><dd>${l.teas.join(' · ')}</dd>` : ''}
-      ${l.lost?.length ? html`<dt>Lost Items</dt><dd>${l.lost.join(' · ')}</dd>` : ''}
+      ${def.birthday ? html`<dt>Aniversário</dt><dd>${def.birthday} <span class="muted">(chá nesse dia não gasta ponto)</span></dd>` : ''}
+      ${p.gifts.length ? html`<dt>Presentes</dt><dd>${p.gifts.join(' · ')}</dd>` : ''}
+      ${p.lost.length ? html`<dt>Lost Items</dt><dd>${p.lost.join(' · ')}</dd>` : ''}
+      ${p.meals.length ? html`<dt>Pratos</dt><dd>${p.meals.join(' · ')}</dd>` : ''}
     </dl>
+    <p class="hint">Pratos para o Full Menu da refeição. A aba Mosteiro mostra os ingredientes e quem mais gosta de cada um.</p>
+  </section>`;
+}
+
+/** Tea Time: the teas to serve, every topic that works and the answers to each final comment. */
+function teaCard(def) {
+  const p = prefsOf(def);
+  if (!p.teas.length && !p.topics.length) return '';
+  const gists = TEA_GISTS[def.id] ?? [];
+  return html`<section class="card tea" aria-labelledby="tea-title">
+    <h2 class="card-title" id="tea-title">Tea Time com ${def.name}</h2>
+    <p class="card-lead">Sirva um chá favorito: aí bastam 2 assuntos certos para chegar ao comentário final. Cada rodada mostra 3 assuntos e pelo menos um está na lista abaixo. Acertando todos, dá para errar o final e ainda ganhar o tempo extra.</p>
+    ${def.supports === false ? html`<p class="hint">${def.name} não tem supports: o chá não sobe suporte.</p>` : ''}
+    <dl class="likes"><dt>Chás favoritos</dt><dd>${p.teas.length ? html`<span class="chips">${p.teas.map((t) => html`<span class="chip tea-chip">${t}</span>`)}</span>` : html`<span class="muted">nenhum listado</span>`}</dd></dl>
+    <h3 class="sub tea-sub">Assuntos que funcionam <span class="muted">${p.topics.length}, em ordem alfabética</span></h3>
+    <ul class="topics">${p.topics.map((t) => html`<li>${t}</li>`)}</ul>
+    ${p.answers.length ? html`<h3 class="sub tea-sub">Comentário final</h3>
+    <div class="table-wrap"><table class="data compact finals">
+      <thead><tr><th scope="col">Se o comentário for sobre…</th><th scope="col">Respostas certas</th></tr></thead>
+      <tbody>${p.answers.map((a, i) => html`<tr><td>${gists[i] ?? '—'}</td><td><span class="chips">${a.map((x) => html`<span class="chip answer">${x}</span>`)}</span></td></tr>`)}</tbody>
+    </table></div>
+    <p class="hint">O comentário aparece em inglês no jogo; a coluna da esquerda resume o assunto. Fonte: fe3h.com, conferido com a Serenes Forest.</p>` : ''}
   </section>`;
 }
 
@@ -165,6 +189,7 @@ export function unidade(state, id) {
     ${id === 'byleth' ? trainingTable(state, currentNotes(state.chapter)) : ''}
     ${recruited || id === 'byleth' ? html`${planCard(def, st)}<div class="cols">${stateForm(def, st)}${masteryList(def, st)}</div>` : planCard(def, st)}
     <div class="cols">${learnCard(def, st)}${likesCard(def)}</div>
+    ${teaCard(def)}
     <section class="card">
       <h2 class="card-title">Anotações</h2>
       <label class="field block" for="u-note"><span class="field-label">Suas notas sobre ${def.name} (ficam neste aparelho)</span>

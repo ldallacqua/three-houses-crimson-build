@@ -4,7 +4,7 @@ import {
   rankIndex, meetsRank, xpToRank, sessionsFor, classCheck, planStatus, unitAdvice, suggestGoals,
   recruitStatus, bylethTraining, paralogueStatus, nextSteps, birthdaysInMonth, parseDate, isRecruited, instructorsFor,
 } from '../js/logic.js';
-import { snapshotState } from '../js/store.js';
+import { snapshotState, normalize } from '../js/store.js';
 import { UNIT_BY_ID } from '../data/units.js';
 import { PARALOGUE_BY_ID } from '../data/paralogues.js';
 
@@ -105,13 +105,22 @@ test('recruitment: Ingrid needs Flying D without support and E+ at B', () => {
   assert.equal(recruitStatus(UNIT_BY_ID.ingrid, s).state, 'ready');
 });
 
-test('recruitment: Lysithea at C+ asks Mag 9 and Faith C; A support needs nothing', () => {
+test('recruitment: at C, Lysithea asks Mag 12 and Faith C+, and the hidden C+ may already be enough', () => {
   const s = snap();
-  s.units.lysithea.support = 'C+';
+  s.units.lysithea.support = 'C';
+  s.units.byleth.ranks.faith = 'C';
   const rs = recruitStatus(UNIT_BY_ID.lysithea, s);
-  assert.deepEqual([rs.tier.stat, rs.tier.rank], [9, 'C']);
-  s.units.lysithea.support = 'A';
+  assert.deepEqual([rs.tier.stat, rs.tier.rank], [12, 'C+']);
+  assert.equal(rs.state, 'missing');
+  assert.equal(rs.maybe?.key, 'C+');
+  s.units.lysithea.support = 'S';
   assert.equal(recruitStatus(UNIT_BY_ID.lysithea, s).state, 'ready');
+});
+
+test('a saved C+ or B+ from the old select reads as C or B', () => {
+  const st = normalize({ units: { lysithea: { support: 'C+' }, ingrid: { support: 'B+' } } });
+  assert.equal(st.units.lysithea.support, 'C');
+  assert.equal(st.units.ingrid.support, 'B');
 });
 
 test('recruitment closes after chapter 11', () => {
