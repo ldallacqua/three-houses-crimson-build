@@ -1,0 +1,10 @@
+# Readable chapter notes: sealed into data/chapters.js by `node tools/seal.mjs`.
+# Unseal with `node tools/seal.mjs open` to edit them.
+notes/
+
+# Local screenshots and scratch output
+.shots/
+
+node_modules/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Crimson Flower · Guia vivo</title>
+  <meta name="description" content="Guia vivo para uma campanha Crimson Flower de Fire Emblem: Three Houses: esquadrão, recrutamento, classes, paralogues e prazos, sem spoilers além do capítulo em que você está.">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0e15">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Cinzel:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Pular para o conteúdo</a>
+
+  <!-- Drawn icons: no game art is shipped. -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f6e2a8"/><stop offset=".55" stop-color="#d4af62"/><stop offset="1" stop-color="#8d6a2c"/>
+      </linearGradient>
+      <symbol id="i-sigil" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="29" fill="none" stroke="url(#g-gold)" stroke-width="2.4"/>
+        <circle cx="32" cy="32" r="23" fill="none" stroke="url(#g-gold)" stroke-width="1" opacity=".7"/>
+        <path d="M32 7 41 32 32 57 23 32Z" fill="none" stroke="url(#g-gold)" stroke-width="2"/>
+        <path d="M7 32h50M32 7v50" stroke="url(#g-gold)" stroke-width=".9" opacity=".55"/>
+        <path d="M32 21c3.6 3 6.4 6.6 6.4 11S35.6 40 32 43c-3.6-3-6.4-6.6-6.4-11S28.4 24 32 21Z" fill="#b3203a" stroke="#f0d898" stroke-width="1"/>
+        <circle cx="32" cy="32" r="2.6" fill="#f0d898"/>
+        <circle cx="32" cy="9.5" r="1.8" fill="#f0d898"/><circle cx="32" cy="54.5" r="1.8" fill="#f0d898"/>
+        <circle cx="9.5" cy="32" r="1.8" fill="#f0d898"/><circle cx="54.5" cy="32" r="1.8" fill="#f0d898"/>
+      </symbol>
+      <symbol id="i-sword" viewBox="0 0 24 24"><path d="M19.5 4.5 8.5 15.5M19.5 4.5h-3.2M19.5 4.5v3.2M5.8 12.8l5.4 5.4M7.4 16.6l-3.6 3.6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-lance" viewBox="0 0 24 24"><path d="M4 20 16.5 7.5M9 13.6l1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M14.6 6.4 20.5 3.5l-2.9 5.9z" fill="currentColor"/></symbol>
+      <symbol id="i-axe" viewBox="0 0 24 24"><path d="M5 20.5 15.5 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M12.6 4.6c2.9-1.6 6.3-.6 7.8 2.3.8 1.6.6 3.3-.2 4.7-1.6-1.2-3.8-1.4-5.6-.6l-.4-1.6-2-1.4.9-1.4-.5-2z" fill="currentColor"/></symbol>
+      <symbol id="i-bow" viewBox="0 0 24 24"><path d="M5 3.8c7.6.8 14.4 7.6 15.2 15.2M5 3.8 20.2 19M3.5 11.5 12 12l.5 8.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-brawl" viewBox="0 0 24 24"><rect x="5" y="7.5" width="13.5" height="10.5" rx="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.6 7.5v3.7M12 7.5v3.7M15.4 7.5v3.7M5 13h4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+      <symbol id="i-reason" viewBox="0 0 24 24"><path d="M3.5 5.6c2.9-1.7 5.9-1.6 8.5.6 2.6-2.2 5.6-2.3 8.5-.6v13.2c-2.9-1.5-5.9-1.4-8.5.6-2.6-2-5.6-2.1-8.5-.6zM12 6.2v13.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+      <symbol id="i-faith" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 11.2V21M7.8 15h8.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="i-authority" viewBox="0 0 24 24"><path d="M6 21V3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M6.8 4h12l-3 4 3 4h-12z" fill="currentColor"/></symbol>
+      <symbol id="i-armor" viewBox="0 0 24 24"><path d="M12 3.2 19 6v5.2c0 4.7-3 8.2-7 9.8-4-1.6-7-5.1-7-9.8V6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 7v10" stroke="currentColor" stroke-width="1.4"/></symbol>
+      <symbol id="i-riding" viewBox="0 0 24 24"><path d="M7 20v-8.5a5 5 0 0 1 10 0V20M4.8 20h4.4M14.8 20h4.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+      <symbol id="i-flying" viewBox="0 0 24 24"><path d="M2.8 15.5c5.5.3 9.5-2.7 12.6-9 1 4 .8 7-.9 9.6 2.3.1 4.3-1 6.3-3-1 4.6-5.3 7.4-10.6 7.4-3.2 0-5.6-1.8-7.4-5z" fill="currentColor"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="sky" aria-hidden="true"></div>
+
+  <header class="mast">
+    <div class="wrap mast-row">
+      <a class="brand" href="#/painel" aria-label="Crimson Flower, guia vivo — Painel">
+        <svg class="sigil" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-sigil"></use></svg>
+        <span class="brand-text">
+          <span class="eyebrow">Fire Emblem: Three Houses</span>
+          <span class="title">Crimson Flower</span>
+          <span class="subtitle">guia vivo do esquadrão</span>
+        </span>
+      </a>
+      <p class="plate" id="chapter-chip"></p>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Seções">
+    <div class="wrap tabs-row">
+      <a href="#/painel" data-route="painel">Painel</a>
+      <a href="#/esquadrao" data-route="esquadrao">Esquadrão</a>
+      <a href="#/recrutamento" data-route="recrutamento">Recrutamento</a>
+      <a href="#/capitulos" data-route="capitulos">Capítulos</a>
+      <a href="#/paralogues" data-route="paralogues">Paralogues</a>
+      <a href="#/classes" data-route="classes">Classes</a>
+      <a href="#/mosteiro" data-route="mosteiro">Mosteiro</a>
+      <a href="#/dados" data-route="dados">Dados</a>
+    </div>
+  </nav>
+
+  <main id="main" class="wrap" tabindex="-1">
+    <noscript><p class="empty">Este guia precisa de JavaScript para guardar o seu progresso.</p></noscript>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p>Guia de fã, sem afiliação com Nintendo, Intelligent Systems ou Koei Tecmo. Nenhuma arte do jogo é usada: tudo é desenhado em CSS e SVG.</p>
+      <p>Seu progresso fica só neste navegador. <a href="#/dados">Backup e fontes</a> · <a href="https://github.com/ldallacqua/three-houses-crimson-build">Código</a></p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

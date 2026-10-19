@@ -1,0 +1,13 @@
+{
+  "name": "three-houses-crimson-build",
+  "private": true,
+  "type": "module",
+  "description": "Guia vivo para uma campanha Crimson Flower de Fire Emblem: Three Houses",
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "test": "node --test",
+    "seal": "node tools/seal.mjs",
+    "unseal": "node tools/seal.mjs open"
+  },
+  "engines": { "node": ">=20" }
+}
