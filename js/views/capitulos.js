@@ -29,7 +29,7 @@ function page(note, state, current) {
       <tbody>${note.paralogues.map((p) => html`<tr><th scope="row">${p.name}</th><td>${p.units}</td><td>${p.reward}</td></tr>`)}</tbody>
     </table></div>` : ''}
     ${note.notes?.length ? html`<h3>Notas</h3><ul class="nb-points">${note.notes.map((n) => html`<li>${md(n)}</li>`)}</ul>` : ''}
-    ${note.spoilers?.map((s) => html`<details class="spoiler"><summary>${s.label}</summary><p>${md(s.text)}</p></details>`)}
+    ${note.spoilers?.map((s, i) => html`<details class="spoiler" id="sp-${note.key}-${i}"><summary>${s.label}</summary><p>${md(s.text)}</p></details>`)}
   </article>`;
 }
 

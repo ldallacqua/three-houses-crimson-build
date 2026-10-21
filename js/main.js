@@ -66,9 +66,12 @@ function render({ keepFocus = true } = {}) {
   const changedRoute = key !== lastRoute;
   const focusId = keepFocus && !changedRoute ? document.activeElement?.id : null;
   const scroll = changedRoute ? 0 : window.scrollY;
+  // Sections the reader opened stay open when the same page draws again.
+  const opened = changedRoute ? [] : [...main.querySelectorAll('details[open][id]')].map((d) => d.id);
 
   hideTooltip();
   main.innerHTML = r.view(state, r.arg).toString();
+  for (const id of opened) document.getElementById(id)?.setAttribute('open', '');
   main.classList.toggle('enter', changedRoute);
   document.title = `${typeof r.title === 'function' ? r.title(r.arg) : r.title} · Crimson Flower`;
   document.body.classList.toggle('picking', !state.build);

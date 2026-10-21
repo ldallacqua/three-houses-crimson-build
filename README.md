@@ -29,9 +29,9 @@ O jogo roda no Switch e o save não dá para ler, então o estado é digitado: n
 - **Goals para cada aluna.** As duas skills que mais aproximam a próxima classe do plano — ou o breakpoint que vale mais (Vengeance da Bernadetta, Physic da Hapi), com o XP que falta.
 - **Recrutamento com a conta feita.** Para cada recruta, o que o Byleth precisa em cada rank de suporte (nenhum, C, C+, B, B+, A — o C+ e o B+ o jogo não mostra), o que ele já tem e quantas sessões de Faculty Training faltam — e quem ensina essa skill **neste capítulo** (no Cap. 6, por exemplo, ninguém ensina Flying).
 - **Plano de classe por unidade.** Cada etapa com requisitos, nível, selo, maestria e se ela já pode certificar. Dá para trocar de plano (Sniper ou Bow Knight, Dancer ou maga) e o resto se ajusta.
-- **Paralogues e prazos.** Janela, quem abre, a recompensa que importa e quem precisa estar recrutada para ela vir.
-- **Notas por capítulo, lacradas.** Do Cap. 1 à Parte 2, um caderno por mês com checklist, a missão do mês (baús, drops, prêmios e quem fica com eles) e avisos de coisas perdíveis. Itens que o estado já resolve (quem entrou, classe, maestria, suporte, paralogue feito, data ou capítulo passado) se marcam sozinhos e dizem por quê.
-- **Mosteiro.** Quem dá Faculty Training este mês, Group Tasks que combinam com o plano, quem gosta de qual presente e chá, aniversários.
+- **Paralogues e prazos.** Uma linha por paralogue: janela, quem abre, quem fica com cada item e quem precisa estar recrutada para a recompensa vir. Abrir a linha mostra o porquê, as recompensas e as dicas.
+- **Notas por capítulo, lacradas.** Do Cap. 1 à Parte 2, uma página por mês com checklist, a missão do mês (baús, drops, prêmios e quem fica com eles) e avisos de coisas perdíveis. Itens que o estado já resolve (quem entrou, classe, maestria, suporte, paralogue feito, data ou capítulo passado) se marcam sozinhos e dizem por quê.
+- **Mosteiro.** Quem dá Faculty Training este mês, a dupla da Group Task da semana (uma tarefa por semana, sempre em dupla: o que o plano pede, ponto forte na skill e suporte entre elas), quem gosta de qual presente e chá, aniversários.
 - **Resumo para o chat.** Um botão copia o estado inteiro em Markdown, para revisar o plano numa conversa ou atualizar o [guia mestre](docs/guia-mestre.md).
 - **No celular, offline.** Instalável como app; abre sem internet ao lado do console.
 
@@ -58,7 +58,11 @@ Cada unidade aparece com o retrato do jogo num anel na cor da casa; quem ainda n
 </p>
 
 <p align="center">
-  <img src="docs/capitulos.png" alt="Capítulos: a página de caderno do Cap. 6 aberta e os meses seguintes lacrados" width="900">
+  <img src="docs/capitulos.png" alt="Capítulos: as notas do Cap. 1 abertas, com a lista que se marca sozinha, a missão do mês e quem fica com o item" width="900">
+</p>
+
+<p align="center">
+  <img src="docs/paralogues.png" alt="Paralogues: uma linha por paralogue, com quem fica com cada item e quem falta recrutar" width="900">
 </p>
 
 <p align="center">
@@ -96,7 +100,7 @@ Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos
 
 Para refazer ou acrescentar retratos (precisa de `curl` e `ffmpeg`): `bash tools/portraits.sh petra hapi`. Um personagem novo também entra na lista `PORTRAITS` do `sw.js`.
 
-Chás, assuntos do chá, respostas do comentário final, pratos e presentes vêm do fe3h.com: `node tools/social.mjs` refaz `data/social.js`. Os comentários finais não são publicados (são falas do jogo); `data/tea-gists.js` traz um resumo em português de cada um, na mesma ordem, e os testes avisam se a contagem mudar.
+Chás, assuntos do chá, respostas do comentário final, pratos, presentes, pontos fortes e fracos de skill e quem tem suporte com quem vêm do fe3h.com: `node tools/social.mjs` refaz `data/social.js`. Os comentários finais não são publicados (são falas do jogo); `data/tea-gists.js` traz um resumo em português de cada um, na mesma ordem, e os testes avisam se a contagem mudar.
 
 ## O que tem no repositório
 

@@ -299,3 +299,23 @@ test('the overview lists the items of the paralogues still open, not the done or
   assert.deepEqual(paralogueItems(late), []);
   assert.ok(!paralogueItems(late, { open: false }).some((r) => r.item === 'Spear of Assal'), 'missed ones never show');
 });
+
+test('the week’s group task is one pair, never Byleth, for a skill the plan still needs', async () => {
+  const { groupTaskPlan, skillGrowth, canSupport } = await import('../js/logic.js');
+  assert.equal(skillGrowth('petra', 'flying'), 1);
+  assert.equal(skillGrowth('dorothea', 'flying'), -1);
+  assert.equal(skillGrowth('edelgard', 'flying'), 0);
+  assert.ok(canSupport('edelgard', 'petra'));
+  assert.ok(!canSupport('petra', 'constance'));
+  const s = snap();
+  const plan = groupTaskPlan(s);
+  assert.equal(plan.options.length, 3);
+  for (const o of plan.options) assert.ok(o.best.pair.length === 2 && !o.best.pair.includes('byleth'));
+  assert.equal(plan.pick.name, 'Sky Watch');
+  assert.deepEqual(plan.pick.best.pair, ['edelgard', 'petra'], 'both need Flying, Petra is strong in it and they have supports');
+  for (const id of ['edelgard', 'petra', 'constance']) s.units[id].ranks.flying = 'A+';
+  const next = groupTaskPlan(s);
+  assert.equal(next.pick.name, 'Stable Duty');
+  assert.ok(next.pick.best.pair.includes('hapi'));
+  assert.ok(next.pick.best.support, 'the partner has supports with Hapi');
+});

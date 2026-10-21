@@ -359,6 +359,62 @@ export function sharedMeals(defs) {
   return lists.length ? [...lists[0]].filter((m) => lists.every((l) => l.has(m))) : [];
 }
 
+// ---------- group tasks ----------
+
+// One task a week, always two students; Byleth does not take part. Both gain experience in the
+// task's skill, Good +4/+8/+12 and Perfect +8/+12/+16 for a weakness/neutral/strength, plus
+// Smithing Stones and gold, and support with each other when they have supports. Perfect is likelier
+// with a strength in the skill and a higher support between the two. Fire Emblem Wiki (Lessons) and
+// fe3h.com (Lectures guide).
+export const GROUP_TASKS = [
+  { id: 'sky', name: 'Sky Watch', skill: 'flying' },
+  { id: 'stable', name: 'Stable Duty', skill: 'riding' },
+  { id: 'weeding', name: 'Weeding', skill: 'heavyArmor' },
+];
+
+/** +1 when the skill is a strength of the unit, -1 when it is a weakness, 0 otherwise. */
+export function skillGrowth(id, skill) {
+  const s = SOCIAL[id];
+  if (s?.strengths?.includes(skill)) return 1;
+  if (s?.weaknesses?.includes(skill)) return -1;
+  return 0;
+}
+
+export const canSupport = (a, b) => Boolean(SOCIAL[a]?.pairs?.includes(b) || SOCIAL[b]?.pairs?.includes(a));
+
+/**
+ * The week's Group Task: for each task, the best pair, and the task to pick. A pair is worth more
+ * when both need the skill for the plan, then when the skill is a strength of theirs, then when they
+ * have supports with each other. With nobody needing any of the three skills, the task still buys
+ * support between a pair that has supports, so that pair is the pick.
+ */
+export function groupTaskPlan(state) {
+  const recruited = UNITS.filter((u) => u.id !== 'byleth' && isRecruited(state, u.id) && roleOf(state, u.id) !== 'ignorar');
+  const starters = recruited.filter((u) => ['titular', 'rotacao'].includes(roleOf(state, u.id)));
+  const pool = starters.length >= 2 ? starters : recruited;
+  const options = GROUP_TASKS.map((task) => {
+    const needs = pool.filter((u) => skillNeeds(u, unitState(state, u.id)).has(task.skill)).map((u) => u.id);
+    let best = null;
+    for (let i = 0; i < pool.length; i++) {
+      for (let j = i + 1; j < pool.length; j++) {
+        const pair = [pool[i].id, pool[j].id];
+        const need = pair.filter((id) => needs.includes(id)).length;
+        const fit = pair.reduce((sum, id) => sum + skillGrowth(id, task.skill), 0);
+        const support = canSupport(...pair);
+        // With nobody needing the skill, support is what the task is for, so it outweighs the fit.
+        const score = need * 10 + fit * 2 + (support ? (need ? 3 : 5) : 0);
+        if (!best || score > best.score) best = { pair, need, fit, support, score };
+      }
+    }
+    return { ...task, needs, best };
+  });
+  const useful = options.filter((o) => o.best?.need);
+  const pick = useful.length
+    ? useful.reduce((a, b) => (b.best.score > a.best.score ? b : a))
+    : options.filter((o) => o.best?.support).reduce((a, b) => (!a || b.best.score > a.best.score ? b : a), null);
+  return { pick, options, anyNeed: useful.length > 0 };
+}
+
 // ---------- paralogues ----------
 
 export function paralogueStatus(p, state) {

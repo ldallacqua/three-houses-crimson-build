@@ -5,7 +5,7 @@ import { html } from '../html.js';
 import { FACULTY } from '../../data/faculty.js';
 import { SKILLS, SKILL_NAME, RECRUIT_DEADLINE } from '../../data/skills.js';
 import { UNITS, UNIT_BY_ID } from '../../data/units.js';
-import { roleOf, isRecruited, skillNeeds, unitState, recruitTargets, bylethTraining, prefsOf, sharedMeals } from '../logic.js';
+import { roleOf, skillNeeds, unitState, recruitTargets, bylethTraining, prefsOf, sharedMeals, groupTaskPlan, skillGrowth } from '../logic.js';
 import { MEALS } from '../../data/social.js';
 import { currentNotes } from '../seal.js';
 import { avatar, skillIcon, emptyState } from './ui.js';
@@ -39,22 +39,44 @@ function facultyTable(state) {
   </section>`;
 }
 
+/** Why a pair suits a task, in short phrases. */
+function pairReasons(o) {
+  const [a, b] = o.best.pair.map((id) => UNIT_BY_ID[id]);
+  const skill = SKILL_NAME[o.skill];
+  const out = [];
+  if (o.best.need === 2) out.push(`${[a, b].some((u) => u.gender === 'm') ? 'os dois precisam' : 'as duas precisam'} de ${skill}`);
+  else if (o.best.need === 1) {
+    const u = UNIT_BY_ID[o.best.pair.find((id) => o.needs.includes(id))];
+    out.push(`só ${u.gender === 'm' ? 'o' : 'a'} ${u.name} precisa de ${skill}`);
+  }
+  const strong = [a, b].filter((u) => skillGrowth(u.id, o.skill) > 0).map((u) => u.name);
+  const weak = [a, b].filter((u) => skillGrowth(u.id, o.skill) < 0).map((u) => u.name);
+  if (strong.length) out.push(`${strong.join(' e ')}: ponto forte em ${skill}`);
+  if (weak.length) out.push(`${weak.join(' e ')}: ponto fraco em ${skill}`);
+  out.push(o.best.support ? 'têm suporte entre si' : 'não têm suporte entre si');
+  return out;
+}
+
+const duo = (o, size) => html`<span class="gt-duo">${o.best.pair.map((id, i) => html`${i ? html`<span class="gt-plus" aria-hidden="true">+</span>` : ''}<a class="person" href="#/unidade/${id}">${avatar(UNIT_BY_ID[id], size)}${UNIT_BY_ID[id].name}</a>`)}</span>`;
+
 function groupTasks(state) {
-  const tasks = [
-    { name: 'Sky Watch', skill: 'flying' },
-    { name: 'Stable Duty', skill: 'riding' },
-    { name: 'Weeding', skill: 'heavyArmor' },
-  ];
-  const wants = (skill) => UNITS.filter((u) => isRecruited(state, u.id) && ['titular', 'rotacao'].includes(roleOf(state, u.id)) && u.id !== 'byleth')
-    .filter((u) => skillNeeds(u, unitState(state, u.id)).has(skill));
+  const { pick, options, anyNeed } = groupTaskPlan(state);
+  const others = options.filter((o) => o !== pick);
   return html`<section class="card">
-    <h2 class="card-title">Group Tasks</h2>
-    <p class="card-lead">Duplas ganham XP na skill da tarefa e suporte entre si. Use em quem o plano ainda pede essa skill e forme duplas que já se dão bem (suporte entre elas ajuda o resultado).</p>
-    <ul class="gt">${tasks.map((t) => {
-      const names = wants(t.skill);
-      return html`<li><p class="gt-head"><strong>${t.name}</strong><span class="skill">${skillIcon(t.skill)}${SKILL_NAME[t.skill]}</span></p>
-        <p class="people">${names.length ? names.map(person) : html`<span class="muted">ninguém precisa agora</span>`}</p></li>`;
-    })}</ul>
+    <h2 class="card-title">Group Task da semana</h2>
+    <p class="card-lead">Uma tarefa por semana, sempre em dupla; o Byleth não participa. A dupla ganha XP na skill da tarefa e, se tiver suporte entre si, pontos de suporte.</p>
+    ${pick ? html`<div class="gt-pick">
+      <p class="gt-head"><strong>${pick.name}</strong><span class="skill">${skillIcon(pick.skill)}${SKILL_NAME[pick.skill]}</span></p>
+      ${duo(pick, 'md')}
+      <p class="gt-why">${pairReasons(pick).join(' · ')}.</p>
+    </div>` : emptyState('Recrute pelo menos duas unidades para formar uma dupla.')}
+    ${pick && !anyNeed ? html`<p class="hint">Ninguém do plano precisa de Flying, Riding ou Heavy Armor agora: a tarefa vale pelo suporte, pelas Smithing Stones e pelo ouro.</p>` : ''}
+    ${pick ? html`<p class="sub">Outras opções</p>
+    <ul class="gt-alt">${others.map((o) => html`<li>
+      <p class="gt-head"><strong>${o.name}</strong><span class="skill">${skillIcon(o.skill)}${SKILL_NAME[o.skill]}</span></p>
+      ${o.best?.need || (!anyNeed && o.best?.support) ? html`${duo(o, 'xs')}<p class="gt-why">${pairReasons(o).join(' · ')}.</p>` : html`<p class="gt-why muted">Ninguém do plano precisa de ${SKILL_NAME[o.skill]} agora.</p>`}
+    </li>`)}</ul>` : ''}
+    <p class="hint">Resultado Good: +4/+8/+12 de XP (ponto fraco/neutro/forte), 3 Smithing Stones e 500 G. Perfect: +8/+12/+16, 5 Smithing Stones e 1.000 G. Ponto forte na skill e suporte alto na dupla deixam o Perfect mais provável. Repita a dupla até ela chegar no rank do plano; depois a sugestão muda.</p>
   </section>`;
 }
 

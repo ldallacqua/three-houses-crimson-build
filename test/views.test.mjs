@@ -50,6 +50,8 @@ test('every character page has teas, topics and one summary per final comment', 
     assert.equal(TEA_GISTS[u.id]?.length, s.answers.length, `${u.id}: one summary per final comment`);
     assert.ok(s.answers.every((a) => a.length), `${u.id}: every comment has an answer`);
     assert.ok([...s.meals, ...s.mealsDisliked].every((m) => dishes.has(m)), `${u.id}: meals on the menu`);
+    assert.ok(Array.isArray(s.strengths) && Array.isArray(s.weaknesses), `${u.id}: skill strengths and weaknesses`);
+    assert.ok(s.pairs.every((id) => id !== u.id && UNITS.some((x) => x.id === id)), `${u.id}: support partners are units of the plan`);
   }
   const { unidade } = await import('../js/views/unidade.js');
   const page = text(unidade(snapshotState(), 'lysithea'));
@@ -122,4 +124,17 @@ test('the Sunday order only lists what is open in the first chapters', async () 
   assert.match(ch(3), /Faculty Training da skill/);
   assert.doesNotMatch(ch(3), /Chá Perfect/);
   assert.match(ch(4), /Refeição ou chá.*Chá Perfect/);
+});
+
+test('the Mosteiro suggests one group task pair; paralogue rows say who gets each item', async () => {
+  const { paralogues } = await import('../js/views/paralogues.js');
+  const page = mosteiro(snapshotState()).toString();
+  assert.match(text(page), /Group Task da semana Uma tarefa por semana, sempre em dupla/);
+  const pick = page.match(/<div class="gt-pick">([\s\S]*?)<\/div>/)[1];
+  assert.equal(pick.match(/class="person"/g).length, 2);
+  assert.match(text(pick), /Sky Watch .*Edelgard \+ Petra/);
+  const rows = paralogues(snapshotState()).toString();
+  assert.match(rows, /<details class="para-row phase-[a-z]+" id="para-nuptials">/);
+  assert.match(text(rows), /Rumored Nuptials .*Luín → Ingrid/);
+  assert.match(text(rows), /Thyrsus → Constance/);
 });

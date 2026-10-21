@@ -64,7 +64,7 @@ function masteryList(def, st) {
     <h2 class="card-title">Maestrias concluídas</h2>
     <p class="card-lead">Marque quando a tela de classe mostrar a estrela de maestria. Maestria ≠ certificação ≠ nível.</p>
     <ul class="mastery-list">${first.map(box)}</ul>
-    ${rest.length ? html`<details class="more-box"><summary>Outras classes</summary><ul class="mastery-list">${rest.map(box)}</ul></details>` : ''}
+    ${rest.length ? html`<details class="more-box" id="more-classes"><summary>Outras classes</summary><ul class="mastery-list">${rest.map(box)}</ul></details>` : ''}
   </section>`;
 }
 
