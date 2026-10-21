@@ -1199,6 +1199,15 @@
   .danger-zone { padding-top: 10px; border-top: 1px dashed var(--line-soft); }
   .build-line { color: var(--ink-2); }
 
+  /* the cloud save (Dados) */
+  .sync-form .field { max-width: 360px; }
+  .sync-status { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .sync-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; }
+  .sync-status.ok { color: var(--ok); }
+  .sync-status.info { color: var(--info); }
+  .sync-status.warn { color: var(--warn); }
+  .sync-status.miss { color: var(--bad); }
+
   /* Builds: the picker */
   .picking .tabs { display: none; }
   .link-btn { padding: 0; border: 0; background: none; color: var(--gold-hi); font: inherit; text-decoration: underline; text-decoration-color: rgb(240 216 152 / 0.4); text-underline-offset: 3px; cursor: pointer; }

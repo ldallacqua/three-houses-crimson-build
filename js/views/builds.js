@@ -45,6 +45,7 @@ function startCard(state) {
       })}
     </div>
     <p class="hint">Quer ver o guia preenchido antes de começar o seu? <button type="button" class="link-btn" data-act="load-sample">Abrir com o save de exemplo do autor (${SNAPSHOT_LABEL})</button>.</p>
+    <p class="hint">Tem a senha mestre da nuvem? <a href="#/dados">Conecte e traga o seu save</a>.</p>
   </section>`;
 }
 

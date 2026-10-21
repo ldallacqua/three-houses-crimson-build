@@ -27,6 +27,7 @@ const FILES = [
   'js/seal.js',
   'js/store.js',
   'js/summary.js',
+  'js/sync.js',
   'js/controls/place.js',
   'js/controls/select.js',
   'js/controls/tooltip.js',
@@ -95,6 +96,8 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
+  // The save in the cloud is always fetched fresh.
+  if (url.pathname.includes('/api/')) return;
   if (request.mode === 'navigate') {
     event.respondWith(networkFirst(request));
   } else if (url.origin === self.location.origin) {

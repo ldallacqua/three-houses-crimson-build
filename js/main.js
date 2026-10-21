@@ -1,7 +1,8 @@
 // The page: hash routes, one delegated listener for every form field and button, and the
 // re-render after each change. State is saved on every change.
 
-import { load, save, setPath, getPath, parseImport, snapshotState, freshState } from './store.js';
+import { load, save, persist, setPath, getPath, parseImport, snapshotState, freshState } from './store.js';
+import { createSync, endpoint } from './sync.js';
 import { RANKS } from '../data/skills.js';
 import { UNIT_BY_ID } from '../data/units.js';
 import { BUILD_BY_ID } from '../data/builds.js';
@@ -11,7 +12,7 @@ import { parseDate, monthOfChapter, reviewStatus } from './logic.js';
 import { summaryMarkdown } from './summary.js';
 import { initSelects } from './controls/select.js';
 import { initTooltips, hide as hideTooltip } from './controls/tooltip.js';
-import { initDialog, confirmDialog } from './controls/dialog.js';
+import { initDialog, confirmDialog, chooseDialog } from './controls/dialog.js';
 import { painel } from './views/painel.js';
 import { atualizar } from './views/atualizar.js';
 import { esquadrao } from './views/esquadrao.js';
@@ -47,9 +48,10 @@ let state = load();
 let lastRoute = '';
 
 function route() {
-  // Nothing else makes sense before a build is picked: every route shows the picker.
-  if (!state.build) return { name: 'builds', ...ROUTES.builds };
   const [name = 'painel', arg] = location.hash.replace(/^#\/?/, '').split('/');
+  // Nothing else makes sense before a build is picked: every route shows the picker, except Dados,
+  // where a new device can bring its save down from the cloud.
+  if (!state.build && name !== 'dados') return { name: 'builds', ...ROUTES.builds };
   return ROUTES[name] ? { name, arg, ...ROUTES[name] } : { name: 'painel', ...ROUTES.painel };
 }
 
@@ -105,8 +107,32 @@ function render({ keepFocus = true } = {}) {
 function commit(message) {
   if (!save(state)) toast('Não deu para salvar neste navegador (armazenamento bloqueado).');
   else if (message) toast(message);
+  try {
+    sync.changed();
+  } catch { /* the cloud never stops the page */ }
   render();
 }
+
+// The save in the cloud, once the master password was typed on this device (Dados).
+const sync = createSync({
+  storage: localStorage,
+  fetch: (...args) => fetch(...args),
+  url: endpoint(),
+  getState: () => state,
+  adopt: (next) => {
+    state = next;
+    persist(state);
+    render();
+  },
+  ask: chooseDialog,
+  notify: (message) => toast(message),
+  // The status shows on Dados; redraw it there, unless that would wipe a field being typed in.
+  onChange: () => {
+    if (route().name === 'dados' && !document.activeElement?.matches('input[type="text"], input[type="password"]')) render();
+  },
+});
+
+const cloudNote = () => (sync.info().on ? ' A nuvem também passa a ter este save; o anterior fica no histórico dela.' : '');
 
 function coerce(el) {
   const type = el.dataset.type;
@@ -203,7 +229,7 @@ const actions = {
   'load-sample': async () => {
     const ok = !state.updated || await confirmDialog({
       title: 'Abrir o save de exemplo?',
-      body: 'Tudo o que você marcou neste aparelho será substituído pelo save de exemplo (Cap. 6). Exporte um backup antes se quiser guardar.',
+      body: `Tudo o que você marcou neste aparelho será substituído pelo save de exemplo (Cap. 6). Exporte um backup antes se quiser guardar.${cloudNote()}`,
       confirm: 'Substituir',
       danger: true,
     });
@@ -215,13 +241,42 @@ const actions = {
   'reset-fresh': async () => {
     const ok = await confirmDialog({
       title: 'Recomeçar do Cap. 1?',
-      body: 'Tudo o que você marcou neste aparelho será apagado e o guia volta ao começo, com a escolha de build. Exporte um backup antes se quiser guardar.',
+      body: `Tudo o que você marcou neste aparelho será apagado e o guia volta ao começo, com a escolha de build. Exporte um backup antes se quiser guardar.${cloudNote()}`,
       confirm: 'Recomeçar',
       danger: true,
     });
     if (!ok) return;
     state = freshState();
     commit('Recomeçado do Cap. 1.');
+  },
+  'sync-now': async () => {
+    await sync.pull();
+    const { status } = sync.info();
+    if (status === 'idle') toast('Sincronizado.');
+  },
+  'sync-off': async () => {
+    const ok = await confirmDialog({
+      title: 'Desconectar este aparelho?',
+      body: 'O save continua aqui e na nuvem, mas as mudanças deste aparelho param de subir até você digitar a senha de novo.',
+      confirm: 'Desconectar',
+    });
+    if (!ok) return;
+    sync.disconnect();
+    toast('Este aparelho saiu da sincronização.');
+  },
+  'sync-remote': () => sync.resolve('remote'),
+  'sync-local': () => sync.resolve('local'),
+  'sync-undo': async () => {
+    const ok = await confirmDialog({
+      title: 'Voltar ao save anterior deste aparelho?',
+      body: 'É o save que estava aqui antes de vir o da nuvem. Ele volta para este aparelho e sobe para a nuvem.',
+      confirm: 'Voltar',
+    });
+    if (!ok) return;
+    const previous = sync.undo();
+    if (!previous) return;
+    state = previous;
+    commit('Save anterior restaurado.');
   },
   // The − and + beside a number field.
   step: (btn) => {
@@ -289,7 +344,29 @@ main.addEventListener('change', async (e) => {
   }
 });
 
+main.addEventListener('submit', async (e) => {
+  const form = e.target.closest('form[data-act="sync-connect"]');
+  if (!form) return;
+  e.preventDefault();
+  const input = form.querySelector('input[type="password"]');
+  const button = form.querySelector('button');
+  if (!input.value) return;
+  button.disabled = true;
+  try {
+    await sync.connect(input.value);
+  } catch (err) {
+    toast(err.message);
+  }
+  render();
+});
+
 window.addEventListener('hashchange', () => render({ keepFocus: false }));
+
+// Coming back to the page or to the network: bring down what another device saved.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') sync.pull();
+});
+window.addEventListener('online', () => sync.pull());
 
 // Another tab changed the state: follow it.
 window.addEventListener('storage', (e) => {
@@ -308,6 +385,7 @@ initSelects();
 initTooltips();
 initDialog();
 render({ keepFocus: false });
+sync.pull();
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.register('sw.js').catch(() => {});

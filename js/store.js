@@ -98,8 +98,13 @@ export function load(storage = globalThis.localStorage) {
 }
 
 export function save(state, storage = globalThis.localStorage) {
+  state.updated = new Date().toISOString();
+  return persist(state, storage);
+}
+
+/** Store the state as it is, keeping its time: a save taken from the cloud keeps the time it was made. */
+export function persist(state, storage = globalThis.localStorage) {
   try {
-    state.updated = new Date().toISOString();
     storage?.setItem(STORAGE_KEY, JSON.stringify(state));
     return true;
   } catch {

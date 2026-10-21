@@ -12,16 +12,18 @@ function finish(value) {
   const resolve = settle;
   settle = null;
   if (dialog?.open) dialog.close(value);
-  resolve?.(value === 'ok');
+  resolve?.(value === 'ok' || value === 'cancel' ? value : '');
 }
 
 /**
+ * A choice between two answers. Resolves 'ok', 'cancel', or '' when dismissed (Escape, a click
+ * outside), so a dismissal can mean "not now" where both buttons do something.
  * @param {{ title: string, body: string, confirm?: string, cancel?: string, danger?: boolean }} opts
- * @returns {Promise<boolean>}
+ * @returns {Promise<'ok' | 'cancel' | ''>}
  */
-export function confirmDialog({ title, body, confirm = 'Confirmar', cancel = 'Cancelar', danger = false }) {
+export function chooseDialog({ title, body, confirm = 'Confirmar', cancel = 'Cancelar', danger = false }) {
   const dialog = document.getElementById('dialog');
-  if (!dialog?.showModal) return Promise.resolve(window.confirm(`${title}\n\n${body}`));
+  if (!dialog?.showModal) return Promise.resolve(window.confirm(`${title}\n\n${body}`) ? 'ok' : 'cancel');
   finish('');
   dialog.querySelector('#dialog-title').textContent = title;
   dialog.querySelector('#dialog-body').textContent = body;
@@ -35,6 +37,11 @@ export function confirmDialog({ title, body, confirm = 'Confirmar', cancel = 'Ca
   return new Promise((resolve) => {
     settle = resolve;
   });
+}
+
+/** Yes or no: true only for the confirm button. */
+export async function confirmDialog(opts) {
+  return (await chooseDialog(opts)) === 'ok';
 }
 
 export function initDialog() {

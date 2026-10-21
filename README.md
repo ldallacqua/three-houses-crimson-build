@@ -34,6 +34,7 @@ O jogo roda no Switch e o save não dá para ler, então o estado é digitado: n
 - **Mosteiro.** Quem dá Faculty Training este mês, a dupla da Group Task da semana (uma tarefa por semana, sempre em dupla: o que o plano pede, ponto forte na skill e suporte entre elas), quem gosta de qual presente e chá, aniversários.
 - **Resumo para o chat.** Um botão copia o estado inteiro em Markdown, para revisar o plano numa conversa ou atualizar o [guia mestre](docs/guia-mestre.md).
 - **No celular, offline.** Instalável como app; abre sem internet ao lado do console.
+- **O mesmo save em todo aparelho.** Com a senha mestre, cada mudança sobe para um banco Turso por uma função na Vercel, e o site traz o que outro aparelho salvou. Quando dois aparelhos mudaram, ele pergunta qual save manter e guarda o outro. Como ligar: [`docs/sync.md`](docs/sync.md).
 
 ## Interface
 
@@ -111,12 +112,13 @@ Chás, assuntos do chá, respostas do comentário final, pratos, presentes, pont
 | `img/portraits/` | Retratos dos personagens (WebP, 224 px), gerados por `tools/portraits.sh`. |
 | `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, próximos passos. Funções puras. |
 | `js/store.js` | Estado no `localStorage`, exportar/importar JSON e a limpeza de tudo que entra. |
+| `js/sync.js`, `api/save.js`, `server/sync.js` | O save na nuvem: o lado do site, a função da Vercel e o que ela faz no Turso (versões numeradas, conflito, histórico). |
 | `js/views/` | Uma tela por arquivo, renderizada com um template que escapa tudo. |
 | `data/` | Builds (`builds.js`), classes, unidades, instrutores, paralogues e seus itens, chás e pratos (`social.js`, gerado), o save de exemplo e as notas lacradas. |
 | `docs/guia-mestre.md` | O guia mestre em texto, com histórico de versões. |
 | `sw.js`, `manifest.webmanifest` | Cópia offline e instalação como app. |
 | `test/` | Testes com o runner do próprio Node. |
-| `tools/` | Servidor local, lacre das notas, retratos, dados de chá e pratos, e screenshots. |
+| `tools/` | Servidor local (com um `/api/save` de teste, senha `dev`), lacre das notas, retratos, dados de chá e pratos, e screenshots. |
 
 Sem framework, sem pacotes, sem etapa de build: o GitHub Actions roda os testes e publica a pasta como está no GitHub Pages.
 
