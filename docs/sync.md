@@ -15,8 +15,9 @@ um chat: você cola cada um direto na Vercel.
 ## 1. Banco no Turso (5 min)
 
 1. Entre em [turso.tech](https://turso.tech) com o GitHub (a mesma conta do Shelf serve).
-2. Crie um banco chamado **`crimson-build`**, na região **AWS US East (Virginia)**
-   (`aws-us-east-1`).
+2. Crie um banco chamado **`crimson-flower`**, na região **AWS South America (São Paulo)**
+   (`aws-sa-east-1`). A função da Vercel roda em São Paulo também (`gru1`, no `vercel.json`),
+   ao lado do banco.
 3. Na página do banco:
    - Copie a **URL**, que começa com `libsql://`.
    - Crie um **token** com leitura e escrita, sem expiração.
@@ -40,7 +41,10 @@ As tabelas são criadas sozinhas no primeiro acesso.
    | `TURSO_AUTH_TOKEN` | o token do banco |
    | `SYNC_PASSWORD` | a sua senha mestre (uma frase longa é melhor que uma palavra) |
 
-5. Clique em **Deploy**.
+5. Clique em **Deploy**. Depois disso, cada push no `main` publica a função de novo.
+
+Feito em 20/10/2026 pelo CLI (`vercel project create`, `vercel link`, `vercel git connect`,
+`vercel env add … --sensitive`), com o banco `crimson-flower` em São Paulo.
 
 **Para conferir:** abra `https://three-houses-crimson-build.vercel.app/api/save`.
 

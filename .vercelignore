@@ -1,0 +1,6 @@
+# Never upload the readable chapter notes or the tea comments (spoilers and game dialogue), nor
+# local scratch. A deploy from GitHub only has committed files anyway.
+notes/
+.shots/
+.vercel/
+.env*
