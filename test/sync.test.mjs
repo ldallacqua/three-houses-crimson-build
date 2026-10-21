@@ -196,3 +196,20 @@ test('without a connection the changes wait on the device; a dismissed clash wai
   assert.ok(isBlank({ ...freshState(), build: 'corte-carmesim' }));
   assert.ok(!isBlank(snapshotState()));
 });
+
+test('a save from before builds existed takes the build of the device it lands on, and the cloud gets it', async () => {
+  const { opts } = await server('mestre');
+  const call = (request) => handle(request, opts);
+  const old = snapshotState();
+  old.build = '';
+  const mac = await device('mac', call, old);
+  await mac.sync.connect('mestre');
+  const pc = await device('pc', call, { ...snapshotState(), date: '9/30' }, ['ok']);
+  await pc.sync.connect('mestre');
+  assert.equal(pc.state.build, 'corte-carmesim', 'the PC keeps its build');
+  assert.equal(pc.state.date, '9/7', 'and takes the rest from the cloud');
+  const cloud = await (await call(new Request('http://x/api/save', { headers: { authorization: 'Bearer mestre' } }))).json();
+  assert.equal(cloud.state.build, 'corte-carmesim', 'the build went up');
+  await mac.sync.pull();
+  assert.equal(mac.state.build, 'corte-carmesim', 'and reaches the Mac');
+});

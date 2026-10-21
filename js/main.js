@@ -354,6 +354,12 @@ main.addEventListener('submit', async (e) => {
   button.disabled = true;
   try {
     await sync.connect(input.value);
+    // Lined up with the cloud: on to the overview (or the build picker, if the save has no build).
+    // A choice still to make or an error stays here, where Dados shows it.
+    if (sync.info().status === 'idle') {
+      location.hash = '#/painel';
+      return;
+    }
   } catch (err) {
     toast(err.message);
   }

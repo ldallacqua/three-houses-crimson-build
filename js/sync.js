@@ -122,7 +122,7 @@ export function createSync({ storage, fetch, url, getState, adopt, ask, notify, 
     timer = timers.set(() => serial(push), ms);
   }
 
-  function take(remote) {
+  async function take(remote) {
     const local = getState();
     if (!isBlank(local) && !sameSave(local, remote.state)) {
       try {
@@ -130,9 +130,17 @@ export function createSync({ storage, fetch, url, getState, adopt, ask, notify, 
       } catch { /* nothing to keep it in */ }
     }
     adopt(normalize(remote.state));
-    setMeta({ rev: remote.rev, dirty: false, at: new Date().toISOString() });
+    setMeta({ rev: remote.rev, dirty: Boolean(remote.filled), at: new Date().toISOString() });
     conflict = null;
     set('idle');
+    // The build this device added goes up too.
+    if (remote.filled) await push();
+  }
+
+  /** A save from before builds existed has none: it takes this device's build. */
+  function withBuild(remote, local) {
+    if (!remote.state || normalize(remote.state).build || !local.build) return remote;
+    return { ...remote, state: { ...remote.state, build: local.build }, filled: true };
   }
 
   async function push() {
@@ -147,19 +155,21 @@ export function createSync({ storage, fetch, url, getState, adopt, ask, notify, 
     if (edits !== sent) later();
   }
 
-  async function reconcile(remote, { first = false } = {}) {
+  async function reconcile(incoming, { first = false } = {}) {
     const m = meta();
     const local = getState();
-    if (!remote.rev) {
+    if (!incoming.rev) {
       setMeta({ rev: 0, dirty: true });
       await push();
       if (first) notify('Conectado. Seu save foi para a nuvem.');
       return;
     }
+    const remote = withBuild(incoming, local);
     if (sameSave(local, remote.state)) {
-      setMeta({ rev: remote.rev, dirty: false, at: new Date().toISOString() });
+      setMeta({ rev: remote.rev, dirty: Boolean(remote.filled), at: new Date().toISOString() });
       conflict = null;
       set('idle');
+      if (remote.filled) await push();
       if (first) notify('Conectado. Este aparelho e a nuvem já tinham o mesmo save.');
       return;
     }
@@ -169,7 +179,7 @@ export function createSync({ storage, fetch, url, getState, adopt, ask, notify, 
     }
     // The cloud moved on (or this device is new to it) and the two saves differ.
     if ((!first && !m.dirty) || isBlank(local)) {
-      take(remote);
+      await take(remote);
       notify(first ? 'Conectado. Este aparelho pegou o save da nuvem.' : 'Save atualizado com o que você salvou em outro aparelho.');
       return;
     }
@@ -188,7 +198,7 @@ export function createSync({ storage, fetch, url, getState, adopt, ask, notify, 
   async function resolve(which) {
     if (!conflict) return;
     if (which === 'remote') {
-      take(conflict);
+      await take(conflict);
       return notify('Agora este aparelho usa o save da nuvem.');
     }
     setMeta({ rev: conflict.rev, dirty: true });

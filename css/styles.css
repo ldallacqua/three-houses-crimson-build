@@ -411,7 +411,7 @@
   .field-label { font-size: 0.78rem; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; display: flex; align-items: center; gap: 6px; }
   .field-label .skill { gap: 5px; }
   .field-label .ico { color: var(--gold-lo); }
-  input[type="text"], input[type="number"], textarea {
+  input[type="text"], input[type="number"], input[type="password"], textarea {
     width: 100%;
     min-height: 42px;
     line-height: 1.3;
@@ -422,13 +422,21 @@
     color: var(--ink);
     transition: border-color 0.15s, box-shadow 0.15s;
   }
-  input[type="text"]:hover, input[type="number"]:hover, textarea:hover { border-color: var(--line-strong); }
+  input[type="text"]:hover, input[type="number"]:hover, input[type="password"]:hover, textarea:hover { border-color: var(--line-strong); }
   input::placeholder, textarea::placeholder { color: rgb(154 145 127 / 0.7); }
   textarea { resize: vertical; min-height: 84px; line-height: 1.5; }
-  input[type="text"]:focus-visible, input[type="number"]:focus-visible, textarea:focus-visible {
+  input[type="text"]:focus-visible, input[type="number"]:focus-visible, input[type="password"]:focus-visible, textarea:focus-visible {
     outline: none;
     border-color: var(--gold-hi);
     box-shadow: var(--ring);
+  }
+  input[type="password"] { letter-spacing: 0.12em; }
+  /* A field the browser or a password manager filled keeps the page's colours. */
+  input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--ink);
+    caret-color: var(--ink);
+    box-shadow: 0 0 0 100px var(--field) inset;
+    transition: background-color 9999s;
   }
   input[type="number"] { appearance: textfield; -moz-appearance: textfield; font-weight: 700; }
   input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
@@ -1200,7 +1208,9 @@
   .build-line { color: var(--ink-2); }
 
   /* the cloud save (Dados) */
-  .sync-form .field { max-width: 360px; }
+  .sync-form { max-width: 520px; }
+  .sync-form .btn { flex: none; min-width: 132px; }
+  .sync-form input, .sync-form .btn { height: 44px; }
   .sync-status { display: flex; align-items: center; gap: 10px; font-weight: 700; }
   .sync-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; }
   .sync-status.ok { color: var(--ok); }
