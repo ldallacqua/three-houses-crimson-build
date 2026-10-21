@@ -23,7 +23,7 @@ Guias dizem a build ideal. Não sabem em que ponto o seu save está. Este guia s
 O jogo roda no Switch e o save não dá para ler, então o estado é digitado: nível, classe, ranks de skill, maestrias e suporte com cada recruta, copiados da tela de status. A partir disso a página calcula o resto e atualiza na hora.
 
 - **Builds para escolher.** No primeiro acesso você escolhe a build, como num site de builds: nome, autor, rota, o que ela pede e por que funciona. Hoje há uma, a **Corte Carmesim** (a waifu build da Flor Carmesim: Edelgard e as melhores aliadas de Fódlan, Byleth masculino). O guia começa no Cap. 1; dá para abrir o save de exemplo do autor (Cap. 6) para ver tudo preenchido.
-- **Quem fica com cada item.** Para cada item que vale guardar (relíquias, armas raras, anéis, gemas, stat boosters, selos), de onde ele vem e quem fica com ele, numa ordem de preferência: vai para a primeira que já estiver no exército. Aparece no capítulo, no painel do mês, no paralogue e na ficha de quem recebe.
+- **Quem fica com cada item.** Para cada item que vale guardar (relíquias, armas raras, anéis, gemas, stat boosters, selos), de onde ele vem e quem fica com ele, numa ordem de preferência: vai para a primeira que já estiver no exército. Acessório (anel, escudo, gema, cajado) é um por personagem: quem já usa um melhor é pulada, e o item diz quem foi pulada e por quê; o que sobra vai para o comboio. Aparece no capítulo, no painel do mês (com o card **Acessórios: um por pessoa**), no paralogue e na ficha de quem recebe.
 - **O que fazer agora.** Recrutar quem já cumpre o requisito, certificar quem já pode, terminar a maestria antes de trocar, os paralogues que fecham neste capítulo.
 - **Atualizar, uma vez por capítulo.** Uma página com o exército e as recrutas, só com os campos que as recomendações usam (nível, classe, maestria, os ranks que o plano ainda pede, suportes). Mexer numa personagem marca ela como conferida; ao avançar de capítulo, todas voltam a pendentes e o painel avisa.
 - **Goals para cada aluna.** As duas skills que mais aproximam a próxima classe do plano — ou o breakpoint que vale mais (Vengeance da Bernadetta, Physic da Hapi), com o XP que falta.
@@ -97,7 +97,7 @@ node tools/serve.mjs
 
 Abre em http://localhost:8790. Testes: `node --test`.
 
-Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos em `notes/chapters/` (fora do git); depois de editar, `node tools/seal.mjs` valida e lacra de novo. Uma tarefa pode ter `auto` (regras em `taskAuto`, `js/logic.js`: `recruited`, `recruits`, `reached`, `mastered`, `support`, `paralogues`, `after`, `past`) para se marcar sozinha. Cada capítulo pode ter `items` (`item`, `kind`, `where`, `who` em ordem de preferência, `why`); os itens dos paralogues do Part 1 ficam em `data/paralogues.js`. O lacre recusa unidades, classes e tipos que não existem.
+Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos em `notes/chapters/` (fora do git); depois de editar, `node tools/seal.mjs` valida e lacra de novo. Uma tarefa pode ter `auto` (regras em `taskAuto`, `js/logic.js`: `recruited`, `recruits`, `reached`, `mastered`, `support`, `paralogues`, `after`, `past`) para se marcar sozinha. Cada capítulo pode ter `items` (`item`, `kind`, `where`, `who` em ordem de preferência, `why`); os itens dos paralogues do Part 1 ficam em `data/paralogues.js`. Quais itens são acessório, e qual vence quando dois querem a mesma pessoa, está em `data/accessories.js`. O lacre recusa unidades, classes e tipos que não existem.
 
 Para refazer ou acrescentar retratos (precisa de `curl` e `ffmpeg`): `bash tools/portraits.sh petra hapi`. Um personagem novo também entra na lista `PORTRAITS` do `sw.js`.
 
@@ -110,11 +110,11 @@ Chás, assuntos do chá, respostas do comentário final, pratos, presentes, pont
 | `index.html`, `css/styles.css` | A página. O visual é CSS e SVG desenhados à mão; a única arte do jogo são os retratos. |
 | `js/controls/` | Select, tooltip e diálogo, e o posicionamento das listas flutuantes. |
 | `img/portraits/` | Retratos dos personagens (WebP, 224 px), gerados por `tools/portraits.sh`. |
-| `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, próximos passos. Funções puras. |
+| `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, um acessório por pessoa, próximos passos. Funções puras. |
 | `js/store.js` | Estado no `localStorage`, exportar/importar JSON e a limpeza de tudo que entra. |
 | `js/sync.js`, `api/save.js`, `server/sync.js` | O save na nuvem: o lado do site, a função da Vercel e o que ela faz no Turso (versões numeradas, conflito, histórico). |
 | `js/views/` | Uma tela por arquivo, renderizada com um template que escapa tudo. |
-| `data/` | Builds (`builds.js`), classes, unidades, instrutores, paralogues e seus itens, chás e pratos (`social.js`, gerado), o save de exemplo e as notas lacradas. |
+| `data/` | Builds (`builds.js`), classes, unidades, instrutores, paralogues e seus itens, acessórios (`accessories.js`), chás e pratos (`social.js`, gerado), o save de exemplo e as notas lacradas. |
 | `docs/guia-mestre.md` | O guia mestre em texto, com histórico de versões. |
 | `sw.js`, `manifest.webmanifest` | Cópia offline e instalação como app. |
 | `test/` | Testes com o runner do próprio Node. |

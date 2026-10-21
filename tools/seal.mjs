@@ -12,6 +12,7 @@ import { UNIT_BY_ID } from '../data/units.js';
 import { CLASS_BY_NAME } from '../data/classes.js';
 import { PARALOGUE_BY_ID } from '../data/paralogues.js';
 import { SUPPORTS } from '../data/skills.js';
+import { EQUIPMENT, ACCESSORY_ORDER } from '../data/accessories.js';
 
 const AUTO_KEYS = new Set(['recruited', 'recruits', 'reached', 'mastered', 'support', 'paralogues', 'after', 'past']);
 // The kinds the item list knows how to label (js/views/ui.js, ITEM_KIND).
@@ -44,6 +45,9 @@ function check(note, file, seenIds) {
     if (!ITEM_KINDS.has(it.kind)) fail(`item ${it.item}: tipo desconhecido ${it.kind}`);
     if (!Array.isArray(it.who)) fail(`item ${it.item}: who deve ser uma lista`);
     for (const id of it.who) if (!UNIT_BY_ID[id]) fail(`item ${it.item}: unidade desconhecida ${id}`);
+    // One accessory per unit (js/logic.js, accessoryPlan): it has to know which items take the slot.
+    if (['ring', 'shield', 'gem'].includes(it.kind) && !EQUIPMENT.has(it.item)) fail(`item ${it.item}: acessório fora de data/accessories.js`);
+    if (EQUIPMENT.has(it.item) && !ACCESSORY_ORDER.includes(it.item)) fail(`item ${it.item}: falta em ACCESSORY_ORDER`);
   }
 }
 

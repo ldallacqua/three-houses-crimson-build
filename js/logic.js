@@ -8,6 +8,8 @@ import { UNITS, UNIT_BY_ID } from '../data/units.js';
 import { FACULTY } from '../data/faculty.js';
 import { PARALOGUES, PARALOGUE_BY_ID } from '../data/paralogues.js';
 import { SOCIAL } from '../data/social.js';
+import { EQUIPMENT, ACCESSORY_ORDER } from '../data/accessories.js';
+import { NOTE_KEYS, openNotes } from './seal.js';
 
 // ---------- ranks ----------
 
@@ -434,14 +436,67 @@ export function paralogueStatus(p, state) {
 
 // ---------- items ----------
 
+const wantedBy = (rec, state) => (rec.who ?? []).filter((id) => UNIT_BY_ID[id] && roleOf(state, id) !== 'ignorar');
+
 /**
  * Who keeps an item. `who` is the plan's order of preference; the first one in the army gets it.
  * When none is there yet, `next` is who to keep it for. Units set aside ('ignorar') are skipped.
+ * An accessory also skips whoever already wears a better one (accessoryPlan); `busy` names them.
  */
 export function itemHolder(rec, state) {
-  const wanted = (rec.who ?? []).filter((id) => UNIT_BY_ID[id] && roleOf(state, id) !== 'ignorar');
+  if (isAccessory(rec)) {
+    const { slots } = accessoryPlan(state, [rec]);
+    return slots.find((s) => sameItem(s.rec, rec));
+  }
+  const wanted = wantedBy(rec, state);
   const holder = wanted.find((id) => isRecruited(state, id)) ?? null;
-  return { holder, next: holder ? null : wanted[0] ?? null, wanted };
+  return { holder, next: holder ? null : wanted[0] ?? null, wanted, busy: [] };
+}
+
+export const isAccessory = (rec) => EQUIPMENT.has(rec.item);
+const sameItem = (a, b) => a.item === b.item && a.where === b.where;
+const accessoryRank = (rec) => {
+  const i = ACCESSORY_ORDER.indexOf(rec.item);
+  return i < 0 ? ACCESSORY_ORDER.length : i;
+};
+
+/**
+ * One accessory per unit. Takes the plan's accessories that can be had by now (the open chapters'
+ * and those of the paralogues done or open) plus `extra`, and hands them out in ACCESSORY_ORDER:
+ * each goes to the first of its own order who is in the army and has none yet. An item with nobody
+ * left is spare, or kept for (`next`) a unit still to join.
+ * Returns `slots` (each item: holder, next, wanted, busy: [{ id, item }] who it skipped) and
+ * `wearing` (unit id → item).
+ */
+export function accessoryPlan(state, extra = []) {
+  const pool = [];
+  for (const p of PARALOGUES) {
+    if (!['done', 'open', 'closing'].includes(paralogueStatus(p, state).phase)) continue;
+    pool.push(...(p.items ?? []).filter(isAccessory).map((rec) => ({ ...rec, from: p.name })));
+  }
+  for (const key of NOTE_KEYS) {
+    const from = key === 'p2' ? 'Parte 2' : `Cap. ${key}`;
+    pool.push(...(openNotes(key, state.chapter)?.items ?? []).filter(isAccessory).map((rec) => ({ ...rec, from })));
+  }
+  for (const rec of extra) if (!pool.some((r) => sameItem(r, rec))) pool.push(rec);
+
+  const wearing = new Map();
+  const promised = new Set();
+  const slots = pool
+    .map((rec, i) => ({ rec, i }))
+    .sort((a, b) => accessoryRank(a.rec) - accessoryRank(b.rec) || a.i - b.i)
+    .map(({ rec }) => {
+      const wanted = wantedBy(rec, state);
+      const holder = wanted.find((id) => isRecruited(state, id) && !wearing.has(id)) ?? null;
+      const busy = wanted.slice(0, holder ? wanted.indexOf(holder) : wanted.length)
+        .filter((id) => wearing.has(id))
+        .map((id) => ({ id, item: wearing.get(id).item }));
+      if (holder) wearing.set(holder, rec);
+      const next = holder ? null : wanted.find((id) => !isRecruited(state, id) && !promised.has(id)) ?? null;
+      if (next) promised.add(next);
+      return { rec, holder, next, wanted, busy };
+    });
+  return { slots, wearing };
 }
 
 /** The items of the Part 1 paralogues still to play (or, with open: false, all but the missed). */

@@ -277,7 +277,7 @@ test('an item goes to the first of the plan’s order who is in the army', async
   const { itemHolder } = await import('../js/logic.js');
   const s = snap();
   const dust = { who: ['constance', 'lysithea', 'dorothea'] };
-  assert.deepEqual(itemHolder(dust, s), { holder: 'constance', next: null, wanted: ['constance', 'lysithea', 'dorothea'] });
+  assert.deepEqual(itemHolder(dust, s), { holder: 'constance', next: null, wanted: ['constance', 'lysithea', 'dorothea'], busy: [] });
   s.units.constance.recruited = false;
   assert.equal(itemHolder(dust, s).holder, 'dorothea', 'Lysithea is not in the army yet');
   s.units.lysithea.recruited = true;
@@ -285,8 +285,39 @@ test('an item goes to the first of the plan’s order who is in the army', async
   s.units.lysithea.role = 'ignorar';
   assert.deepEqual(itemHolder(dust, s).wanted, ['constance', 'dorothea'], 'units set aside drop out');
   const luin = { who: ['ingrid'] };
-  assert.deepEqual(itemHolder(luin, s), { holder: null, next: 'ingrid', wanted: ['ingrid'] }, 'kept for her until she joins');
-  assert.deepEqual(itemHolder({ who: [] }, s), { holder: null, next: null, wanted: [] });
+  assert.deepEqual(itemHolder(luin, s), { holder: null, next: 'ingrid', wanted: ['ingrid'], busy: [] }, 'kept for her until she joins');
+  assert.deepEqual(itemHolder({ who: [] }, s), { holder: null, next: null, wanted: [], busy: [] });
+});
+
+test('each unit wears one accessory: a better one sends the other down its own order', async () => {
+  const { accessoryPlan, itemHolder } = await import('../js/logic.js');
+  const at = (chapter, patch = (x) => x) => patch(normalize({ ...snap(), chapter }));
+  const plan = (s) => {
+    const { slots, wearing } = accessoryPlan(s);
+    return { slots, wearing, by: (item) => slots.filter((x) => x.rec.item === item) };
+  };
+
+  // Chapter 5: only its own Accuracy Ring, so Edelgard wears it.
+  const five = plan(at(5));
+  assert.equal(five.by('Accuracy Ring')[0].holder, 'edelgard');
+
+  // Chapter 7: Rumored Nuptials gives Edelgard and Petra better rings, and the Accuracy Ring moves on.
+  const seven = plan(at(7));
+  assert.equal(seven.by('Prayer Ring')[0].holder, 'edelgard');
+  assert.equal(seven.by('Goddess Ring')[0].holder, 'petra');
+  const [acc] = seven.by('Accuracy Ring');
+  assert.equal(acc.holder, 'byleth');
+  assert.deepEqual(acc.busy, [{ id: 'edelgard', item: 'Prayer Ring' }, { id: 'petra', item: 'Goddess Ring' }]);
+  assert.equal(itemHolder(acc.rec, at(7)).holder, 'byleth', 'every page agrees');
+  const holders = seven.slots.map((x) => x.holder).filter(Boolean);
+  assert.equal(new Set(holders).size, holders.length, 'nobody wears two');
+
+  // Chapter 9 without Marianne: both Healing Staffs wait, each for a different healer.
+  const nine = plan(at(9));
+  assert.equal(nine.by('Caduceus Staff')[0].holder, 'hapi');
+  assert.deepEqual(nine.by('Healing Staff').map((x) => [x.holder, x.next]), [[null, 'marianne'], [null, 'mercedes']]);
+  const withMarianne = plan(at(9, (s) => { s.units.marianne.recruited = true; return s; }));
+  assert.deepEqual(withMarianne.by('Healing Staff').map((x) => x.holder), ['marianne', null]);
 });
 
 test('the overview lists the items of the paralogues still open, not the done or missed ones', async () => {

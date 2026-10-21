@@ -1,6 +1,6 @@
 # FIRE EMBLEM: THREE HOUSES — GUIA MESTRE DO WAIFU SQUAD
 
-> **Versão 2.7 • atualizado em 20/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relatos do jogador (Death Blow ainda não liberada; o jogo só mostra suporte C/B/A/S)**
+> **Versão 2.8 • atualizado em 21/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relatos do jogador (Death Blow ainda não liberada; o jogo só mostra suporte C/B/A/S)**
 > **Progresso:** Parte 1, *White Clouds*, Capítulo 6 — **Rumors of a Reaper**, data **9/7** (antes de concluir a missão do mês).
 > **Casa:** Black Eagles; objetivo **Crimson Flower (Edelgard)**. **Byleth masculino**.
 > **DLC:** todas; *Cindered Shadows* concluída, Constance, Hapi e Anna já recrutadas.
@@ -241,26 +241,56 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 
 ### Itens do Part 1: quem fica com o quê
 
-*Recomendação.* Vai para a primeira da lista que já estiver no exército. Efeitos conferidos no fe3h.com. Os itens das missões dos Caps. 7–12 e da Parte 2 estão nas notas lacradas do site, para não adiantar os mapas.
+*Recomendação.* Vai para a primeira da lista que já estiver no exército. **Acessório** (anel, escudo, gema, cajado que não é arma, Thyrsus, Fetters) vai para a primeira da lista que estiver no exército **e ainda sem acessório melhor**: cada personagem equipa um só (ver abaixo). Efeitos conferidos no fe3h.com. Os itens das missões dos Caps. 7–12 e da Parte 2 estão nas notas lacradas do site, para não adiantar os mapas.
 
 | Item | De onde | Para | Por quê |
 |---|---|---|---|
-| March Ring | Cap. 6, baú de cima | Dorothea → Bernadetta | Mov +1 em quem anda a pé; Dancer a partir do Cap. 9 |
+| Accuracy Ring | Cap. 5, Fortress Knight | Edelgard → Petra → Byleth → Shamir → Bernadetta | Hit +10; sai da Edelgard quando ela pegar o Prayer Ring |
+| March Ring | Cap. 6, baú de cima | Dorothea → Bernadetta → Shamir | Mov +1 em quem anda a pé; Dancer a partir do Cap. 9 |
 | Levin Sword | Cap. 6, baú de baixo | Anna → Dorothea | espada mágica de 1–2 de alcance (Sword C) |
 | Thyrsus | Land of the Golden Deer | Lysithea → Constance → Hapi | +2 de alcance mágico; Crest de Gloucester na Lysithea |
 | Luín | Rumored Nuptials (com a Ingrid) | Ingrid | Burning Quake com a Crest dela |
-| Goddess Ring | Rumored Nuptials (com a Dorothea) | Petra → Edelgard | Luck +4 e cura por turno na linha de frente |
-| Prayer Ring | Rumored Nuptials (Brigand) | Edelgard → Petra | Miracle e +5 HP por turno |
+| Goddess Ring | Rumored Nuptials (com a Dorothea) | Petra → Shamir → Edelgard → Ingrid | Luck +4 e cura por turno na linha de frente |
+| Prayer Ring | Rumored Nuptials (Brigand) | Edelgard → Petra → Byleth | Miracle e +5 HP por turno |
 | Killer Axe | Rumored Nuptials (baú esq.) | Edelgard → Petra | crítico alto com Death Blow |
-| Healing Staff | Rumored Nuptials (baú dir.) | Marianne → Hapi → Dorothea | cura +10 |
+| Healing Staff | Rumored Nuptials (baú dir.) | Marianne → Hapi → Dorothea → Mercedes | cura +10; a Hapi usa até ganhar o Caduceus |
 | Vajra-Mushti | Black Market Scheme | Byleth | ataca 2× ao iniciar: Brawl em dobro (plano Punhos) |
 | Seraph Robe | Sword and Shield of Seiros | Lysithea → Constance | +5 HP máximo na maga mais frágil |
-| Fetters of Dromi | A Cursed Relic | Bernadetta → Constance | Mov +1 e Canto em quem anda a pé (com Crest) |
-| Experience Gem | Oil and Water | Ingrid → Lysithea → Marianne | a recruta mais atrasada no nível |
+| Fetters of Dromi | A Cursed Relic | Bernadetta → Constance → Hapi | Mov +1 e Canto em quem anda a pé (com Crest) |
+| Experience Gem | Oil and Water | Ingrid → Marianne → Lysithea → Constance | a recruta mais atrasada no nível |
 | Knowledge Gem | Tales of the Red Canyon | Byleth | ele não tem Goals: skill e maestria em dobro |
 | Spear of Assal | An Ocean View | Ingrid → Petra | lança sagrada (Lance A), sem dano para quem usa |
-| Caduceus Staff | An Ocean View | Hapi → Marianne | +1 de alcance mágico e cura por turno |
+| Caduceus Staff | An Ocean View | Hapi → Marianne → Constance | +1 de alcance mágico e cura por turno |
 | Black Pearl | An Ocean View (Bishop) | Dorothea | Charm +2, se der antes do White Heron Cup |
+
+### Acessórios: um por personagem
+
+*Fato* (fe3h.com, Serenes Forest): anel, escudo, gema e os cajados que não são arma ocupam **o mesmo espaço de equipamento**. Cada personagem usa **um só**, ao lado da arma. Quando dois acessórios querem a mesma pessoa, fica o mais importante para ela, e o outro desce para a próxima da lista dele. Ordem de importância: Thyrsus, Knowledge Gem, Caduceus Staff, Prayer Ring, Fetters of Dromi, March Ring, Healing Staff, Experience Gem, Goddess Ring, Accuracy Ring (os das missões lacradas entram no meio, e o site já os considera).
+
+Com Part 1 completo (até os paralogues), fica assim:
+
+| Personagem | Acessório | Antes dele |
+|---|---|---|
+| Byleth | Knowledge Gem (Red Canyon) | Accuracy Ring |
+| Edelgard | Prayer Ring (Rumored Nuptials) | Accuracy Ring |
+| Petra | Goddess Ring (Rumored Nuptials) | — |
+| Lysithea | Thyrsus (Land of the Golden Deer) | — |
+| Hapi | Caduceus Staff (An Ocean View) | Healing Staff, se a Marianne ainda não entrou |
+| Bernadetta | Fetters of Dromi (A Cursed Relic) | Accuracy Ring, se sobrar para ela |
+| Dorothea | March Ring (Cap. 6) | — |
+| Ingrid | Experience Gem (Oil and Water) | — |
+| Marianne | Healing Staff (Rumored Nuptials) | — |
+| Shamir | Accuracy Ring, quando o Byleth pegar a Knowledge Gem | — |
+| Constance | ainda nenhum: o site avisa quando aparecer um para ela | — |
+
+**O que sobra** (uma segunda Healing Staff, por exemplo) fica no comboio e vai para quem entrar no mapa sem acessório. Os acessórios das missões dos Caps. 7–12 e da Parte 2 seguem a mesma regra; o site recalcula a cada capítulo, no Painel (**Acessórios: um por pessoa**) e em cada item.
+
+**Escudos** — *fato* (Serenes Forest, fe3h.com, fórum Serenes Forest e GameFAQs):
+- O peso do escudo **soma com o da arma**. Cada 5 de Str anulam 1 ponto desse total; o que sobra sai do **Attack Speed**, e a esquiva usa o AS, então cai junto. O inimigo ataca duas vezes quando o AS dele passa o seu por 4 ou mais.
+- Escudos de loja (proteção/peso): Leather 1/1, Iron 2/2, Steel 3/3, Silver 4/4; Talisman e Hexlock dão Res também, mas pesam 4 e 5.
+- **Edelgard e Byleth: não agora.** Com Str 22, a Edelgard anula 4 de peso, e a Killer Axe pesa 12: ela já perde 8 de AS, e cada ponto de escudo vira −1 de AS e de esquiva. O Byleth vive de atacar duas vezes (manopla ou Sword of the Creator, peso 9). Além disso, o espaço dos dois já tem coisa melhor (Prayer Ring e Knowledge Gem).
+- **Quando passa a valer:** com **Heavy Armor C**, qualquer personagem aprende **Weight −3** (equipe em Abilities), que anula um Steel Shield. Heavy Armor é ponto forte da Edelgard.
+- **Os bons são os de peso 0 da Parte 2** (Aurora, Kadmos, Lampos): +3 de proteção e anulam a fraqueza do tipo de unidade (voadora, armadura, cavalaria). Seiros Shield e Ochain Shield não saem para você nesta rota.
 
 ## 7. REGRAS PARA NÃO DESPERDIÇAR
 
@@ -272,7 +302,8 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 6. **Exame só com 100%.** Selo e Abyssian Exam Pass são gastos mesmo se reprovar.
 7. **Relíquias machucam quem não tem Crest** (10 de dano após cada combate): Thyrsus, Fetters of Dromi, Luín, Vajra-Mushti.
 8. **Uma Dancer por campanha.**
-9. **Prazos:** paralogues 7–11, 8–11, Red Canyon 8–10, An Ocean View 9–11; recrutamento até o 11.
+9. **Um acessório por personagem** (anel, escudo, gema ou cajado). Escudo pesa: só vale com peso 0 ou com Weight −3.
+10. **Prazos:** paralogues 7–11, 8–11, Red Canyon 8–10, An Ocean View 9–11; recrutamento até o 11.
 
 ## 8. CHECKLIST PARA O PRÓXIMO UPDATE
 
@@ -306,6 +337,9 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 - Maestria de classe (XP por tier, +1 por combate, Knowledge Gem, estátua da Cethleann): https://fireemblemwiki.org/wiki/Class_mastery · https://www.fe3h.com/classes · https://www.fe3h.com/monastery/saint_statues
 - Abyssian Exam Pass (750 Renown, Pagan Altar, gasto mesmo reprovando): https://fireemblemwiki.org/wiki/Abyssian_Exam_Pass
 - Thyrsus, Fetters of Dromi, Luín, Vajra-Mushti: https://fireemblemwiki.org
+- Acessórios e escudos (proteção, peso, efeito): https://www.fe3h.com/equipment · https://serenesforest.net/three-houses/weapons-and-items/equipment/ · peso das armas: https://serenesforest.net/three-houses/weapons-and-items/axes/
+- Peso do escudo soma com o da arma, Str/5 anula, esquiva cai junto: https://forums.serenesforest.net/topic/88733-speed-weight-and-attack-speed/ · https://gamefaqs.gamespot.com/boards/204445-fire-emblem-three-houses/77890529
+- Weight −3 em Heavy Armor C, Weight −5 em A+: https://serenesforest.net/three-houses/characters/learned-abilities-arts/
 - Shamir na Crimson Flower: https://fireemblemwiki.org/wiki/Shamir
 - Paralogues e janelas: https://www.fe3h.com/paralogues (land_of_the_golden_deer, rumored_nuptials, a_cursed_relic, black_market_scheme, sword_and_shield_of_seiros, oil_and_water, tales_of_the_red_canyon, an_ocean_view, the_secret_merchant)
 - Missão do Cap. 6: https://www.fe3h.com/chapters/part1/chapter_6
@@ -317,6 +351,7 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 - **v1.0 — 18/10/2026:** pesquisa inicial + equipe feminina de 10, sem screenshots reais.
 - **v2.0 — 18/10/2026:** baseada nas 8 telas reais do Cap. 6. Bernadetta Archer, Mage no Lv 10 para Hapi/Constance, Shamir, Flying/suporte para Ingrid, Lorenz/Thyrsus, March Ring, Byleth e maestrias não verificadas.
 - **v2.1 — 18/10/2026:** Seteth e Manuela fora do Faculty Training durante todo o Cap. 6; Ingrid via suporte B + pedido espontâneo; Flying fica para o Cap. 7.
+- **v2.8 — 21/10/2026:** *Correção:* **cada personagem equipa um acessório só** (anel, escudo, gema e cajado dividem o mesmo espaço). O guia dava dois ou três para a mesma pessoa (Edelgard: Accuracy Ring e Prayer Ring; Petra: Goddess Ring e outros). Agora cada item tem uma ordem mais longa e uma importância: quem já usa um melhor é pulado, e o que sobra vai para a próxima da ordem ou para o comboio. Nova seção **Acessórios: um por personagem**, com escudos: o peso soma com o da arma e tira AS e esquiva, então não valem agora na Edelgard nem no Byleth; os de peso 0 da Parte 2 valem. No site: card **Acessórios: um por pessoa** no Painel, e cada item diz quem foi pulado e por quê. Também no site: o lembrete mensal de olhar a aba Recrutamento se marca sozinho quando o mês acaba.
 - **v2.7 — 20/10/2026:** *Correção:* **Group Task é uma por semana, sempre em dupla** (o Byleth não participa). Este guia e o site listavam várias pessoas por tarefa; agora o site indica uma dupla, pelo que o plano pede, ponto forte na skill e suporte entre as duas (dados do fe3h.com e da Fire Emblem Wiki). No site, as notas dos capítulos saíram do fundo de caderno pautado para um painel liso, e os paralogues viraram uma lista em que cada linha mostra quem fica com cada item e abre para o resto.
 - **v2.6 — 20/10/2026:** o site virou **build selecionável**: no primeiro acesso a pessoa escolhe a build (hoje só a **Corte Carmesim**, este plano) e começa no Cap. 1; este save virou o "save de exemplo". **Notas dos Caps. 1–5** (quests que liberam atividades, Faculty Training só a partir do Cap. 3, missões com baús e drops). **Quem fica com cada item**, por capítulo e por paralogue (tabela acima para o Part 1). *Correções conferidas:* cada Ashen Wolf entra no jogo principal depois de um capítulo de *Cindered Shadows* (Constance 3, Hapi 4, Balthus 5, Yuri 6), não de um capítulo do jogo; **Retribution** e **The Face Beneath** não existem na Crimson Flower; **Arrow of Indra** é uma lança que bate com magia, não um arco.
 - **v2.5 — 19/10/2026:** site com a aba **Atualizar** (todo o esquadrão e as recrutas numa página, só com os campos que as recomendações usam), lembrete a cada capítulo novo e **checklist que se marca sozinha** quando o estado mostra que o item foi feito ou perdeu o sentido. Lembrete da Edelgard no painel passou a pedir B (o C+ é oculto).

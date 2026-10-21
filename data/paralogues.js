@@ -3,7 +3,8 @@
 // decides the reward that matters most here (keyReward). Part II paralogues are in the sealed notes.
 //
 // items: who keeps each reward worth keeping, in the plan's order of preference. The first one in
-// the army gets it (logic.js, itemHolder). Item effects: fe3h.com item and weapon pages.
+// the army gets it (logic.js, itemHolder); an accessory skips whoever already wears a better one
+// (data/accessories.js). Item effects: fe3h.com item and weapon pages.
 
 export const PARALOGUES = [
   {
@@ -38,10 +39,10 @@ export const PARALOGUES = [
     star: 'Luín — lança relíquia (Mt 17). Com a Crest da Ingrid, libera Burning Quake. Só vem se a Ingrid estiver recrutada.',
     items: [
       { item: 'Luín', kind: 'relic', where: 'Fim do mapa, só com a Ingrid recrutada', who: ['ingrid'], why: 'A Crest de Daphnel da Ingrid libera Burning Quake, o melhor golpe dela. Ninguém mais aproveita.' },
-      { item: 'Goddess Ring', kind: 'ring', where: 'Fim do mapa, com a Dorothea recrutada', who: ['petra', 'edelgard'], why: 'Luck +4 e cura um pouco de HP por turno: para quem fica na frente e esquiva.' },
-      { item: 'Prayer Ring', kind: 'ring', where: 'Cai de um Brigand', who: ['edelgard', 'petra'], why: 'Miracle (pode sobreviver com 1 HP) e +5 de HP por turno. Para a outra da linha de frente.' },
+      { item: 'Goddess Ring', kind: 'ring', where: 'Fim do mapa, com a Dorothea recrutada', who: ['petra', 'shamir', 'edelgard', 'ingrid'], why: 'Luck +4 e cura um pouco de HP por turno: para quem fica na frente e esquiva. Quando a Petra ganhar um acessório melhor, passa para a próxima da ordem.' },
+      { item: 'Prayer Ring', kind: 'ring', where: 'Cai de um Brigand', who: ['edelgard', 'petra', 'byleth'], why: 'Miracle (pode sobreviver com 1 HP) e +5 de HP por turno. Para a outra da linha de frente.' },
       { item: 'Killer Axe', kind: 'weapon', where: 'Baú da esquerda', who: ['edelgard', 'petra'], why: 'Machado com crítico alto (Axe C). Combina com Death Blow.' },
-      { item: 'Healing Staff', kind: 'staff', where: 'Baú da direita', who: ['marianne', 'hapi', 'dorothea'], why: 'Cura +10, para a curandeira dedicada (Marianne). Sem ela, a Hapi usa até ganhar o Caduceus Staff do An Ocean View.' },
+      { item: 'Healing Staff', kind: 'staff', where: 'Baú da direita', who: ['marianne', 'hapi', 'dorothea', 'mercedes'], why: 'Cura +10, para a curandeira dedicada (Marianne). Sem ela, a Hapi usa até ganhar o Caduceus Staff do An Ocean View.' },
     ],
     rewards: [
       'Luín e Galatea Pegasus Co.: no fim, se a Ingrid estiver recrutada',
@@ -105,7 +106,7 @@ export const PARALOGUES = [
     window: [8, 11],
     star: 'Fetters of Dromi — Canto e +1 de movimento. Sem Crest, 10 de dano depois de cada combate: prefira uma portadora com Crest.',
     items: [
-      { item: 'Fetters of Dromi', kind: 'relic', where: 'Fim do mapa', who: ['bernadetta', 'constance'], why: 'Movimento +1 e Canto (anda depois de agir). Rende mais em quem anda a pé: a Bernadetta atira e recua. Ela tem Crest, então não toma o dano da relíquia.' },
+      { item: 'Fetters of Dromi', kind: 'relic', where: 'Fim do mapa', who: ['bernadetta', 'constance', 'hapi'], why: 'Movimento +1 e Canto (anda depois de agir). Rende mais em quem anda a pé: a Bernadetta atira e recua. Ela tem Crest, então não toma o dano da relíquia.' },
     ],
     rewards: [
       'Fetters of Dromi: no fim',
@@ -127,7 +128,7 @@ export const PARALOGUES = [
     window: [8, 11],
     star: 'Experience Gem (mais XP de nível para quem equipar).',
     items: [
-      { item: 'Experience Gem', kind: 'gem', where: 'Cai do Archer inimigo', who: ['ingrid', 'lysithea', 'marianne'], why: 'Dobra o XP de nível. Para a recruta que entrou por último e está atrás no nível; troque de dona quando ela alcançar as outras.' },
+      { item: 'Experience Gem', kind: 'gem', where: 'Cai do Archer inimigo', who: ['ingrid', 'marianne', 'lysithea', 'constance'], why: 'Dobra o XP de nível. Para a recruta que entrou por último e está atrás no nível; troque de dona quando ela alcançar as outras.' },
     ],
     rewards: [
       'Experience Gem: cai do Archer inimigo',
@@ -160,7 +161,7 @@ export const PARALOGUES = [
     star: 'Spear of Assal (lança relíquia) e Caduceus Staff. Os itens ficam com você mesmo quando a Flayn sair.',
     items: [
       { item: 'Spear of Assal', kind: 'sacred', where: 'Fim do mapa', who: ['ingrid', 'petra'], why: 'Lança sagrada (Lance A), eficaz contra cavalaria e cura por turno. Ninguém toma dano por usar.' },
-      { item: 'Caduceus Staff', kind: 'staff', where: 'Fim do mapa', who: ['hapi', 'marianne'], why: 'Alcance de magia +1 e cura por turno, mais forte com Crest. A Hapi tem Crest, e o alcance soma com o +1 de Dark Magic da Valkyrie.' },
+      { item: 'Caduceus Staff', kind: 'staff', where: 'Fim do mapa', who: ['hapi', 'marianne', 'constance'], why: 'Alcance de magia +1 e cura por turno, mais forte com Crest. A Hapi tem Crest, e o alcance soma com o +1 de Dark Magic da Valkyrie.' },
       { item: 'Black Pearl', kind: 'stat', where: 'Cai de um Bishop', who: ['dorothea'], why: 'Charm +2 permanente. Se der para jogar antes do White Heron Cup, ajuda a vencer.' },
     ],
     rewards: ['Spear of Assal, Caduceus Staff e dois battalions: no fim', 'Advanced Seal, Black Pearl e Levin Sword: caem dos Bishops'],

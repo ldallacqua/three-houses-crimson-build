@@ -70,6 +70,7 @@ test('the overview and the review page render and point at what is left', async 
   const { atualizar } = await import('../js/views/atualizar.js');
   const s = snapshotState();
   assert.match(text(painel(s)), /atualize o esquadrão \d+ de \d+ ainda não foram conferidas/);
+  assert.match(text(painel(s)), /Acessórios: um por pessoa.*Edelgard Accuracy Ring/, 'one accessory each, from the chapters open so far');
   const page = text(atualizar(s));
   assert.match(page, /0 de \d+ conferidas/);
   assert.match(page, /Recrutas .*Lysithea/);

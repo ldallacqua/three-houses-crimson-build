@@ -5,7 +5,7 @@ import { html } from '../html.js';
 import { PARALOGUES } from '../../data/paralogues.js';
 import { UNIT_BY_ID } from '../../data/units.js';
 import { FACULTY_BY_ID } from '../../data/faculty.js';
-import { paralogueStatus, isRecruited, itemHolder } from '../logic.js';
+import { paralogueStatus, isRecruited, itemHolder, isAccessory } from '../logic.js';
 import { avatar, icon, switchField, g, itemRow } from './ui.js';
 
 const PHASE = {
@@ -29,7 +29,7 @@ function who(id, state) {
 function loot(rec, state) {
   const { holder, next } = itemHolder(rec, state);
   const def = UNIT_BY_ID[holder ?? next];
-  return html`<span class="loot k-${rec.kind}">${def ? avatar(def, 'xs', { dim: !holder }) : ''}<span>${rec.item}</span><span class="loot-to">→ ${def?.name ?? NOBODY[rec.kind] ?? 'quem precisar'}</span></span>`;
+  return html`<span class="loot k-${rec.kind}">${def ? avatar(def, 'xs', { dim: !holder }) : ''}<span>${rec.item}</span><span class="loot-to">→ ${def?.name ?? NOBODY[rec.kind] ?? (isAccessory(rec) ? 'sobra' : 'quem precisar')}</span></span>`;
 }
 
 function row(p, state) {

@@ -1,12 +1,12 @@
 // Overview: where the campaign stands and the short list of what to do now.
 
 import { html, md } from '../html.js';
-import { UNIT_BY_ID } from '../../data/units.js';
+import { UNITS, UNIT_BY_ID } from '../../data/units.js';
 import { PARALOGUES } from '../../data/paralogues.js';
 import { SKILL_NAME, RECRUIT_DEADLINE } from '../../data/skills.js';
 import {
   nextSteps, bylethTraining, paralogueStatus, composition, recruitTargets, birthdaysInMonth, parseDate,
-  monthOfChapter, isRecruited, roleOf, reviewStatus, taskDone, unitState, supportIndex, prefsOf, paralogueItems,
+  monthOfChapter, isRecruited, roleOf, reviewStatus, taskDone, unitState, supportIndex, prefsOf, paralogueItems, accessoryPlan,
 } from '../logic.js';
 import { currentNotes } from '../seal.js';
 import { avatar, taskItem, tagChip, chapterLabel, skillIcon, rank, emptyState, icon, itemRow } from './ui.js';
@@ -91,8 +91,32 @@ function itemsCard(state, notes) {
   if (!list.length) return '';
   return html`<section class="card" aria-labelledby="it-title">
     <h2 class="card-title" id="it-title">Itens deste capítulo</h2>
-    <p class="card-lead">Quem fica com cada item que dá para ganhar agora: a primeira da ordem que já estiver no exército. Os nomes em cinza ainda não entraram.</p>
+    <p class="card-lead">Quem fica com cada item que dá para ganhar agora: a primeira da ordem que já estiver no exército e, se for acessório, ainda não usar um melhor. Os nomes riscados ainda não entraram.</p>
     <ul class="item-list">${list.map((rec) => itemRow(rec, state))}</ul>
+  </section>`;
+}
+
+const ROLE_ORDER = ['titular', 'rotacao', 'reserva', 'utilitario', 'temporaria'];
+
+/** Who wears which accessory: one each, from what the open chapters and paralogues give. */
+function accessoriesCard(state) {
+  const { slots, wearing } = accessoryPlan(state);
+  if (!slots.length) return '';
+  const army = UNITS
+    .filter((u) => isRecruited(state, u.id) && (wearing.has(u.id) || ['titular', 'rotacao'].includes(roleOf(state, u.id))))
+    .sort((a, b) => ROLE_ORDER.indexOf(roleOf(state, a.id)) - ROLE_ORDER.indexOf(roleOf(state, b.id)));
+  const spare = slots.filter((s) => !s.holder);
+  return html`<section class="card" aria-labelledby="ac-title">
+    <h2 class="card-title" id="ac-title">Acessórios: um por pessoa</h2>
+    <p class="card-lead">Anel, escudo, gema ou cajado: cada personagem equipa um só, ao lado da arma. Escudo também pesa e tira velocidade. Com o que já dá para pegar até aqui, fica assim:</p>
+    <ul class="acc-list">${army.map((u) => {
+      const rec = wearing.get(u.id);
+      return html`<li class="${rec ? '' : 'none'}">
+        <a class="person" href="#/unidade/${u.id}">${avatar(u, 'sm')}<span>${u.name}</span></a>
+        <span class="acc-item">${rec ? html`<strong>${rec.item}</strong><span class="acc-from">${rec.from}</span>` : 'nenhum ainda'}</span>
+      </li>`;
+    })}</ul>
+    ${spare.length ? html`<p class="hint acc-spare"><strong>Sobrando:</strong> ${spare.map((s, i) => html`${i ? ' · ' : ''}${s.rec.item}${s.next ? ` (guarde para ${UNIT_BY_ID[s.next].name})` : ''}`)}. Guarde no comboio e equipe em quem entrar no mapa sem acessório.</p>` : ''}
   </section>`;
 }
 
@@ -206,6 +230,7 @@ export function painel(state) {
     ${tiles(state, notes)}
     <div class="cols">${stepsCard(state, notes)}${checklistCard(state, notes)}</div>
     ${itemsCard(state, notes)}
+    ${accessoriesCard(state)}
     <div class="cols">${trainingCard(state, notes)}${deadlinesCard(state)}</div>
     <div class="cols">${birthdaysCard(state)}${progressCard(state)}</div>
   </section>`;

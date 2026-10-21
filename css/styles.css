@@ -1280,23 +1280,24 @@
   .item-list { list-style: none; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); align-items: start; }
   .item-list.compact { grid-template-columns: 1fr; gap: 8px; }
   .item-rec {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    /* The holder sits beside the text, and drops below it when the card is too narrow for both. */
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px 16px;
-    align-items: start;
+    align-items: flex-start;
     padding: 12px 14px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--line-soft);
     background: rgb(255 255 255 / 0.025);
   }
   .compact .item-rec { padding: 10px 12px; }
-  .item-main { display: grid; gap: 3px; min-width: 0; }
+  .item-main { display: grid; gap: 3px; min-width: 0; flex: 1 1 240px; }
   .item-name { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
   .item-name strong { font-size: 1.02rem; }
   .item-where { font-size: 0.86rem; color: var(--muted); }
   .item-from { color: var(--gold); font-weight: 700; }
   .item-why { font-size: 0.93rem; color: var(--ink-2); }
-  .item-to { display: grid; gap: 5px; justify-items: end; }
+  .item-to { display: grid; gap: 5px; justify-items: end; max-width: 250px; margin-left: auto; }
   .item-to .person { gap: 8px; text-decoration: none; color: var(--ink); font-weight: 800; }
   .item-to-text { display: grid; line-height: 1.2; }
   .item-to-label { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 800; }
@@ -1304,6 +1305,15 @@
   .item-order .on { color: var(--gold-hi); font-weight: 800; }
   .item-order .off { color: var(--muted); opacity: 0.75; text-decoration: line-through; text-decoration-color: rgb(154 145 127 / 0.5); }
   .item-order .sep { color: var(--muted); }
+  .item-order .busy { color: var(--muted); }
+  .acc-list { list-style: none; display: grid; gap: 8px 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+  .acc-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 10px 7px 7px; border-radius: var(--radius-sm); border: 1px solid var(--line-soft); background: rgb(255 255 255 / 0.025); }
+  .acc-list .person { color: var(--ink); font-weight: 700; min-width: 0; }
+  .acc-item { display: grid; text-align: right; line-height: 1.25; font-size: 0.9rem; }
+  .acc-from { font-size: 0.74rem; color: var(--muted); }
+  .acc-list li.none .acc-item { color: var(--muted); font-style: italic; }
+  .acc-spare { margin-top: 12px; }
+  .item-busy { font-size: 0.78rem; color: var(--muted); text-align: right; }
   .item-kind.k-relic, .item-kind.k-sacred { background: rgb(214 180 106 / 0.14); color: var(--gold-hi); border-color: var(--line-strong); }
   .item-kind.k-stat, .item-kind.k-gem { background: rgb(144 119 214 / 0.16); color: #cfc2f4; border-color: rgb(144 119 214 / 0.4); }
   .item-kind.k-ring, .item-kind.k-shield, .item-kind.k-staff { background: var(--info-bg); color: var(--info); border-color: rgb(134 182 230 / 0.35); }
@@ -1343,9 +1353,9 @@
     .build-banner .avatar.xl { --size: 96px; }
     .build-faces { max-width: 150px; }
     .build-faces .avatar.md { --size: 34px; }
-    .item-rec { grid-template-columns: 1fr; }
-    .item-to { justify-items: start; }
+    .item-to { justify-items: start; max-width: none; margin-left: 0; }
     .item-order { justify-content: flex-start; }
+    .item-busy { text-align: left; }
   }
 
   @media (prefers-reduced-motion: reduce) {

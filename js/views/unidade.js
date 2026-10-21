@@ -6,7 +6,7 @@ import { SKILLS, STATS } from '../../data/skills.js';
 import { CLASSES, TIER_LABEL } from '../../data/classes.js';
 import {
   unitState, roleOf, isRecruited, planStatus, unitAdvice, suggestGoals, meetsRank, recruitStatus, prefsOf,
-  itemHolder, paralogueItems,
+  itemHolder, paralogueItems, accessoryPlan,
 } from '../logic.js';
 import { TEA_GISTS } from '../../data/tea-gists.js';
 import { currentNotes, NOTE_KEYS, openNotes } from '../seal.js';
@@ -25,9 +25,10 @@ function itemsCard(def, state) {
     return (h.holder ?? h.next) === def.id;
   });
   if (!mine.length) return '';
+  const worn = accessoryPlan(state).wearing.get(def.id);
   return html`<section class="card" aria-labelledby="it-title">
     <h2 class="card-title" id="it-title">Itens para ${g(def, 'ela', 'ele')}</h2>
-    <p class="card-lead">Pelo plano, estes itens ficam com ${def.name}. Os de capítulos ainda lacrados aparecem quando você chegar lá.</p>
+    <p class="card-lead">Pelo plano, estes itens ficam com ${def.name}.${worn ? ` Acessório agora: ${worn.item} (cada personagem equipa um só).` : ''} Os de capítulos ainda lacrados aparecem quando você chegar lá.</p>
     <ul class="item-list">${mine.map((rec) => itemRow(rec, state))}</ul>
   </section>`;
 }
