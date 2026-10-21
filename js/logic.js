@@ -587,7 +587,7 @@ const nameList = (ids) => {
  * A chapter task's own rule, read against the state. Returns null while the task still makes sense,
  * or { why } once the state shows it is done or moot. Rules (all must hold):
  *   recruited: [ids]        with you (units marked 'ignorar' are skipped)
- *   recruits: 'starters'|'all'  no student or faculty recruit of those roles left
+ *   recruits: 'starters'|'all'  no student or faculty recruit of those roles left, or the chapter is over
  *   reached: { id: class }  in that class or past it
  *   mastered: { id: class } mastered it or moved past it
  *   support: { id: rank }   support with Byleth at least that rank
@@ -608,8 +608,9 @@ export function taskAuto(task, state, chapter = state.chapter) {
   if (a.recruits) {
     const roles = a.recruits === 'all' ? ['titular', 'rotacao', 'reserva', 'utilitario'] : ['titular', 'rotacao'];
     const open = recruitTargets(state).filter((u) => ['student', 'faculty'].includes(u.recruit.kind) && roles.includes(roleOf(state, u.id)));
-    if (open.length) return null;
-    why.push(a.recruits === 'all' ? 'todas as recrutas no exército' : 'titulares e rotação recrutadas');
+    // A month's look at the Recruitment tab: once the month is over, later chapters carry who is left.
+    if (open.length && state.chapter <= chapter) return null;
+    why.push(!open.length ? (a.recruits === 'all' ? 'todas as recrutas no exército' : 'titulares e rotação recrutadas') : 'o capítulo já passou');
   }
   if (a.reached) {
     const entries = Object.entries(a.reached);

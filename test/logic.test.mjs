@@ -268,6 +268,9 @@ test('a task only that month can do settles once the chapter is over', async () 
   assert.equal(taskAuto(once, s, 6), null, 'still this chapter');
   assert.match(taskAuto(once, s, 5).why, /capítulo já passou/);
   assert.equal(taskAuto({ auto: { past: true, recruited: ['lysithea'] } }, s, 5), null, 'every rule has to hold');
+  const look = { auto: { recruits: 'starters' } };
+  assert.equal(taskAuto(look, s, 6), null, 'starters still to recruit this month');
+  assert.match(taskAuto(look, s, 4).why, /capítulo já passou/, 'a past month’s look at the tab is over');
 });
 
 test('an item goes to the first of the plan’s order who is in the army', async () => {
