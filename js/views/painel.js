@@ -6,18 +6,30 @@ import { PARALOGUES } from '../../data/paralogues.js';
 import { SKILL_NAME, RECRUIT_DEADLINE } from '../../data/skills.js';
 import {
   nextSteps, bylethTraining, paralogueStatus, composition, recruitTargets, birthdaysInMonth, parseDate,
-  monthOfChapter, isRecruited, roleOf, reviewStatus, taskDone,
+  monthOfChapter, isRecruited, roleOf, reviewStatus, taskDone, unitState, supportIndex, prefsOf,
 } from '../logic.js';
 import { currentNotes } from '../seal.js';
 import { avatar, taskItem, tagChip, chapterLabel, skillIcon, rank, emptyState, icon } from './ui.js';
 
 function deadlines(state) {
   const ch = state.chapter;
-  const rows = [
-    { to: 9, from: 9, text: 'White Heron Cup: escolher a representante e vencer (Dancer).', link: '#/unidade/dorothea' },
-    { to: RECRUIT_DEADLINE, from: 1, text: 'Último capítulo para recrutar alunas de outras casas.', link: '#/recrutamento' },
-    { to: 11, from: 1, text: 'Crimson Flower: suporte C+ com a Edelgard e aceitar o convite dela.', link: '#/unidade/edelgard' },
-  ];
+  const dorothea = unitState(state, 'dorothea');
+  const edelgard = unitState(state, 'edelgard');
+  const rows = [];
+  if (dorothea.cls !== 'Dancer' && !dorothea.mastered?.includes('Dancer')) {
+    rows.push({ to: 9, from: 9, text: 'White Heron Cup: escolher a representante e vencer (Dancer).', link: '#/unidade/dorothea' });
+  }
+  if (recruitTargets(state).some((u) => ['student', 'faculty'].includes(u.recruit.kind))) {
+    rows.push({ to: RECRUIT_DEADLINE, from: 1, text: 'Último capítulo para recrutar de outras casas.', link: '#/recrutamento' });
+  }
+  rows.push({
+    to: 11,
+    from: 1,
+    text: supportIndex(edelgard.support) >= supportIndex('B')
+      ? 'Crimson Flower: aceitar o convite da Edelgard (suporte já está em B).'
+      : 'Crimson Flower: suporte B com a Edelgard (a rota pede C+, que o jogo não mostra) e aceitar o convite dela.',
+    link: '#/unidade/edelgard',
+  });
   for (const p of PARALOGUES) {
     const s = paralogueStatus(p, state);
     if (s.phase === 'done') continue;
@@ -32,7 +44,8 @@ function deadlines(state) {
 function tiles(state, notes) {
   const comp = composition(state);
   const ready = comp.starters.filter((u) => isRecruited(state, u.id)).length;
-  const pending = recruitTargets(state).filter((u) => ['titular', 'rotacao'].includes(roleOf(state, u.id)));
+  const open = state.chapter <= RECRUIT_DEADLINE;
+  const pending = open ? recruitTargets(state).filter((u) => ['titular', 'rotacao'].includes(roleOf(state, u.id))) : [];
   const tasks = notes?.tasks ?? [];
   const done = tasks.filter((t) => taskDone(t, state)).length;
   return html`<div class="tiles">
@@ -44,14 +57,14 @@ function tiles(state, notes) {
     <div class="tile">
       <p class="tile-label">Titulares em campo</p>
       <p class="tile-value">${ready}<span class="of">/${comp.total}</span></p>
-      <p class="tile-sub">${comp.total - ready ? `${comp.total - ready} ainda por recrutar` : 'todas recrutadas'}</p>
+      <p class="tile-sub">${comp.total - ready ? `${comp.total - ready} ${open ? 'ainda por recrutar' : 'fora do exército'}` : 'todas no exército'}</p>
     </div>
     <div class="tile">
       <p class="tile-label">Recrutas prioritárias</p>
       <p class="tile-value">${pending.length}</p>
       ${pending.length
         ? html`<p class="tile-sub stack">${pending.map((u) => html`<a href="#/unidade/${u.id}" data-tip="${u.name}" aria-label="${u.name}">${avatar(u, 'sm')}</a>`)}</p>`
-        : html`<p class="tile-sub">nenhuma pendente</p>`}
+        : html`<p class="tile-sub">${open ? 'nenhuma pendente' : `recrutamento fechou no Cap. ${RECRUIT_DEADLINE}`}</p>`}
     </div>
     <div class="tile">
       <p class="tile-label">Checklist do capítulo</p>
@@ -148,7 +161,7 @@ function birthdaysCard(state) {
       return html`<li class="${when === 'hoje' ? 'today' : when === 'passou' ? 'past' : ''}">
         <span class="date">${b.date}</span><a class="person" href="#/unidade/${b.id}">${avatar(def, 'xs')}${b.name}</a>
         ${when ? html`<span class="tag ${when === 'hoje' ? 'tag-rota' : 'tag-info'}">${when}</span>` : ''}
-        <span class="gifts">${def.likes?.gifts?.slice(0, 4).join(' · ')}</span>
+        <span class="gifts">${prefsOf(def).gifts.slice(0, 4).join(' · ')}</span>
       </li>`;
     })}</ul>
   </section>`;

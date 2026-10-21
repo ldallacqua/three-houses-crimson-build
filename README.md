@@ -76,7 +76,7 @@ Cada unidade aparece com o retrato do jogo num anel na cor da casa; quem ainda n
 
 Requisitos de classe e de recrutamento, magias e artes por rank, presentes, chás, aniversários, janelas de paralogue e disponibilidade de instrutores foram conferidos em [fe3h.com](https://www.fe3h.com), [Serenes Forest](https://serenesforest.net/three-houses/) e na [Fire Emblem Wiki](https://fireemblemwiki.org). Os planos de build e as prioridades são recomendação deste guia — estão marcados como tal no [guia mestre](docs/guia-mestre.md), junto com o que ainda é incerto.
 
-Os testes (`node --test`) checam que cada classe citada num plano existe, que todo personagem na página tem retrato, que os ranks são válidos, que as tabelas de recrutamento ficam mais fáceis a cada rank de suporte, que as notas lacradas abrem e citam instrutores reais, que o cache offline lista todos os arquivos e que o estado importado é limpo antes de entrar.
+Os testes (`node --test`) checam que cada classe citada num plano existe, que todo personagem na página tem retrato, que os ranks são válidos, que as tabelas de recrutamento ficam mais fáceis a cada rank de suporte, que as notas lacradas abrem e citam instrutores reais, que o cache offline lista todos os arquivos e que o estado importado é limpo antes de entrar. Um teste de fuzz (`test/fuzz.test.mjs`) renderiza todas as telas com centenas de estados aleatórios (semente fixa) e falha se alguma mostrar uma seta de rank que não sobe, `undefined`/`NaN`, ids repetidos ou rótulos apontando para campos que não existem, ou se algum conselho apontar para trás (Goal já cumprido, classe já passada, recrutar quem já entrou).
 
 ## Rodar localmente
 

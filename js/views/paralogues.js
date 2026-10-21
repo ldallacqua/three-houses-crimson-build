@@ -5,7 +5,7 @@ import { PARALOGUES } from '../../data/paralogues.js';
 import { UNIT_BY_ID } from '../../data/units.js';
 import { FACULTY_BY_ID } from '../../data/faculty.js';
 import { paralogueStatus, isRecruited } from '../logic.js';
-import { avatar, icon, switchField } from './ui.js';
+import { avatar, icon, switchField, g } from './ui.js';
 
 const PHASE = {
   closing: ['último capítulo', 'miss', 0],
@@ -19,7 +19,7 @@ const PHASE = {
 function who(id, state) {
   const def = UNIT_BY_ID[id] ?? { ...FACULTY_BY_ID[id], house: 'church' };
   const ok = isRecruited(state, id);
-  return html`<span class="who ${ok ? 'ok' : ''}">${avatar(def, 'xs', { dim: !ok })}${def.name ?? id}${ok ? icon('check', 'recrutada') : ''}</span>`;
+  return html`<span class="who ${ok ? 'ok' : ''}">${avatar(def, 'xs', { dim: !ok })}${def.name ?? id}${ok ? icon('check', g(def, 'recrutada', 'recrutado')) : ''}</span>`;
 }
 
 function card(p, state) {
@@ -32,7 +32,7 @@ function card(p, state) {
     </header>
     <p class="para-meta"><span class="when">Cap. ${s.from}–${s.to}</span>${p.units.map((id) => who(id, state))}</p>
     <p class="para-star">${p.star}</p>
-    ${s.missingKey && s.phase !== 'missed' ? html`<p class="warn">${UNIT_BY_ID[p.key]?.name ?? p.key} ainda não está recrutada: sem ela você perde ${p.keyReward}.</p>` : ''}
+    ${s.missingKey && s.phase !== 'missed' ? html`<p class="warn">${UNIT_BY_ID[p.key]?.name ?? p.key} ainda não está ${g(UNIT_BY_ID[p.key], 'recrutada', 'recrutado')}: sem ${g(UNIT_BY_ID[p.key], 'ela', 'ele')} você perde ${p.keyReward}.</p>` : ''}
     <details class="more-box"><summary>Recompensas e dicas</summary>
       <ul class="para-list">${p.rewards.map((r) => html`<li>${r}</li>`)}</ul>
       <ul class="para-list tips">${p.tips.map((t) => html`<li>${t}</li>`)}</ul>

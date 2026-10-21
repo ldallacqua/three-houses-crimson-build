@@ -102,7 +102,11 @@ function coerce(el) {
   if (type === 'bool') return el.checked;
   if (type === 'int') {
     const n = Number.parseInt(el.value, 10);
-    return Number.isFinite(n) ? n : null;
+    if (!Number.isFinite(n)) return null;
+    // Typing is not held to min/max by the browser; keep what is saved inside the field's range.
+    const min = el.min === '' ? -Infinity : Number(el.min);
+    const max = el.max === '' ? Infinity : Number(el.max);
+    return Math.min(max, Math.max(min, n));
   }
   if (type === 'rank') return RANKS.includes(el.value) ? el.value : null;
   return el.value;
@@ -195,7 +199,8 @@ const actions = {
     const min = Number(input.min || 0);
     const max = Number(input.max || 99);
     const now = Number.parseInt(input.value, 10);
-    const next = Math.min(max, Math.max(min, (Number.isFinite(now) ? now : min) + Number(btn.dataset.step)));
+    // From an empty field, either button starts at the lowest value.
+    const next = Number.isFinite(now) ? Math.min(max, Math.max(min, now + Number(btn.dataset.step))) : min;
     if (next === now) return;
     input.value = String(next);
     input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -211,9 +216,15 @@ main.addEventListener('change', async (e) => {
   const el = e.target;
   if (el.dataset.bind) {
     const value = coerce(el);
-    if (el.dataset.bind === 'date' && value && !/^\d{1,2}\/\d{1,2}$/.test(value.trim())) {
-      toast('Use mês/dia, por exemplo 9/7.');
-      return;
+    if (el.dataset.bind === 'date' && value) {
+      const date = parseDate(value);
+      if (!date) {
+        toast('Use mês/dia, por exemplo 9/7.');
+        render();
+        return;
+      }
+      const month = monthOfChapter(state.chapter);
+      if (month && date.month !== month) toast(`${value.trim()} não é do mês do ${chapterLabel(state.chapter)}: confira o capítulo.`);
     }
     setPath(state, el.dataset.bind, typeof value === 'string' ? value.trim() : value);
     markReviewed(el.dataset.bind);

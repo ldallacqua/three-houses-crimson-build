@@ -3,7 +3,7 @@
 import { UNITS } from '../data/units.js';
 import { SKILLS, STATS } from '../data/skills.js';
 import { PARALOGUES } from '../data/paralogues.js';
-import { unitState, isRecruited, roleOf, planStatus, suggestGoals, recruitStatus, paralogueStatus } from './logic.js';
+import { unitState, isRecruited, roleOf, planStatus, suggestGoals, recruitStatus, paralogueStatus, taskAuto, reviewStatus } from './logic.js';
 import { currentNotes } from './seal.js';
 
 const line = (cells) => `| ${cells.join(' | ')} |`;
@@ -14,6 +14,9 @@ export function summaryMarkdown(state) {
   out.push('');
   out.push(`- Capítulo: ${state.chapter}${state.date ? ` · data ${state.date}` : ''}`);
   out.push(`- Dificuldade: ${state.difficulty || 'não informada'} · Modo: ${state.mode || 'não informado'}`);
+  const review = reviewStatus(state);
+  out.push(`- Conferidas neste capítulo: ${review.all.length - review.pending.length} de ${review.all.length}${review.pending.length ? ` (faltam ${review.pending.map((u) => u.name).join(', ')})` : ''}`);
+  out.push(`- Suporte com a Edelgard: ${unitState(state, 'edelgard').support ?? 'não informado'}`);
   out.push(`- Exportado do guia vivo em ${new Date().toISOString().slice(0, 10)}`);
   out.push('');
   out.push('## Unidades no exército');
@@ -55,7 +58,10 @@ export function summaryMarkdown(state) {
     out.push('');
     out.push('## Checklist do capítulo');
     out.push('');
-    for (const t of notes.tasks) out.push(`- [${state.checks[t.id] ? 'x' : ' '}] ${t.text.replace(/\*\*/g, '')}`);
+    for (const t of notes.tasks) {
+      const auto = taskAuto(t, state);
+      out.push(`- [${auto || state.checks[t.id] ? 'x' : ' '}] ${t.text.replace(/\*\*/g, '')}${auto ? ` _(automático: ${auto.why})_` : ''}`);
+    }
   }
   const personal = UNITS.filter((d) => unitState(state, d.id).note);
   if (personal.length) {

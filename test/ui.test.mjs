@@ -43,3 +43,13 @@ test('a portrait is decorative and falls back to the initial', () => {
   assert.match(out, /src="img\/portraits\/edelgard.webp" alt=""/);
   assert.match(out, /avatar sm dim/);
 });
+
+test('a requirement already met shows the target and what you have, never an arrow', async () => {
+  const { reqItem } = await import('../js/views/ui.js');
+  const met = reqItem({ skill: 'lance', need: 'C', have: 'B', ok: true, xp: 0 }).toString();
+  assert.doesNotMatch(met, /→/);
+  assert.match(met, /tem B/);
+  const open = reqItem({ skill: 'lance', need: 'C', have: 'D', ok: false, xp: 200 }).toString();
+  assert.match(open, /→/);
+  assert.match(open, /200 XP/);
+});

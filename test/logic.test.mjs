@@ -237,3 +237,26 @@ test('the Edelgard reminder asks for B, the rank the game shows', () => {
   s.units.edelgard.support = 'B';
   assert.equal(nextSteps({ ...s, chapter: 10 }, null).some((x) => x.kind === 'rota'), false);
 });
+
+test('a class outside the chosen plan: the plan with it is used, and lower stages count as behind', () => {
+  const s = snap();
+  const byleth = { ...s.units.byleth, cls: 'Hero', plan: undefined };
+  const status = planStatus(UNIT_BY_ID.byleth, byleth);
+  assert.equal(status.plan.id, 'espada');
+  assert.equal(status.current.cls.name, 'Hero');
+  const picked = planStatus(UNIT_BY_ID.byleth, { ...byleth, plan: 'punhos' });
+  assert.equal(picked.plan.id, 'punhos');
+  assert.equal(picked.stages.find((x) => x.cls.name === 'Brigand').status, 'done');
+  assert.notEqual(picked.next.cls.name, 'Brigand');
+});
+
+test('recruitment boxes past the deadline or with support A say so instead of failing', async () => {
+  const { recruitBlock } = await import('../js/views/recrutamento.js');
+  const late = { ...snap(), chapter: 12 };
+  assert.match(recruitBlock(UNIT_BY_ID.lysithea, late).toString(), /prazo para recrutar no Part 1 terminou/);
+  assert.match(recruitBlock(UNIT_BY_ID.manuela, late).toString(), /prazo para recrutar no Part 1 terminou/);
+  const s = snap();
+  s.units.lysithea.support = 'A';
+  assert.match(recruitBlock(UNIT_BY_ID.lysithea, s).toString(), /entra sem requisito/);
+  assert.match(recruitBlock(UNIT_BY_ID.lorenz, snap()).toString(), /se ele recusar|ele tem|ele passa/);
+});

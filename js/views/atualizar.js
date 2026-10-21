@@ -49,7 +49,7 @@ function armyCard(def, state, seen) {
     ${def.id === 'edelgard' ? html`<div class="form-row">${supportSelect(`a-${def.id}-sup`, `${p}.support`, st.support)}</div>` : ''}
     ${stats.length ? html`<div class="form-grid stats">${stats.map((s) => numberField(`a-${def.id}-${s}`, `${p}.stats.${s}`, st.stats?.[s], STAT_NAME[s], { max: 255 }))}</div>` : ''}
     ${skills.length ? html`<div class="form-grid ranks">${skills.map((s) => rankSelect(`a-${def.id}-r-${s}`, `${p}.ranks.${s}`, st.ranks?.[s], s))}</div>` : ''}
-    <p class="hint">${def.id === 'byleth'
+    <p class="hint">${def.id === 'byleth' && stats.length
       ? 'Atributos e ranks que as recrutas e a classe dele pedem.'
       : 'Só os ranks que o plano e os Goals ainda pedem.'} <a href="#/unidade/${def.id}">Ficha completa</a></p>
   </article>`;

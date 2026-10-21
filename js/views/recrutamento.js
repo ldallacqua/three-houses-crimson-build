@@ -5,7 +5,7 @@ import { UNITS, HOUSES, ROLES } from '../../data/units.js';
 import { SKILL_NAME, STAT_NAME, RECRUIT_DEADLINE } from '../../data/skills.js';
 import { recruitStatus, roleOf, unitState, bylethTraining, isRecruited, prefsOf } from '../logic.js';
 import { currentNotes } from '../seal.js';
-import { avatar, rank, supportSelect, switchField, skillIcon, roleChip, emptyState } from './ui.js';
+import { avatar, rank, supportSelect, switchField, skillIcon, roleChip, emptyState, g } from './ui.js';
 
 const TIER_NAME = { none: 'Sem suporte', C: 'C', 'C+': 'C+', B: 'B', 'B+': 'B+' };
 const HIDDEN_TIP = 'O jogo não mostra este rank: ele fica no meio do caminho até o próximo.';
@@ -21,8 +21,11 @@ const STATE_LABEL = {
   recruited: ['recrutada', 'ok'],
 };
 
-export function stateBadge(rs) {
-  const [label, tone] = STATE_LABEL[rs.state] ?? [rs.state, 'info'];
+const MASC = { ready: 'pronto', auto: 'entra sozinho', recruited: 'recrutado' };
+
+export function stateBadge(rs, def) {
+  const [fem, tone] = STATE_LABEL[rs.state] ?? [rs.state, 'info'];
+  const label = def?.gender === 'm' ? MASC[rs.state] ?? fem : fem;
   return html`<span class="badge ${tone}">${label}</span>`;
 }
 
@@ -50,16 +53,22 @@ export function recruitBlock(def, state, rs = recruitStatus(def, state), { bare 
   const st = unitState(state, def.id);
   const r = def.recruit;
   const prefs = prefsOf(def);
+  const ela = def.gender === 'm' ? 'ele' : 'ela';
   let body;
-  if (r.kind === 'student') {
+  if (rs.state === 'missed') {
+    body = html`<p>O prazo para recrutar no Part 1 terminou no Cap. ${RECRUIT_DEADLINE}.</p>`;
+  } else if (rs.reason) {
+    // Support A (or S): no requirement left.
+    body = html`<p class="good">${rs.reason} Fale com ${def.name} no Explore e escolha <strong>Recruit</strong>.</p>`;
+  } else if (r.kind === 'student') {
     const todo = [];
     if (rs.state === 'ready') todo.push(html`<li class="good">Byleth já cumpre: fale com ${def.name} no Explore e escolha <strong>Recruit</strong>.</li>`);
     else {
       if (!rs.tier.statOk) todo.push(html`<li>${STAT_NAME[rs.stat]} ${rs.statHave ?? '?'} / ${rs.tier.stat}: suba o suporte (o requisito cai a cada rank).</li>`);
       if (!rs.tier.rankOk) todo.push(html`<li>${SKILL_NAME[rs.skill]} ${rs.rankHave ?? '?'} → ${rs.tier.rank}: ${rs.tier.xp} XP de Faculty Training.</li>`);
-      if (rs.maybe) todo.push(html`<li class="good">Pode já dar: entre ${rs.support} e o próximo rank existe um ${rs.maybe.key} que o jogo não mostra, e com ele o Byleth já cumpre. Tente <strong>Recruit</strong>; se ela recusar, continue subindo o suporte.</li>`);
-      if (rs.spontaneous) todo.push(html`<li class="good">Com suporte ${rs.support}, ela tem ~10% de chance por semana de pedir para entrar mesmo sem requisito.</li>`);
-      else todo.push(html`<li>Suporte B: o requisito cai e ela passa a ter ~10% de chance por semana de pedir para entrar.</li>`);
+      if (rs.maybe) todo.push(html`<li class="good">Pode já dar: entre ${rs.support} e o próximo rank existe um ${rs.maybe.key} que o jogo não mostra, e com ele o Byleth já cumpre. Tente <strong>Recruit</strong>; se ${ela} recusar, continue subindo o suporte.</li>`);
+      if (rs.spontaneous) todo.push(html`<li class="good">Com suporte ${rs.support}, ${ela} tem ~10% de chance por semana de pedir para entrar mesmo sem requisito.</li>`);
+      else todo.push(html`<li>Suporte B: o requisito cai e ${ela} passa a ter ~10% de chance por semana de pedir para entrar.</li>`);
     }
     body = html`${studentTable(def, rs)}<ul class="todo">${todo}</ul>`;
   } else if (r.kind === 'faculty') {
@@ -69,16 +78,17 @@ export function recruitBlock(def, state, rs = recruitStatus(def, state), { bare 
   } else if (r.kind === 'abyss') {
     body = rs.state === 'later' ? html`<p>No Abismo a partir do Cap. ${rs.from}.</p>` : html`<p>Fale no Abismo e escolha <strong>Recruit</strong>. Sem requisito.</p>`;
   } else {
-    body = html`<p>${rs.state === 'later' ? `Entra sozinha no Cap. ${rs.from}.` : 'Entra sozinha.'}</p>`;
+    const alone = g(def, 'Entra sozinha', 'Entra sozinho');
+    body = html`<p>${rs.state === 'later' ? `${alone} no Cap. ${rs.from}.` : `${alone}.`}</p>`;
   }
   const inner = html`
     ${r.kind === 'student' && controls ? html`<div class="toolbar">${supportSelect(`rs-${def.id}`, `units.${def.id}.support`, st.support)}
-      ${switchField(`rr-${def.id}`, st.recruited, 'Recrutada', html`data-bind="units.${def.id}.recruited" data-type="bool"`)}</div>` : ''}
+      ${switchField(`rr-${def.id}`, st.recruited, 'Já está no meu exército', html`data-bind="units.${def.id}.recruited" data-type="bool"`)}</div>` : ''}
     ${body}
     ${r.kind === 'student' ? html`<p class="hint">Prazo: até o Cap. ${RECRUIT_DEADLINE}. ${prefs.gifts.length ? `Presentes: ${prefs.gifts.join(', ')}.` : ''}${prefs.teas.length ? ` Chás: ${prefs.teas.join(', ')}.` : ''}${def.birthday ? ` Aniversário: ${def.birthday}.` : ''} <a href="#/unidade/${def.id}">Assuntos do chá e pratos na ficha</a>.</p>` : ''}`;
   if (bare) return inner;
   return html`<section class="card recruit" aria-label="Recrutamento de ${def.name}">
-    <h2 class="card-title">Recrutamento ${stateBadge(rs)}</h2>
+    <h2 class="card-title">Recrutamento ${stateBadge(rs, def)}</h2>
     ${inner}
   </section>`;
 }
@@ -109,7 +119,7 @@ function targetCard(def, state) {
       <a class="unit-portrait" href="#/unidade/${def.id}" tabindex="-1" aria-hidden="true">${avatar(def, 'lg', { dim: true })}</a>
       <div class="unit-id"><h3><a href="#/unidade/${def.id}">${def.name}</a></h3>
         <p class="unit-meta"><span>${HOUSES[def.house].name}</span>${roleChip(role)}</p></div>
-      ${stateBadge(rs)}
+      ${stateBadge(rs, def)}
     </header>
     <p class="unit-line">${def.summary}</p>
     ${recruitBlock(def, state, rs, { bare: true })}

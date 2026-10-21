@@ -10,7 +10,7 @@ import {
 import { TEA_GISTS } from '../../data/tea-gists.js';
 import { currentNotes } from '../seal.js';
 import {
-  avatar, rank, reqItem, abilityChip, rankSelect, numberField, supportSelect, roleSelect, roleChip, select, switchField, skillLabel, classSelect,
+  avatar, rank, reqItem, abilityChip, rankSelect, numberField, supportSelect, roleSelect, roleChip, select, switchField, skillLabel, classSelect, g,
 } from './ui.js';
 import { recruitBlock, trainingTable } from './recrutamento.js';
 
@@ -163,7 +163,7 @@ export function unidade(state, id) {
           <h1 id="v-title">${def.name}</h1>
           <p class="hero-meta">${recruited
             ? html`<span class="chip">${st.cls ?? 'classe ?'}</span><span class="chip">Lv ${st.level ?? '?'}</span>`
-            : html`<span class="badge info">não recrutada</span>`}${roleChip(role)}</p>
+            : html`<span class="badge info">${g(def, 'não recrutada', 'não recrutado')}</span>`}${roleChip(role)}</p>
           <p class="lead">${def.summary}</p>
         </div>
       </div>

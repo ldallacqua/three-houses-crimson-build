@@ -4,7 +4,7 @@ import { html } from '../html.js';
 import { UNITS, HOUSES } from '../../data/units.js';
 import { SKILL_NAME } from '../../data/skills.js';
 import { unitState, roleOf, isRecruited, planStatus, unitAdvice, suggestGoals, recruitStatus, composition } from '../logic.js';
-import { avatar, roleChip, roleSelect, rank, icon } from './ui.js';
+import { avatar, roleChip, roleSelect, rank, icon, g } from './ui.js';
 
 const ORDER = ['titular', 'rotacao', 'reserva', 'utilitario', 'temporaria', 'ignorar'];
 const GROUP_NOTE = {
@@ -35,7 +35,7 @@ function compositionBar(state) {
     <h2 class="card-title">Composição das titulares <span class="count">${c.total}/10</span></h2>
     <ul class="lineup" aria-label="Titulares">${c.starters.map((u) => {
       const ok = isRecruited(state, u.id);
-      return html`<li><a href="#/unidade/${u.id}" data-tip="${u.name}${ok ? '' : ' · não recrutada'}" aria-label="${u.name}${ok ? '' : ', não recrutada'}">${avatar(u, 'md', { dim: !ok })}</a></li>`;
+      return html`<li><a href="#/unidade/${u.id}" data-tip="${u.name}${ok ? '' : ` · ${g(u, 'não recrutada', 'não recrutado')}`}" aria-label="${u.name}${ok ? '' : `, ${g(u, 'não recrutada', 'não recrutado')}`}">${avatar(u, 'md', { dim: !ok })}</a></li>`;
     })}</ul>
     <ul class="comp-cells">${cells.map(([label, n, ico]) => html`<li>${icon(ico)}<span class="n">${n}</span><span class="l">${label}</span></li>`)}</ul>
     <p class="card-lead">Recomendação deste guia: Shamir entra já como titular (pronta e fica na Crimson Flower); Marianne começa como 11ª porque Dorothea e Hapi já curam com Physic. Troque o papel no seletor de cada carta.</p>
@@ -56,7 +56,7 @@ function card(def, state) {
     goals = suggestGoals(def, st, status);
   } else if (!recruited && def.recruit) {
     const rs = recruitStatus(def, state);
-    line = `Recrutamento: ${RECRUIT_TEXT[rs.state] ?? rs.state}.`;
+    line = `Recrutamento: ${rs.state === 'auto' ? g(def, 'entra sozinha', 'entra sozinho') : RECRUIT_TEXT[rs.state] ?? rs.state}.`;
   }
   return html`<article class="unit-card ${recruited ? '' : 'pending'}" data-house="${house.color}">
     <header class="unit-head">
@@ -65,7 +65,7 @@ function card(def, state) {
         <h3><a href="#/unidade/${def.id}">${def.name}</a></h3>
         <p class="unit-meta">${recruited
           ? html`<span>${st.cls ?? 'classe ?'}</span><span class="sep" aria-hidden="true"></span><span>Lv ${st.level ?? '?'}</span>`
-          : html`<span>${house.name}</span><span class="sep" aria-hidden="true"></span><span class="pending-note">não recrutada</span>`}</p>
+          : html`<span>${house.name}</span><span class="sep" aria-hidden="true"></span><span class="pending-note">${g(def, 'não recrutada', 'não recrutado')}</span>`}</p>
       </div>
       ${roleSelect(`role-${def.id}`, def, role, { compact: true })}
     </header>

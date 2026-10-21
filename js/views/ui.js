@@ -6,6 +6,9 @@ import { HOUSES, ROLES } from '../../data/units.js';
 import { ABILITY_TEXT, CLASSES, OTHER_CLASSES, TIER_LABEL } from '../../data/classes.js';
 import { monthOfChapter, taskAuto } from '../logic.js';
 
+/** The feminine or masculine form of a word for a character (most of the squad is female). */
+export const g = (def, fem, masc) => (def?.gender === 'm' ? masc : fem);
+
 export const icon = (id, label) =>
   html`<svg class="ico" ${label ? html`role="img" aria-label="${label}"` : html`aria-hidden="true"`}><use href="#i-${id}"></use></svg>`;
 
@@ -35,11 +38,18 @@ export function reqItem(item) {
     const opts = item.options.map((o) => `${SKILL_NAME[o.skill]} ${o.need}`).join(' ou ');
     return html`<li class="req ${item.ok ? 'ok' : 'miss'}"><span class="req-name">${opts}</span><span class="req-state">${item.ok ? icon('check', 'cumprido') : 'falta'}</span></li>`;
   }
-  const state = item.ok ? 'ok' : item.unknown ? 'unknown' : 'miss';
-  return html`<li class="req ${state}">
+  // Met: show what it asks and that it is done; the arrow is only for a rank still to reach.
+  if (item.ok) {
+    return html`<li class="req ok">
+    ${skillLabel(item.skill)}
+    <span class="req-ranks">${rank(item.need, 'need')}</span>
+    <span class="req-state">${icon('check', 'cumprido')}<small>tem ${item.have}</small></span>
+  </li>`;
+  }
+  return html`<li class="req ${item.unknown ? 'unknown' : 'miss'}">
     ${skillLabel(item.skill)}
     <span class="req-ranks">${rank(item.have)}<span class="arrow" aria-hidden="true">→</span>${rank(item.need, 'need')}</span>
-    <span class="req-state">${item.ok ? icon('check', 'cumprido') : item.unknown ? 'informe o rank' : `${item.xp} XP`}</span>
+    <span class="req-state">${item.unknown ? 'informe o rank' : `${item.xp} XP`}</span>
   </li>`;
 }
 

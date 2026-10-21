@@ -49,9 +49,12 @@ export function isRecruited(state, id) {
   return false;
 }
 
+/** The plan picked on the sheet; without one, the plan that has the unit's current class, else the first. */
 export function planOf(def, st) {
   if (!def?.plans?.length) return null;
-  return def.plans.find((p) => p.id === st.plan) ?? def.plans[0];
+  return def.plans.find((p) => p.id === st.plan)
+    ?? def.plans.find((p) => p.stages.some((s) => s.cls === st.cls))
+    ?? def.plans[0];
 }
 
 // ---------- classes ----------
@@ -106,9 +109,12 @@ export function planStatus(def, st) {
   const unit = unitForCheck(def, st);
   const mastered = new Set(unit.mastered);
   const currentIndex = plan.stages.findIndex((s) => s.cls === st.cls);
+  // A class outside the plan still says how far the unit got: stages of a lower tier are behind it.
+  const now = CLASS_BY_NAME[st.cls];
+  const behind = (cls) => currentIndex === -1 && now && now.tier !== 'unique' && TIER_ORDER[cls.tier] < TIER_ORDER[now.tier];
   const stages = plan.stages.map((stage, index) => {
     const cls = CLASS_BY_NAME[stage.cls];
-    const status = index < currentIndex || (currentIndex === -1 && mastered.has(stage.cls))
+    const status = index < currentIndex || (currentIndex === -1 && (mastered.has(stage.cls) || behind(cls)))
       ? 'done'
       : index === currentIndex ? 'current' : 'future';
     return {
@@ -425,7 +431,7 @@ export function nextSteps(state, notes) {
     if (ps.phase === 'closing') steps.push({ priority: 1, kind: 'paralogue', text: `Último capítulo para ${p.name}.`, link: '#/paralogues' });
     if (ps.phase === 'open' && ps.missingKey) {
       const key = UNIT_BY_ID[p.key];
-      steps.push({ priority: 2, kind: 'paralogue', text: `${p.name} já está aberto, mas ${key?.name ?? p.key} precisa estar recrutada para ${p.keyReward}.`, link: '#/paralogues' });
+      steps.push({ priority: 2, kind: 'paralogue', text: `${p.name} já está aberto, mas ${key?.name ?? p.key} precisa estar ${key?.gender === 'm' ? 'recrutado' : 'recrutada'} para ${p.keyReward}.`, link: '#/paralogues' });
     }
   }
   const edel = unitState(state, 'edelgard');
@@ -473,6 +479,7 @@ export function keySkills(def, st, state) {
 
 /** Byleth's stats that open recruits ask for. */
 export function keyStats(state) {
+  if (state.chapter > RECRUIT_DEADLINE) return [];
   const stats = new Set(recruitTargets(state).filter((u) => u.recruit.kind === 'student').map((u) => u.recruit.stat));
   return ['str', 'mag', 'dex', 'spd', 'cha'].filter((s) => stats.has(s));
 }
