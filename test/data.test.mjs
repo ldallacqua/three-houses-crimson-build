@@ -12,6 +12,9 @@ import { FACULTY, FACULTY_BY_ID } from '../data/faculty.js';
 import { SNAPSHOT } from '../data/snapshot.js';
 import { SEALED } from '../data/chapters.js';
 import { NOTE_KEYS, openNotes } from '../js/seal.js';
+import { BUILDS } from '../data/builds.js';
+import { ITEM_KIND } from '../js/views/ui.js';
+import { UNIT_BY_ID } from '../data/units.js';
 
 const isRank = (r) => RANKS.includes(r);
 
@@ -74,7 +77,7 @@ test('snapshot uses only known units, classes and ranks', () => {
 });
 
 test('sealed notes open, in order, and name real instructors', () => {
-  assert.deepEqual(NOTE_KEYS, ['6', '7', '8', '9', '10', '11', '12', 'p2']);
+  assert.deepEqual(NOTE_KEYS, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'p2']);
   for (const key of Object.keys(SEALED)) {
     const n = openNotes(key, 99);
     assert.equal(n.key, key);
@@ -82,7 +85,36 @@ test('sealed notes open, in order, and name real instructors', () => {
   }
 });
 
+test('every item recommendation names a known kind and real units', () => {
+  const notes = Object.keys(SEALED).map((key) => openNotes(key, 99));
+  const recs = [
+    ...notes.flatMap((n) => (n.items ?? []).map((it) => [`notas ${n.key}`, it])),
+    ...PARALOGUES.flatMap((p) => (p.items ?? []).map((it) => [p.id, it])),
+  ];
+  assert.ok(recs.length > 40, 'items from chapters and paralogues');
+  for (const [where, it] of recs) {
+    assert.ok(it.item && it.why, `${where}: ${it.item}`);
+    assert.ok(ITEM_KIND[it.kind], `${where}: ${it.item} kind ${it.kind}`);
+    for (const id of it.who) assert.ok(UNIT_BY_ID[id], `${where}: ${it.item} → ${id}`);
+    assert.equal(new Set(it.who).size, it.who.length, `${where}: ${it.item} repeats a name`);
+  }
+  for (const n of notes.filter((n) => n.key !== 'p2' && Number(n.key) <= 12)) assert.ok(n.items?.length, `Cap. ${n.key} has items`);
+});
+
+test('every build names real units and says who made it', () => {
+  assert.ok(BUILDS.length >= 1);
+  assert.equal(new Set(BUILDS.map((b) => b.id)).size, BUILDS.length);
+  for (const b of BUILDS) {
+    assert.ok(b.name && b.author && b.tagline && b.pitch, b.id);
+    assert.ok(UNIT_BY_ID[b.lead], `${b.id}: lead`);
+    for (const id of b.faces) assert.ok(UNIT_BY_ID[id], `${b.id}: ${id}`);
+  }
+  assert.equal(SNAPSHOT.build, BUILDS[0].id, 'the example save follows a real build');
+});
+
 test('sealed notes stay shut past the current chapter', () => {
+  assert.ok(openNotes('1', 1));
+  assert.equal(openNotes('2', 1), null);
   assert.ok(openNotes('6', 6));
   assert.equal(openNotes('7', 6), null);
   assert.equal(openNotes('p2', 12), null);

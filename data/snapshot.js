@@ -1,10 +1,13 @@
-// The save as of the master guide v2.1 (eight screenshots, Chapter 6, 9/7). The page starts here and
-// "Restaurar snapshot" comes back here. Ranks marked as approximate in the guide are entered as the
-// rank shown; nothing that the screenshots did not show (masteries, supports) is assumed.
+// The example save: the author's game as of the master guide v2.1 (eight screenshots, Chapter 6,
+// 9/7), playing the Corte Carmesim build. A new visitor starts from Chapter 1 instead; this one is
+// there to show the page filled in ("Carregar o save de exemplo"). Ranks marked as approximate in the
+// guide are entered as the rank shown; nothing the screenshots did not show (masteries, supports) is
+// assumed.
 
-export const SNAPSHOT_LABEL = 'Guia mestre v2.1 · Cap. 6 · 9/7';
+export const SNAPSHOT_LABEL = 'Cap. 6 · 9/7';
 
 export const SNAPSHOT = {
+  build: 'corte-carmesim',
   chapter: 6,
   date: '9/7',
   difficulty: '',

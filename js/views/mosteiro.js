@@ -12,6 +12,11 @@ import { avatar, skillIcon, emptyState } from './ui.js';
 
 const person = (def) => html`<span class="person">${avatar(def, 'xs')}${def.name}</span>`;
 
+// The chapter each Sunday activity opens in, through a quest of that month: Choir Practice in 2,
+// Faculty Training in 3 (Learning from the Best), Tea Time in 4 (Tea for Two). Fire Emblem Wiki
+// chapter pages and Serenes Forest.
+const OPENS = { choir: ['Choir Practice', 2], faculty: ['Faculty Training', 3], tea: ['Tea Time', 4] };
+
 function facultyTable(state) {
   const notes = currentNotes(state.chapter);
   const away = new Set(notes?.away ?? []);
@@ -66,6 +71,11 @@ function sundayOrder(state) {
   const classSkills = [...skillNeeds(byleth, unitState(state, 'byleth'))].map((s) => SKILL_NAME[s]);
   const classNow = classSkills.length ? html` Agora: <strong>${classSkills.join(' e ')}</strong>.` : '';
   const points = html`<p class="hint">Pontos por domingo: 1 no Professor Level E e +1 a cada nível, até 10 no A+. Faculty Training não sobe atributo (Str, Mag, Dex, Cha), só rank de skill.</p>`;
+  const has = (what) => state.chapter >= OPENS[what][1];
+  const closed = Object.keys(OPENS).filter((k) => !has(k));
+  const closedNote = closed.length
+    ? html`<p class="hint">Ainda não abriram neste capítulo: ${closed.map((k) => `${OPENS[k][0]} (Cap. ${OPENS[k][1]})`).join(', ')}. Cada um abre com uma quest do mês.</p>`
+    : '';
 
   if (state.chapter > RECRUIT_DEADLINE) {
     return html`<section class="card">
@@ -105,13 +115,14 @@ function sundayOrder(state) {
     <p class="card-lead">Até o fim do Cap. ${RECRUIT_DEADLINE}: suporte com as recrutas primeiro, depois o treino que fecha o recrutamento, e o que sobrar na classe do Byleth. Recrutamento tem prazo e suporte B derruba o requisito; a classe não some.</p>
     ${recruits.length ? html`<p class="people sunday-who"><span class="muted">Recrutas em aberto:</span> ${recruits.map((u) => html`<a class="person" href="#/unidade/${u.id}">${avatar(u, 'xs')}${u.name}</a>`)}</p>` : ''}
     <ol class="steps">
-      <li class="step"><strong>Primeiro o que é grátis.</strong> Presentes de que elas gostam e Lost Items (+20 de suporte cada), chá no aniversário (não gasta ponto). Assista logo as conversas de suporte: com uma conversa pendente, aquela dupla não ganha ponto.</li>
-      <li class="step"><strong>Alguém perto de fechar?</strong> Se a recruta já tem o suporte e faltam 1–2 treinos, treine e recrute no mesmo dia.</li>
-      <li class="step"><strong>Choir Practice com duas recrutas.</strong> +30 de suporte com cada, sempre. Um por dia; alunas de outras casas podem ir (só não ganham Faith).</li>
-      <li class="step"><strong>Refeição ou chá.</strong> Full Menu com um prato de que as duas gostem dá +30 com cada (o Today's Special dá metade). Chá Perfect dá +30 com uma só: use na que está perto do próximo rank; os assuntos certos estão na ficha dela.${mealPairs ? html` Pratos que as duas gostam:${mealPairs}` : ''}</li>
-      <li class="step"><strong>Faculty Training da skill que falta.</strong>${trainNow}</li>
-      <li class="step"><strong>Sobrou ponto: classe do Byleth.</strong>${classNow}</li>
+      <li class="step"><strong>Primeiro o que é grátis.</strong> Presentes de que elas gostam e Lost Items (+20 de suporte cada)${has('tea') ? ', chá no aniversário (não gasta ponto)' : ''}. Assista logo as conversas de suporte: com uma conversa pendente, aquela dupla não ganha ponto.</li>
+      ${has('faculty') ? html`<li class="step"><strong>Alguém perto de fechar?</strong> Se a recruta já tem o suporte e faltam 1–2 treinos, treine e recrute no mesmo dia.</li>` : ''}
+      ${has('choir') ? html`<li class="step"><strong>Choir Practice com duas recrutas.</strong> +30 de suporte com cada, sempre. Um por dia; alunas de outras casas podem ir (só não ganham Faith).</li>` : ''}
+      <li class="step"><strong>${has('tea') ? 'Refeição ou chá.' : 'Refeição em dupla.'}</strong> Full Menu com um prato de que as duas gostem dá +30 com cada (o Today's Special dá metade).${has('tea') ? ' Chá Perfect dá +30 com uma só: use na que está perto do próximo rank; os assuntos certos estão na ficha dela.' : ''}${mealPairs ? html` Pratos que as duas gostam:${mealPairs}` : ''}</li>
+      ${has('faculty') ? html`<li class="step"><strong>Faculty Training da skill que falta.</strong>${trainNow}</li>
+      <li class="step"><strong>Sobrou ponto: classe do Byleth.</strong>${classNow}</li>` : ''}
     </ol>
+    ${closedNote}
     ${points}
   </section>`;
 }

@@ -1,6 +1,8 @@
 // Everyone the plan counts on, with their build paths, what they learn by rank, what they like and
 // how Byleth recruits them. Teas, tea topics, meals (and the full gift lists) are in data/social.js.
-// supports: false = no support with anyone, so social activities only buy motivation. Facts come from fe3h.com character pages and the Fire Emblem Wiki; the
+// supports: false = no support with anyone, so social activities only buy motivation.
+// recruit.kind 'abyss' (Ashen Wolves): from = first main-game chapter, dlc = the Cindered Shadows
+// chapter that has to be cleared first (fe3h.com character pages). Facts come from fe3h.com character pages and the Fire Emblem Wiki; the
 // plans and notes are this guide's advice. Nothing here goes past Chapter 6 of the story except the
 // planning facts the master guide already lists (paralogue windows, the Dancer, route deadlines).
 //
@@ -49,7 +51,7 @@ export const UNITS = [
     crest: true,
     role: 'titular',
     tags: ['físico'],
-    summary: 'Carry físico. Nível 20 com Str 33 segura o time enquanto as outras sobem — mas não deixe ele roubar todas as kills.',
+    summary: 'Carry físico desde o começo: segura o time enquanto as outras sobem. Não deixe ele roubar todas as kills.',
     plans: [
       {
         id: 'punhos',
@@ -66,15 +68,15 @@ export const UNITS = [
         label: 'Espada: Hero → Swordmaster',
         stages: [
           { cls: 'Brigand', master: true, why: 'Death Blow primeiro.' },
-          { cls: 'Hero', why: 'Axe C já está feito; falta Sword B. Vantage e Swordfaire inatos.' },
+          { cls: 'Hero', why: 'Sword B e Axe C (o Axe vem do Brigand). Vantage e Swordfaire inatos.' },
           { cls: 'Swordmaster', master: true, why: 'Sword A. Astra só funciona dentro da classe.' },
         ],
       },
     ],
     notes: [
       'Byleth não tem Goals: as skills dele só sobem com Faculty Training e usando a arma em combate.',
-      'Rota Punhos leva Brawl de E+ até A: 1.280 XP. Use manoplas em mapas fáceis. A Vajra-Mushti (Black Market Scheme, ou no inventário do Balthus — confira) ataca duas vezes, o que dobra o ganho; Byleth tem Crest, então não toma os 10 de dano da relíquia.',
-      'Rota Espada é a confortável: Sword já está em C e ele tem a Sword of the Creator. Byleth também ganha uma classe própria mais tarde (sem spoiler) que favorece espada.',
+      'Rota Punhos pede Brawl A no fim: é muito XP, então use manoplas em mapas fáceis desde cedo. A Vajra-Mushti (Black Market Scheme, ou no inventário do Balthus — confira) ataca duas vezes, o que dobra o ganho; Byleth tem Crest, então não toma os 10 de dano da relíquia.',
+      'Rota Espada é a confortável: Sword é ponto forte dele. Byleth também ganha uma classe própria mais tarde (sem spoiler) que favorece espada.',
       'Recrutar vem antes de Brawl: no Part 1, gaste o Faculty Training dele nas skills que destravam recrutas (aba Recrutamento) e o que sobrar em Brawl. A ordem do domingo está na aba Mosteiro.',
       'Pontos fortes dele: Sword, Brawl e Authority (30 XP por sessão em vez de 20). Faith é o budding talent: depois de 6 sessões de Faith, ela também passa a render 30.',
     ],
@@ -87,7 +89,7 @@ export const UNITS = [
     crest: true,
     role: 'titular',
     tags: ['físico', 'voo'],
-    summary: 'Dano físico com machado. Bem encaminhada para Wyvern Rider no Lv20.',
+    summary: 'Dano físico com machado; Brigand pela Death Blow e Wyvern Rider no Lv 20.',
     plans: [
       {
         id: 'wyvern',
@@ -123,7 +125,7 @@ export const UNITS = [
     crest: false,
     role: 'titular',
     tags: ['físico', 'voo'],
-    summary: 'Velocidade e mobilidade. Flying já está em C; o gargalo é Axe B.',
+    summary: 'Velocidade e mobilidade. Flying é fácil para ela; o gargalo do Wyvern Rider é Axe B.',
     plans: [
       {
         id: 'wyvern',
@@ -148,7 +150,7 @@ export const UNITS = [
     birthday: '9/7',
     notes: [
       'Res 3: mantenha longe de magos inimigos.',
-      'Não gaste aulas em Flying agora — C já basta para Wyvern Rider. Goals: Axe.',
+      'Flying C basta para Wyvern Rider: depois disso, Goals em Axe.',
       'Alternativa: Assassin (Sword B + Bow C) por Lethality, só se quiser variar.',
     ],
   },
@@ -160,7 +162,7 @@ export const UNITS = [
     crest: true,
     role: 'titular',
     tags: ['físico', 'alcance'],
-    summary: 'Arqueira. Deveria estar em Archer já; Vengeance (Lance C+) está perto.',
+    summary: 'Arqueira, com Vengeance (Lance C+) para finalizar. Archer no Lv 10, Sniper no 20.',
     plans: [
       {
         id: 'sniper',
@@ -283,7 +285,7 @@ export const UNITS = [
     crest: false,
     role: 'titular',
     tags: ['dança', 'cura'],
-    summary: 'Plano atual: Dancer no Cap. 9, com Physic e Meteor (Reason A) para linked attacks.',
+    summary: 'Dancer no Cap. 9 (White Heron Cup), com Physic e Meteor (Reason A) para linked attacks.',
     plans: [
       {
         id: 'dancer',
@@ -326,8 +328,8 @@ export const UNITS = [
     crest: true,
     role: 'titular',
     tags: ['magia', 'voo'],
-    summary: 'Mag 20 no nível 9: a maior artilharia mágica do grupo. Muito frágil.',
-    recruit: { kind: 'abyss', from: 3 },
+    summary: 'A maior artilharia mágica do grupo desde que entra. Muito frágil.',
+    recruit: { kind: 'abyss', from: 2, dlc: 3 },
     plans: [
       {
         id: 'dark-flier',
@@ -365,7 +367,7 @@ export const UNITS = [
     },
     birthday: '3/20',
     notes: [
-      'HP 25, Def 4, Spd 8: ataque e recue. Nunca termine o turno ao alcance de físicos.',
+      'HP, Def e Spd baixos: ataque e recue. Nunca termine o turno ao alcance de físicos.',
       'Ela pode já ter um Abyssian Exam Pass no inventário. Senão: 750 de Renown no Pagan Altar (Abismo).',
     ],
   },
@@ -378,7 +380,7 @@ export const UNITS = [
     role: 'titular',
     tags: ['magia', 'cura'],
     summary: 'Controle com Dark Magic (Banshee) e cura. Valkyrie dá montaria e +1 de alcance.',
-    recruit: { kind: 'abyss', from: 4 },
+    recruit: { kind: 'abyss', from: 2, dlc: 4 },
     plans: [
       {
         id: 'valkyrie',
@@ -516,7 +518,7 @@ export const UNITS = [
     },
     birthday: '11/23',
     notes: [
-      'Dorothea e Hapi já têm Physic. Por isso ela começa como 11ª (rotação), não como titular fixa.',
+      'Dorothea e Hapi também chegam a Physic. Por isso ela começa como 11ª (rotação), não como titular fixa.',
       'Ela tem um paralogue próprio na Parte 2.',
     ],
   },
@@ -576,7 +578,7 @@ export const UNITS = [
     crest: false,
     role: 'reserva',
     tags: ['físico', 'alcance'],
-    summary: 'Física versátil (arco e lança). Byleth já tem a Str; falta Lance.',
+    summary: 'Física versátil (arco e lança). Para recrutar, o Byleth precisa de Str e Lance.',
     recruit: studentTiers('str', 'lance', {
       none: [15, 'C'], C: [12, 'C'], 'C+': [9, 'D+'], B: [6, 'D'], 'B+': [3, 'E+'],
     }),
@@ -677,7 +679,7 @@ export const UNITS = [
     role: 'utilitario',
     tags: [],
     summary: 'Grátis no Abismo. Libera Black Market Scheme com a Hapi (Vajra-Mushti).',
-    recruit: { kind: 'abyss', from: 5 },
+    recruit: { kind: 'abyss', from: 2, dlc: 5 },
     notes: ['Pode já carregar uma Vajra-Mushti e um Abyssian Exam Pass — confira o inventário ao recrutar.'],
   },
   {
@@ -689,7 +691,7 @@ export const UNITS = [
     role: 'utilitario',
     tags: [],
     summary: 'Grátis no Abismo. Com ele recrutado, A Cursed Relic também dá Mockingbird\'s Thieves.',
-    recruit: { kind: 'abyss', from: 6 },
+    recruit: { kind: 'abyss', from: 2, dlc: 6 },
   },
 ];
 

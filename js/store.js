@@ -7,6 +7,7 @@ import { UNITS } from '../data/units.js';
 import { RANKS, SKILLS, STATS, SUPPORTS } from '../data/skills.js';
 import { CLASS_BY_NAME, OTHER_CLASSES } from '../data/classes.js';
 import { PARALOGUES } from '../data/paralogues.js';
+import { BUILD_BY_ID } from '../data/builds.js';
 
 export const STORAGE_KEY = 'fe3h-crimson-build';
 export const SCHEMA = 1;
@@ -24,6 +25,9 @@ const int = (v, min, max) => {
   return Number.isFinite(n) && n >= min && n <= max ? n : null;
 };
 const text = (v, max = 400) => (typeof v === 'string' ? v.slice(0, max) : '');
+
+// What a unit missing from the state starts as: the Black Eagles are in Byleth's house from day one.
+const starter = (def) => (def.house === 'be' ? { recruited: true } : {});
 
 function normalizeUnit(raw, def) {
   const u = isObj(raw) ? raw : {};
@@ -52,7 +56,9 @@ export function normalize(raw) {
   const s = isObj(raw) ? raw : {};
   const state = {
     schema: SCHEMA,
-    chapter: int(s.chapter, 1, 17) ?? SNAPSHOT.chapter,
+    // '' until the player picks one on the build page.
+    build: BUILD_BY_ID[s.build] ? s.build : '',
+    chapter: int(s.chapter, 1, 17) ?? 1,
     date: text(s.date, 8),
     difficulty: ['', 'Normal', 'Hard', 'Maddening'].includes(s.difficulty) ? s.difficulty : '',
     mode: ['', 'Casual', 'Classic'].includes(s.mode) ? s.mode : '',
@@ -63,8 +69,7 @@ export function normalize(raw) {
     updated: text(s.updated, 40),
   };
   for (const def of UNITS) {
-    const fallback = SNAPSHOT.units[def.id] ?? {};
-    state.units[def.id] = normalizeUnit(isObj(s.units) && isObj(s.units[def.id]) ? s.units[def.id] : fallback, def);
+    state.units[def.id] = normalizeUnit(isObj(s.units) && isObj(s.units[def.id]) ? s.units[def.id] : starter(def), def);
   }
   if (isObj(s.checks)) for (const [k, v] of Object.entries(s.checks)) if (/^[\w-]{1,60}$/.test(k) && v) state.checks[k] = true;
   if (isObj(s.paralogues)) for (const [k, v] of Object.entries(s.paralogues)) if (PARALOGUE_IDS.has(k) && v) state.paralogues[k] = true;
@@ -73,6 +78,12 @@ export function normalize(raw) {
   return state;
 }
 
+/** A new player: Chapter 1, no build picked yet, Byleth and the Black Eagles in the army. */
+export function freshState() {
+  return normalize({});
+}
+
+/** The example save (the author's game in Chapter 6), to see the page filled in. */
 export function snapshotState() {
   return normalize(structuredClone(SNAPSHOT));
 }
@@ -80,9 +91,9 @@ export function snapshotState() {
 export function load(storage = globalThis.localStorage) {
   try {
     const raw = storage?.getItem(STORAGE_KEY);
-    return raw ? normalize(JSON.parse(raw)) : snapshotState();
+    return raw ? normalize(JSON.parse(raw)) : freshState();
   } catch {
-    return snapshotState();
+    return freshState();
   }
 }
 

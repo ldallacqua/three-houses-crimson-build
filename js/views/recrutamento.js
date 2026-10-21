@@ -76,7 +76,10 @@ export function recruitBlock(def, state, rs = recruitStatus(def, state), { bare 
       ? html`<p>Disponível a partir do Cap. ${rs.from}. Requisito: Byleth Lv ${r.levels.none} (menos com suporte).</p>`
       : html`<p>Requisito: Byleth Lv ${rs.level.need} — ele está no ${rs.level.have ?? '?'}. ${rs.level.ok ? html`<strong>Pode recrutar.</strong>` : ''}${rs.maybe ? ` Com o ${rs.maybe.key} oculto (o jogo não mostra) bastaria Lv ${rs.maybe.level}: vale tentar.` : ''}</p>`;
   } else if (r.kind === 'abyss') {
-    body = rs.state === 'later' ? html`<p>No Abismo a partir do Cap. ${rs.from}.</p>` : html`<p>Fale no Abismo e escolha <strong>Recruit</strong>. Sem requisito.</p>`;
+    const dlc = html`Pede o Expansion Pass e o Cap. ${r.dlc} de <strong>Cindered Shadows</strong> concluído (menu principal).`;
+    body = rs.state === 'later'
+      ? html`<p>No Abismo a partir do Cap. ${rs.from}. ${dlc}</p>`
+      : html`<p>Fale com ${def.name} no Abismo e escolha <strong>Recruit</strong>. Sem requisito no jogo principal. ${dlc}</p>`;
   } else {
     const alone = g(def, 'Entra sozinha', 'Entra sozinho');
     body = html`<p>${rs.state === 'later' ? `${alone} no Cap. ${rs.from}.` : `${alone}.`}</p>`;

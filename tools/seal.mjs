@@ -13,7 +13,9 @@ import { CLASS_BY_NAME } from '../data/classes.js';
 import { PARALOGUE_BY_ID } from '../data/paralogues.js';
 import { SUPPORTS } from '../data/skills.js';
 
-const AUTO_KEYS = new Set(['recruited', 'recruits', 'reached', 'mastered', 'support', 'paralogues', 'after']);
+const AUTO_KEYS = new Set(['recruited', 'recruits', 'reached', 'mastered', 'support', 'paralogues', 'after', 'past']);
+// The kinds the item list knows how to label (js/views/ui.js, ITEM_KIND).
+const ITEM_KINDS = new Set(['relic', 'sacred', 'weapon', 'staff', 'shield', 'ring', 'gem', 'stat', 'seal', 'battalion', 'material', 'sell', 'skip']);
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const notesDir = path.join(root, 'notes', 'chapters');
@@ -37,6 +39,12 @@ function check(note, file, seenIds) {
     seenIds.add(t.id);
     if (t.auto) checkAuto(t, fail);
   }
+  for (const it of note.items ?? []) {
+    if (!it.item || !it.why) fail('item sem nome ou motivo');
+    if (!ITEM_KINDS.has(it.kind)) fail(`item ${it.item}: tipo desconhecido ${it.kind}`);
+    if (!Array.isArray(it.who)) fail(`item ${it.item}: who deve ser uma lista`);
+    for (const id of it.who) if (!UNIT_BY_ID[id]) fail(`item ${it.item}: unidade desconhecida ${id}`);
+  }
 }
 
 // The rule that settles a task by itself (js/logic.js, taskAuto). Every name has to exist.
@@ -59,6 +67,7 @@ function checkAuto(t, fail) {
   }
   for (const id of a.paralogues ?? []) if (!PARALOGUE_BY_ID[id]) fail(`${where}: paralogue desconhecido ${id}`);
   if (a.after && !/^\d{1,2}\/\d{1,2}$/.test(a.after)) fail(`${where}: after deve ser mês/dia`);
+  if ('past' in a && a.past !== true) fail(`${where}: past deve ser true`);
 }
 
 async function seal() {

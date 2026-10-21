@@ -42,6 +42,8 @@ const FILES = [
   'js/views/classes.js',
   'js/views/mosteiro.js',
   'js/views/dados.js',
+  'js/views/builds.js',
+  'data/builds.js',
   'data/chapters.js',
   'data/classes.js',
   'data/faculty.js',

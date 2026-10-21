@@ -6,13 +6,31 @@ import { SKILLS, STATS } from '../../data/skills.js';
 import { CLASSES, TIER_LABEL } from '../../data/classes.js';
 import {
   unitState, roleOf, isRecruited, planStatus, unitAdvice, suggestGoals, meetsRank, recruitStatus, prefsOf,
+  itemHolder, paralogueItems,
 } from '../logic.js';
 import { TEA_GISTS } from '../../data/tea-gists.js';
-import { currentNotes } from '../seal.js';
+import { currentNotes, NOTE_KEYS, openNotes } from '../seal.js';
 import {
   avatar, rank, reqItem, abilityChip, rankSelect, numberField, supportSelect, roleSelect, roleChip, select, switchField, skillLabel, classSelect, g,
+  itemRow, noteKeyLabel,
 } from './ui.js';
 import { recruitBlock, trainingTable } from './recrutamento.js';
+
+/** The items the plan gives this unit, from the chapters already open and the Part 1 paralogues. */
+function itemsCard(def, state) {
+  const recs = NOTE_KEYS.flatMap((key) => (openNotes(key, state.chapter)?.items ?? []).map((rec) => ({ ...rec, from: noteKeyLabel(key) })));
+  recs.push(...paralogueItems(state, { open: false }));
+  const mine = recs.filter((rec) => {
+    const h = itemHolder(rec, state);
+    return (h.holder ?? h.next) === def.id;
+  });
+  if (!mine.length) return '';
+  return html`<section class="card" aria-labelledby="it-title">
+    <h2 class="card-title" id="it-title">Itens para ${g(def, 'ela', 'ele')}</h2>
+    <p class="card-lead">Pelo plano, estes itens ficam com ${def.name}. Os de capítulos ainda lacrados aparecem quando você chegar lá.</p>
+    <ul class="item-list">${mine.map((rec) => itemRow(rec, state))}</ul>
+  </section>`;
+}
 
 function stateForm(def, st) {
   const p = `units.${def.id}`;
@@ -177,6 +195,7 @@ export function unidade(state, id) {
     ${rs && rs.state !== 'recruited' ? recruitBlock(def, state, rs, { controls: false }) : ''}
     ${id === 'byleth' ? trainingTable(state, currentNotes(state.chapter)) : ''}
     ${recruited || id === 'byleth' ? html`${planCard(def, st)}<div class="cols">${stateForm(def, st)}${masteryList(def, st)}</div>` : planCard(def, st)}
+    ${itemsCard(def, state)}
     <div class="cols">${learnCard(def, st)}${likesCard(def)}</div>
     ${teaCard(def)}
     <section class="card">

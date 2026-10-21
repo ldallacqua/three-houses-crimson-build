@@ -2,6 +2,7 @@
 
 import { html } from '../html.js';
 import { SNAPSHOT_LABEL } from '../../data/snapshot.js';
+import { BUILD_BY_ID } from '../../data/builds.js';
 import { chapterLabel, select } from './ui.js';
 
 const SOURCES = [
@@ -19,7 +20,8 @@ const SOURCES = [
 ];
 
 export function dados(state) {
-  const chapters = Array.from({ length: 17 - 5 }, (_, i) => i + 6);
+  const chapters = Array.from({ length: 17 }, (_, i) => i + 1);
+  const build = BUILD_BY_ID[state.build];
   return html`<section class="view" aria-labelledby="v-title">
     <header class="view-head">
       <p class="kicker">Salvo neste aparelho</p>
@@ -29,6 +31,7 @@ export function dados(state) {
     <div class="cols">
       <section class="card">
         <h2 class="card-title">Campanha</h2>
+        <p class="build-line">Build: <strong>${build?.name ?? 'nenhuma'}</strong>${build ? html` <span class="muted">por ${build.author}</span>` : ''} · <a href="#/builds">trocar</a></p>
         <div class="form-row">
           ${select({
             id: 'd-chapter', label: 'Capítulo', value: String(state.chapter), cls: 'grow',
@@ -62,7 +65,8 @@ export function dados(state) {
         </div>
         <p class="hint">O resumo em Markdown traz nível, classe, ranks, recrutamento e checklist — cole numa conversa para revisar o plano ou atualizar o guia mestre.</p>
         <div class="btn-row danger-zone">
-          <button type="button" class="btn ghost" data-act="reset-snapshot">Voltar ao snapshot (${SNAPSHOT_LABEL})</button>
+          <button type="button" class="btn ghost" data-act="load-sample">Abrir o save de exemplo (${SNAPSHOT_LABEL})</button>
+          <button type="button" class="btn ghost" data-act="reset-fresh">Recomeçar do Cap. 1</button>
         </div>
         ${state.updated ? html`<p class="hint">Última alteração: ${new Date(state.updated).toLocaleString('pt-BR')}</p>` : ''}
       </section>

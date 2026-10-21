@@ -16,6 +16,7 @@ import { paralogues } from '../js/views/paralogues.js';
 import { classes } from '../js/views/classes.js';
 import { mosteiro } from '../js/views/mosteiro.js';
 import { dados } from '../js/views/dados.js';
+import { builds } from '../js/views/builds.js';
 
 // mulberry32
 function rng(seed) {
@@ -30,13 +31,13 @@ function rng(seed) {
 }
 
 const CLASS_NAMES = [...CLASSES.map((c) => c.name), ...OTHER_CLASSES];
-const MONTH_OF = { 6: 9, 7: 10, 8: 11, 9: 12, 10: 1, 11: 2, 12: 3 };
+const MONTH_OF = { 1: 4, 2: 5, 3: 6, 4: 7, 5: 8, 6: 9, 7: 10, 8: 11, 9: 12, 10: 1, 11: 2, 12: 3 };
 
 export function randomState(seed) {
   const r = rng(seed);
   const pick = (list) => list[Math.floor(r() * list.length)];
   const maybe = (p, f) => (r() < p ? f() : undefined);
-  const chapter = 6 + Math.floor(r() * 12);
+  const chapter = 1 + Math.floor(r() * 17);
   const units = {};
   for (const u of UNITS) {
     const ranks = {};
@@ -57,6 +58,7 @@ export function randomState(seed) {
   }
   const month = MONTH_OF[chapter];
   return normalize({
+    build: r() < 0.9 ? 'corte-carmesim' : '',
     chapter,
     date: month && r() < 0.7 ? `${month}/${1 + Math.floor(r() * 30)}` : '',
     units,
@@ -75,6 +77,7 @@ export const PAGES = [
   ['classes', (s) => classes(s)],
   ['mosteiro', (s) => mosteiro(s)],
   ['dados', (s) => dados(s)],
+  ['builds', (s) => builds(s)],
   ...UNITS.map((u) => [`unidade/${u.id}`, (s) => unidade(s, u.id)]),
 ];
 

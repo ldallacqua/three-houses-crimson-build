@@ -2,9 +2,9 @@
 
 import { html, md } from '../html.js';
 import { SKILL_NAME, STAT_NAME, RANKS, SUPPORTS, MONTHS } from '../../data/skills.js';
-import { HOUSES, ROLES } from '../../data/units.js';
+import { HOUSES, ROLES, UNIT_BY_ID } from '../../data/units.js';
 import { ABILITY_TEXT, CLASSES, OTHER_CLASSES, TIER_LABEL } from '../../data/classes.js';
-import { monthOfChapter, taskAuto } from '../logic.js';
+import { monthOfChapter, taskAuto, itemHolder, isRecruited } from '../logic.js';
 
 /** The feminine or masculine form of a word for a character (most of the squad is female). */
 export const g = (def, fem, masc) => (def?.gender === 'm' ? masc : fem);
@@ -182,6 +182,44 @@ export function taskItem(prefix, task, state, chapter) {
   return html`<li class="check ${done ? 'done' : ''}${auto ? ' auto' : ''}">
     <input type="checkbox" id="${id}" ${done ? 'checked' : ''} ${auto ? 'disabled' : ''} data-check="${task.id}">
     <label for="${id}">${tagChip(task.tag)} ${md(task.text)}${auto ? html`<span class="auto-note">${icon('check')}automático: ${auto.why}</span>` : ''}</label>
+  </li>`;
+}
+
+export const ITEM_KIND = {
+  relic: 'Relíquia',
+  sacred: 'Arma sagrada',
+  weapon: 'Arma',
+  staff: 'Cajado',
+  shield: 'Escudo',
+  ring: 'Acessório',
+  gem: 'Gema',
+  stat: 'Status permanente',
+  seal: 'Selo',
+  battalion: 'Battalion',
+  material: 'Material',
+  sell: 'Para vender',
+  skip: 'Pode ignorar',
+};
+
+/**
+ * One item and who keeps it: the first of the plan's order who is in the army, or who to keep it
+ * for. The order shows when there is more than one name, with whoever is not in the army greyed.
+ */
+export function itemRow(rec, state, { where = rec.where, from = rec.from } = {}) {
+  const { holder, next, wanted } = itemHolder(rec, state);
+  const def = UNIT_BY_ID[holder ?? next];
+  return html`<li class="item-rec">
+    <div class="item-main">
+      <p class="item-name"><span class="tag item-kind k-${rec.kind}">${ITEM_KIND[rec.kind] ?? rec.kind}</span><strong>${rec.item}</strong></p>
+      ${from || where ? html`<p class="item-where">${from ? html`<span class="item-from">${from}</span>` : ''}${from && where ? ' · ' : ''}${where ? md(where) : ''}</p>` : ''}
+      <p class="item-why">${md(rec.why)}</p>
+    </div>
+    <div class="item-to">
+      ${def
+        ? html`<a class="person" href="#/unidade/${def.id}">${avatar(def, 'sm', { dim: !holder })}<span class="item-to-text"><span class="item-to-label">${holder ? 'Fica com' : 'Guarde para'}</span>${def.name}</span></a>`
+        : html`<span class="item-to-text"><span class="item-to-label">Quem usa</span>${{ sell: 'ninguém: venda', skip: 'ninguém', material: 'guarde no comboio' }[rec.kind] ?? 'quem precisar'}</span>`}
+      ${wanted.length > 1 ? html`<p class="item-order" aria-label="Ordem de preferência">${wanted.map((id, i) => html`${i ? html`<span class="sep" aria-hidden="true">›</span>` : ''}<span class="${id === holder ? 'on' : isRecruited(state, id) ? '' : 'off'}">${UNIT_BY_ID[id].name}</span>`)}</p>` : ''}
+    </div>
   </li>`;
 }
 

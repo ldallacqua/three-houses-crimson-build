@@ -1,16 +1,16 @@
 # FIRE EMBLEM: THREE HOUSES — GUIA MESTRE DO WAIFU SQUAD
 
-> **Versão 2.5 • atualizado em 19/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relatos do jogador (Death Blow ainda não liberada; o jogo só mostra suporte C/B/A/S)**
+> **Versão 2.6 • atualizado em 20/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relatos do jogador (Death Blow ainda não liberada; o jogo só mostra suporte C/B/A/S)**
 > **Progresso:** Parte 1, *White Clouds*, Capítulo 6 — **Rumors of a Reaper**, data **9/7** (antes de concluir a missão do mês).
 > **Casa:** Black Eagles; objetivo **Crimson Flower (Edelgard)**. **Byleth masculino**.
 > **DLC:** todas; *Cindered Shadows* concluída, Constance, Hapi e Anna já recrutadas.
 > **Restrição do jogador:** time predominantemente feminino; forte, prático, sem spoilers narrativos; não exigir reinício nem grind extremo.
 > **Pressuposto:** dificuldade Normal/Hard (ainda não confirmada). Se for Maddening, reavaliar prioridades.
-> **Guia visual (site):** https://ldallacqua.github.io/three-houses-crimson-build/ — mesmo plano, com fichas editáveis, cálculo de requisitos e notas por capítulo lacradas contra spoiler.
+> **Guia visual (site):** https://ldallacqua.github.io/three-houses-crimson-build/ — mesmo plano, publicado como a build **Corte Carmesim** (a waifu build da Flor Carmesim), com fichas editáveis, cálculo de requisitos, quem fica com cada item e notas do Cap. 1 à Parte 2 lacradas contra spoiler.
 
 ## COMO USAR E ATUALIZAR ESTE ARQUIVO
 
-Este é o documento de referência. **A seção 1 é o plano atual; a seção 2 é o snapshot das imagens e não deve ser sobrescrita retroativamente.** O site usa o mesmo snapshot como ponto de partida; **uma vez por capítulo**, confira nível, classe, maestria, ranks e suportes na aba **Atualizar** do site (ela lembra quando o capítulo muda e mostra quem falta) e use **Dados → Copiar resumo para o chat** para trazer o estado atual a uma conversa. No site, os itens da checklist do capítulo que o estado já resolve (quem entrou, classe, maestria, suporte, paralogue feito, data passada) se marcam sozinhos. Marque checkboxes quando confirmadas no jogo; não presuma que alguém dominou uma classe só por estar nela. Histórico de versões no fim.
+Este é o documento de referência. **A seção 1 é o plano atual; a seção 2 é o snapshot das imagens e não deve ser sobrescrita retroativamente.** No site, este snapshot é o **save de exemplo** (quem chega começa no Cap. 1 e escolhe a build); **uma vez por capítulo**, confira nível, classe, maestria, ranks e suportes na aba **Atualizar** do site (ela lembra quando o capítulo muda e mostra quem falta) e use **Dados → Copiar resumo para o chat** para trazer o estado atual a uma conversa. No site, os itens da checklist do capítulo que o estado já resolve (quem entrou, classe, maestria, suporte, paralogue feito, data passada) se marcam sozinhos. Marque checkboxes quando confirmadas no jogo; não presuma que alguém dominou uma classe só por estar nela. Histórico de versões no fim.
 
 **Convenções:** *Fato* = conferido em fonte (links na seção 9). *Recomendação* = escolha deste guia. *Incerto* = depende do seu save ou não foi confirmado; está marcado assim.
 
@@ -239,6 +239,29 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 - **Última janela** para recrutar e para os paralogues do Part 1.
 - **Crimson Flower — aviso sem spoiler:** suporte **C+** com a Edelgard (oculto no jogo: chegue a **B** para garantir); no Explore, fale com ela e **aceite ir com ela** (encerra o dia e custa a aula seguinte; recusar ou ignorar fecha a rota). Saves separados antes da conversa e antes da batalha. Na escolha durante a batalha do mês, **proteja a Edelgard**.
 
+### Itens do Part 1: quem fica com o quê
+
+*Recomendação.* Vai para a primeira da lista que já estiver no exército. Efeitos conferidos no fe3h.com. Os itens das missões dos Caps. 7–12 e da Parte 2 estão nas notas lacradas do site, para não adiantar os mapas.
+
+| Item | De onde | Para | Por quê |
+|---|---|---|---|
+| March Ring | Cap. 6, baú de cima | Dorothea → Bernadetta | Mov +1 em quem anda a pé; Dancer a partir do Cap. 9 |
+| Levin Sword | Cap. 6, baú de baixo | Anna → Dorothea | espada mágica de 1–2 de alcance (Sword C) |
+| Thyrsus | Land of the Golden Deer | Lysithea → Constance → Hapi | +2 de alcance mágico; Crest de Gloucester na Lysithea |
+| Luín | Rumored Nuptials (com a Ingrid) | Ingrid | Burning Quake com a Crest dela |
+| Goddess Ring | Rumored Nuptials (com a Dorothea) | Petra → Edelgard | Luck +4 e cura por turno na linha de frente |
+| Prayer Ring | Rumored Nuptials (Brigand) | Edelgard → Petra | Miracle e +5 HP por turno |
+| Killer Axe | Rumored Nuptials (baú esq.) | Edelgard → Petra | crítico alto com Death Blow |
+| Healing Staff | Rumored Nuptials (baú dir.) | Marianne → Hapi → Dorothea | cura +10 |
+| Vajra-Mushti | Black Market Scheme | Byleth | ataca 2× ao iniciar: Brawl em dobro (plano Punhos) |
+| Seraph Robe | Sword and Shield of Seiros | Lysithea → Constance | +5 HP máximo na maga mais frágil |
+| Fetters of Dromi | A Cursed Relic | Bernadetta → Constance | Mov +1 e Canto em quem anda a pé (com Crest) |
+| Experience Gem | Oil and Water | Ingrid → Lysithea → Marianne | a recruta mais atrasada no nível |
+| Knowledge Gem | Tales of the Red Canyon | Byleth | ele não tem Goals: skill e maestria em dobro |
+| Spear of Assal | An Ocean View | Ingrid → Petra | lança sagrada (Lance A), sem dano para quem usa |
+| Caduceus Staff | An Ocean View | Hapi → Marianne | +1 de alcance mágico e cura por turno |
+| Black Pearl | An Ocean View (Bishop) | Dorothea | Charm +2, se der antes do White Heron Cup |
+
 ## 7. REGRAS PARA NÃO DESPERDIÇAR
 
 1. **Maestria ≠ nível ≠ certificação.** Maestria só sobe em batalha: +1 de XP de classe por combate na classe atual (Beginner 60, Intermediate 100, Advanced 150, Master 200). Confira em Abilities se a habilidade foi liberada **e equipada**.
@@ -294,6 +317,7 @@ Seção 1. Ausentes do Faculty Training: Seteth e Manuela.
 - **v1.0 — 18/10/2026:** pesquisa inicial + equipe feminina de 10, sem screenshots reais.
 - **v2.0 — 18/10/2026:** baseada nas 8 telas reais do Cap. 6. Bernadetta Archer, Mage no Lv 10 para Hapi/Constance, Shamir, Flying/suporte para Ingrid, Lorenz/Thyrsus, March Ring, Byleth e maestrias não verificadas.
 - **v2.1 — 18/10/2026:** Seteth e Manuela fora do Faculty Training durante todo o Cap. 6; Ingrid via suporte B + pedido espontâneo; Flying fica para o Cap. 7.
+- **v2.6 — 20/10/2026:** o site virou **build selecionável**: no primeiro acesso a pessoa escolhe a build (hoje só a **Corte Carmesim**, este plano) e começa no Cap. 1; este save virou o "save de exemplo". **Notas dos Caps. 1–5** (quests que liberam atividades, Faculty Training só a partir do Cap. 3, missões com baús e drops). **Quem fica com cada item**, por capítulo e por paralogue (tabela acima para o Part 1). *Correções conferidas:* cada Ashen Wolf entra no jogo principal depois de um capítulo de *Cindered Shadows* (Constance 3, Hapi 4, Balthus 5, Yuri 6), não de um capítulo do jogo; **Retribution** e **The Face Beneath** não existem na Crimson Flower; **Arrow of Indra** é uma lança que bate com magia, não um arco.
 - **v2.5 — 19/10/2026:** site com a aba **Atualizar** (todo o esquadrão e as recrutas numa página, só com os campos que as recomendações usam), lembrete a cada capítulo novo e **checklist que se marca sozinha** quando o estado mostra que o item foi feito ou perdeu o sentido. Lembrete da Edelgard no painel passou a pedir B (o C+ é oculto).
 - **v2.4 — 19/10/2026:** **suporte no jogo é C/B/A/S** — C+ e B+ existem, mas são ocultos (seletor do site corrigido; Edelgard: chegar a B garante o C+ da rota); as três opções de refeição e qual escolher; pratos que as recrutas gostam (Sweet Bun Trio agrada Ingrid, Lysithea e Marianne); sauna explicada; chás, assuntos e respostas do comentário final de cada personagem no site; presente da Ingrid corrigido para *Legends of Chivalry*.
 - **v2.3 — 18/10/2026:** ordem para gastar os pontos do domingo (suporte → treino de recrutamento → Brawl) e tabela de suporte por atividade, com o **Choir Practice** (+30 com cada convidada, também de outras casas); conversa de suporte pendente bloqueia ganho; Faculty Training não sobe atributo; pontos fortes do Byleth (Sword, Brawl, Authority) e **Faith como budding talent** (6 sessões); Advanced Drills na Parte 2; **Death Blow ainda não liberada** (relato do jogador) e como funciona a maestria (100 de XP de classe para Brigand, +1 por combate, Knowledge Gem, estátua da Cethleann).

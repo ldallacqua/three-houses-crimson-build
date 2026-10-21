@@ -376,6 +376,27 @@ export function paralogueStatus(p, state) {
   return { phase, done, unlocked, missingKey, from, to };
 }
 
+// ---------- items ----------
+
+/**
+ * Who keeps an item. `who` is the plan's order of preference; the first one in the army gets it.
+ * When none is there yet, `next` is who to keep it for. Units set aside ('ignorar') are skipped.
+ */
+export function itemHolder(rec, state) {
+  const wanted = (rec.who ?? []).filter((id) => UNIT_BY_ID[id] && roleOf(state, id) !== 'ignorar');
+  const holder = wanted.find((id) => isRecruited(state, id)) ?? null;
+  return { holder, next: holder ? null : wanted[0] ?? null, wanted };
+}
+
+/** The items of the Part 1 paralogues still to play (or, with open: false, all but the missed). */
+export function paralogueItems(state, { open = true } = {}) {
+  return PARALOGUES.flatMap((p) => {
+    const s = paralogueStatus(p, state);
+    if (open ? !['open', 'closing', 'locked'].includes(s.phase) : s.phase === 'missed') return [];
+    return (p.items ?? []).map((rec) => ({ ...rec, from: p.name, paralogue: p.id }));
+  });
+}
+
 // ---------- the chapter ----------
 
 export function birthdaysInMonth(month) {
@@ -407,7 +428,7 @@ export function nextSteps(state, notes) {
     const role = roleOf(state, def.id);
     if (rs?.state === 'ready' && role !== 'ignorar') {
       const text = rs.how === 'abyss'
-        ? `Recrutar ${def.name} no Abismo (sem requisito).`
+        ? `Recrutar ${def.name} no Abismo (sem requisito; pede o Cap. ${def.recruit.dlc} de Cindered Shadows).`
         : `Recrutar ${def.name} no Explore: Byleth já cumpre o requisito.`;
       steps.push({ priority: role === 'titular' ? 1 : 3, kind: 'recrutar', text, link: `#/unidade/${def.id}` });
     }
@@ -516,6 +537,7 @@ const nameList = (ids) => {
  *   support: { id: rank }   support with Byleth at least that rank
  *   paralogues: [ids]       marked done
  *   after: 'M/D'            the game date is past it, or the chapter is
+ *   past: true              the chapter is over (for things only that month can do)
  */
 export function taskAuto(task, state, chapter = state.chapter) {
   const a = task.auto;
@@ -558,6 +580,10 @@ export function taskAuto(task, state, chapter = state.chapter) {
     const passed = state.chapter > chapter || (today && today.month === month && today.day > day);
     if (!passed) return null;
     why.push('a data já passou');
+  }
+  if (a.past) {
+    if (state.chapter <= chapter) return null;
+    why.push('o capítulo já passou');
   }
   return why.length ? { why: why.join(' · ') } : null;
 }

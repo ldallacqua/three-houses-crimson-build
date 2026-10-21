@@ -1,9 +1,10 @@
 // The page: hash routes, one delegated listener for every form field and button, and the
 // re-render after each change. State is saved on every change.
 
-import { load, save, setPath, getPath, parseImport, snapshotState } from './store.js';
+import { load, save, setPath, getPath, parseImport, snapshotState, freshState } from './store.js';
 import { RANKS } from '../data/skills.js';
 import { UNIT_BY_ID } from '../data/units.js';
+import { BUILD_BY_ID } from '../data/builds.js';
 import { chapterLabel } from './views/ui.js';
 import { currentNotes } from './seal.js';
 import { parseDate, monthOfChapter, reviewStatus } from './logic.js';
@@ -21,6 +22,7 @@ import { paralogues } from './views/paralogues.js';
 import { classes } from './views/classes.js';
 import { mosteiro } from './views/mosteiro.js';
 import { dados } from './views/dados.js';
+import { builds } from './views/builds.js';
 
 const ROUTES = {
   painel: { view: painel, title: 'Painel' },
@@ -33,16 +35,20 @@ const ROUTES = {
   classes: { view: classes, title: 'Classes' },
   mosteiro: { view: mosteiro, title: 'Mosteiro' },
   dados: { view: dados, title: 'Dados' },
+  builds: { view: builds, title: 'Builds' },
 };
 
 const main = document.getElementById('main');
 const chip = document.getElementById('chapter-chip');
 const reviewBadge = document.getElementById('review-badge');
+const buildName = document.getElementById('build-name');
 const toastEl = document.getElementById('toast');
 let state = load();
 let lastRoute = '';
 
 function route() {
+  // Nothing else makes sense before a build is picked: every route shows the picker.
+  if (!state.build) return { name: 'builds', ...ROUTES.builds };
   const [name = 'painel', arg] = location.hash.replace(/^#\/?/, '').split('/');
   return ROUTES[name] ? { name, arg, ...ROUTES[name] } : { name: 'painel', ...ROUTES.painel };
 }
@@ -65,6 +71,8 @@ function render({ keepFocus = true } = {}) {
   main.innerHTML = r.view(state, r.arg).toString();
   main.classList.toggle('enter', changedRoute);
   document.title = `${typeof r.title === 'function' ? r.title(r.arg) : r.title} · Crimson Flower`;
+  document.body.classList.toggle('picking', !state.build);
+  buildName.textContent = BUILD_BY_ID[state.build]?.name ?? 'escolha a sua build';
   for (const a of document.querySelectorAll('.tabs a')) {
     const on = a.dataset.route === (r.tab ?? r.name);
     if (on) a.setAttribute('aria-current', 'page');
@@ -181,16 +189,36 @@ const actions = {
   'copy-summary': async () => {
     toast((await copy(summaryMarkdown(state))) ? 'Resumo copiado. Cole no chat.' : 'Não deu para copiar.');
   },
-  'reset-snapshot': async () => {
-    const ok = await confirmDialog({
-      title: 'Voltar ao snapshot?',
-      body: 'Tudo o que você marcou neste aparelho será substituído pelo estado do guia mestre. Exporte um backup antes se quiser guardar.',
+  'choose-build': (btn) => {
+    const build = BUILD_BY_ID[btn.dataset.build];
+    if (!build) return;
+    state.build = build.id;
+    if (location.hash !== '#/painel') history.replaceState(null, '', '#/painel');
+    commit(`Build ${build.name} escolhida.`);
+  },
+  // The author's Chapter 6 game, to see the page filled in.
+  'load-sample': async () => {
+    const ok = !state.updated || await confirmDialog({
+      title: 'Abrir o save de exemplo?',
+      body: 'Tudo o que você marcou neste aparelho será substituído pelo save de exemplo (Cap. 6). Exporte um backup antes se quiser guardar.',
       confirm: 'Substituir',
       danger: true,
     });
     if (!ok) return;
     state = snapshotState();
-    commit('Snapshot restaurado.');
+    if (location.hash !== '#/painel') history.replaceState(null, '', '#/painel');
+    commit('Save de exemplo aberto. Para começar o seu, use Dados → Recomeçar do Cap. 1.');
+  },
+  'reset-fresh': async () => {
+    const ok = await confirmDialog({
+      title: 'Recomeçar do Cap. 1?',
+      body: 'Tudo o que você marcou neste aparelho será apagado e o guia volta ao começo, com a escolha de build. Exporte um backup antes se quiser guardar.',
+      confirm: 'Recomeçar',
+      danger: true,
+    });
+    if (!ok) return;
+    state = freshState();
+    commit('Recomeçado do Cap. 1.');
   },
   // The − and + beside a number field.
   step: (btn) => {

@@ -260,3 +260,42 @@ test('recruitment boxes past the deadline or with support A say so instead of fa
   assert.match(recruitBlock(UNIT_BY_ID.lysithea, s).toString(), /entra sem requisito/);
   assert.match(recruitBlock(UNIT_BY_ID.lorenz, snap()).toString(), /se ele recusar|ele tem|ele passa/);
 });
+
+test('a task only that month can do settles once the chapter is over', async () => {
+  const { taskAuto } = await import('../js/logic.js');
+  const s = snap();
+  const once = { auto: { past: true } };
+  assert.equal(taskAuto(once, s, 6), null, 'still this chapter');
+  assert.match(taskAuto(once, s, 5).why, /capítulo já passou/);
+  assert.equal(taskAuto({ auto: { past: true, recruited: ['lysithea'] } }, s, 5), null, 'every rule has to hold');
+});
+
+test('an item goes to the first of the plan’s order who is in the army', async () => {
+  const { itemHolder } = await import('../js/logic.js');
+  const s = snap();
+  const dust = { who: ['constance', 'lysithea', 'dorothea'] };
+  assert.deepEqual(itemHolder(dust, s), { holder: 'constance', next: null, wanted: ['constance', 'lysithea', 'dorothea'] });
+  s.units.constance.recruited = false;
+  assert.equal(itemHolder(dust, s).holder, 'dorothea', 'Lysithea is not in the army yet');
+  s.units.lysithea.recruited = true;
+  assert.equal(itemHolder(dust, s).holder, 'lysithea');
+  s.units.lysithea.role = 'ignorar';
+  assert.deepEqual(itemHolder(dust, s).wanted, ['constance', 'dorothea'], 'units set aside drop out');
+  const luin = { who: ['ingrid'] };
+  assert.deepEqual(itemHolder(luin, s), { holder: null, next: 'ingrid', wanted: ['ingrid'] }, 'kept for her until she joins');
+  assert.deepEqual(itemHolder({ who: [] }, s), { holder: null, next: null, wanted: [] });
+});
+
+test('the overview lists the items of the paralogues still open, not the done or missed ones', async () => {
+  const { paralogueItems } = await import('../js/logic.js');
+  const s = normalize({ ...snap(), chapter: 9 });
+  const names = () => paralogueItems(s).map((r) => r.item);
+  assert.ok(names().includes('Thyrsus'));
+  assert.ok(names().includes('Spear of Assal'));
+  s.paralogues['golden-deer'] = true;
+  assert.ok(!names().includes('Thyrsus'));
+  assert.ok(paralogueItems(s, { open: false }).some((r) => r.item === 'Thyrsus'), 'done ones still count for a unit page');
+  const late = normalize({ ...snap(), chapter: 12 });
+  assert.deepEqual(paralogueItems(late), []);
+  assert.ok(!paralogueItems(late, { open: false }).some((r) => r.item === 'Spear of Assal'), 'missed ones never show');
+});

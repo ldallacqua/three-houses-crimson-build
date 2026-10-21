@@ -3,7 +3,7 @@
 import { html, md } from '../html.js';
 import { FACULTY_BY_ID } from '../../data/faculty.js';
 import { NOTE_KEYS, openNotes, chapterOfKey, keyForChapter } from '../seal.js';
-import { taskItem, noteKeyLabel } from './ui.js';
+import { taskItem, noteKeyLabel, itemRow } from './ui.js';
 
 function away(note) {
   if (!note.away?.length) return html`<p class="away ok">Todos os instrutores de Faculty Training disponíveis.</p>`;
@@ -23,6 +23,7 @@ function page(note, state, current) {
       ${note.tasks.map((t) => taskItem('cc', t, state, chapterOfKey(note.key)))}
     </ul>` : ''}
     ${note.battle ? html`<h3>${note.battle.title}</h3><ul class="nb-points">${note.battle.points.map((p) => html`<li>${md(p)}</li>`)}</ul>` : ''}
+    ${note.items?.length ? html`<h3>Itens e quem fica com eles</h3><ul class="item-list nb-items">${note.items.map((rec) => itemRow(rec, state))}</ul>` : ''}
     ${note.paralogues?.length ? html`<h3>Paralogues desta parte</h3><div class="table-wrap"><table class="data light">
       <thead><tr><th scope="col">Paralogue</th><th scope="col">Precisa</th><th scope="col">Destaque</th></tr></thead>
       <tbody>${note.paralogues.map((p) => html`<tr><th scope="row">${p.name}</th><td>${p.units}</td><td>${p.reward}</td></tr>`)}</tbody>
@@ -46,9 +47,9 @@ export function capitulos(state) {
   const firstSealed = NOTE_KEYS.find((k) => !openNotes(k, state.chapter));
   return html`<section class="view" aria-labelledby="v-title">
     <header class="view-head">
-      <p class="kicker">Do Cap. 6 em diante</p>
+      <p class="kicker">Do Cap. 1 à Parte 2</p>
       <h1 id="v-title">Capítulos</h1>
-      <p class="lead">As notas de cada mês ficam lacradas até você marcar que chegou lá. Os capítulos anteriores ao 6 não são cobertos.</p>
+      <p class="lead">As notas de cada mês ficam lacradas até você marcar que chegou lá: checklist, a missão do mês e quem fica com cada item que ela dá. Os itens dos paralogues do Part 1 estão na aba <a href="#/paralogues">Paralogues</a>.</p>
     </header>
     <nav class="chapter-jump" aria-label="Capítulos">${NOTE_KEYS.map((k) => html`<a href="#/capitulos/${k}" class="${k === currentKey ? 'on' : ''} ${openNotes(k, state.chapter) ? '' : 'locked'}">${k === 'p2' ? 'P2' : k}</a>`)}</nav>
     <div class="notebooks">

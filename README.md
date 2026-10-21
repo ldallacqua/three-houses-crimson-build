@@ -22,13 +22,15 @@ Guias dizem a build ideal. Não sabem em que ponto o seu save está. Este guia s
 
 O jogo roda no Switch e o save não dá para ler, então o estado é digitado: nível, classe, ranks de skill, maestrias e suporte com cada recruta, copiados da tela de status. A partir disso a página calcula o resto e atualiza na hora.
 
+- **Builds para escolher.** No primeiro acesso você escolhe a build, como num site de builds: nome, autor, rota, o que ela pede e por que funciona. Hoje há uma, a **Corte Carmesim** (a waifu build da Flor Carmesim: Edelgard e as melhores aliadas de Fódlan, Byleth masculino). O guia começa no Cap. 1; dá para abrir o save de exemplo do autor (Cap. 6) para ver tudo preenchido.
+- **Quem fica com cada item.** Para cada item que vale guardar (relíquias, armas raras, anéis, gemas, stat boosters, selos), de onde ele vem e quem fica com ele, numa ordem de preferência: vai para a primeira que já estiver no exército. Aparece no capítulo, no painel do mês, no paralogue e na ficha de quem recebe.
 - **O que fazer agora.** Recrutar quem já cumpre o requisito, certificar quem já pode, terminar a maestria antes de trocar, os paralogues que fecham neste capítulo.
 - **Atualizar, uma vez por capítulo.** Uma página com o exército e as recrutas, só com os campos que as recomendações usam (nível, classe, maestria, os ranks que o plano ainda pede, suportes). Mexer numa personagem marca ela como conferida; ao avançar de capítulo, todas voltam a pendentes e o painel avisa.
 - **Goals para cada aluna.** As duas skills que mais aproximam a próxima classe do plano — ou o breakpoint que vale mais (Vengeance da Bernadetta, Physic da Hapi), com o XP que falta.
 - **Recrutamento com a conta feita.** Para cada recruta, o que o Byleth precisa em cada rank de suporte (nenhum, C, C+, B, B+, A — o C+ e o B+ o jogo não mostra), o que ele já tem e quantas sessões de Faculty Training faltam — e quem ensina essa skill **neste capítulo** (no Cap. 6, por exemplo, ninguém ensina Flying).
 - **Plano de classe por unidade.** Cada etapa com requisitos, nível, selo, maestria e se ela já pode certificar. Dá para trocar de plano (Sniper ou Bow Knight, Dancer ou maga) e o resto se ajusta.
 - **Paralogues e prazos.** Janela, quem abre, a recompensa que importa e quem precisa estar recrutada para ela vir.
-- **Notas por capítulo, lacradas.** Do Cap. 6 em diante, um caderno por mês com checklist, a missão do mês e avisos de coisas perdíveis. Itens que o estado já resolve (quem entrou, classe, maestria, suporte, paralogue feito, data passada) se marcam sozinhos e dizem por quê.
+- **Notas por capítulo, lacradas.** Do Cap. 1 à Parte 2, um caderno por mês com checklist, a missão do mês (baús, drops, prêmios e quem fica com eles) e avisos de coisas perdíveis. Itens que o estado já resolve (quem entrou, classe, maestria, suporte, paralogue feito, data ou capítulo passado) se marcam sozinhos e dizem por quê.
 - **Mosteiro.** Quem dá Faculty Training este mês, Group Tasks que combinam com o plano, quem gosta de qual presente e chá, aniversários.
 - **Resumo para o chat.** Um botão copia o estado inteiro em Markdown, para revisar o plano numa conversa ou atualizar o [guia mestre](docs/guia-mestre.md).
 - **No celular, offline.** Instalável como app; abre sem internet ao lado do console.
@@ -74,7 +76,7 @@ Cada unidade aparece com o retrato do jogo num anel na cor da casa; quem ainda n
 
 ## De onde vêm os dados
 
-Requisitos de classe e de recrutamento, magias e artes por rank, presentes, chás, aniversários, janelas de paralogue e disponibilidade de instrutores foram conferidos em [fe3h.com](https://www.fe3h.com), [Serenes Forest](https://serenesforest.net/three-houses/) e na [Fire Emblem Wiki](https://fireemblemwiki.org). Os planos de build e as prioridades são recomendação deste guia — estão marcados como tal no [guia mestre](docs/guia-mestre.md), junto com o que ainda é incerto.
+Requisitos de classe e de recrutamento, magias e artes por rank, presentes, chás, aniversários, janelas de paralogue, disponibilidade de instrutores, baús e drops de cada missão e o efeito de cada item foram conferidos em [fe3h.com](https://www.fe3h.com), [Serenes Forest](https://serenesforest.net/three-houses/) e na [Fire Emblem Wiki](https://fireemblemwiki.org). Os planos de build e as prioridades são recomendação deste guia — estão marcados como tal no [guia mestre](docs/guia-mestre.md), junto com o que ainda é incerto.
 
 Os testes (`node --test`) checam que cada classe citada num plano existe, que todo personagem na página tem retrato, que os ranks são válidos, que as tabelas de recrutamento ficam mais fáceis a cada rank de suporte, que as notas lacradas abrem e citam instrutores reais, que o cache offline lista todos os arquivos e que o estado importado é limpo antes de entrar. Um teste de fuzz (`test/fuzz.test.mjs`) renderiza todas as telas com centenas de estados aleatórios (semente fixa) e falha se alguma mostrar uma seta de rank que não sobe, `undefined`/`NaN`, ids repetidos ou rótulos apontando para campos que não existem, ou se algum conselho apontar para trás (Goal já cumprido, classe já passada, recrutar quem já entrou).
 
@@ -90,7 +92,7 @@ node tools/serve.mjs
 
 Abre em http://localhost:8790. Testes: `node --test`.
 
-Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos em `notes/chapters/` (fora do git); depois de editar, `node tools/seal.mjs` valida e lacra de novo. Uma tarefa pode ter `auto` (regras em `taskAuto`, `js/logic.js`: `recruited`, `recruits`, `reached`, `mastered`, `support`, `paralogues`, `after`) para se marcar sozinha; o lacre recusa nomes que não existem.
+Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos em `notes/chapters/` (fora do git); depois de editar, `node tools/seal.mjs` valida e lacra de novo. Uma tarefa pode ter `auto` (regras em `taskAuto`, `js/logic.js`: `recruited`, `recruits`, `reached`, `mastered`, `support`, `paralogues`, `after`, `past`) para se marcar sozinha. Cada capítulo pode ter `items` (`item`, `kind`, `where`, `who` em ordem de preferência, `why`); os itens dos paralogues do Part 1 ficam em `data/paralogues.js`. O lacre recusa unidades, classes e tipos que não existem.
 
 Para refazer ou acrescentar retratos (precisa de `curl` e `ffmpeg`): `bash tools/portraits.sh petra hapi`. Um personagem novo também entra na lista `PORTRAITS` do `sw.js`.
 
@@ -106,7 +108,7 @@ Chás, assuntos do chá, respostas do comentário final, pratos e presentes vêm
 | `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, próximos passos. Funções puras. |
 | `js/store.js` | Estado no `localStorage`, exportar/importar JSON e a limpeza de tudo que entra. |
 | `js/views/` | Uma tela por arquivo, renderizada com um template que escapa tudo. |
-| `data/` | Classes, unidades, instrutores, paralogues, chás e pratos (`social.js`, gerado), o snapshot inicial e as notas lacradas. |
+| `data/` | Builds (`builds.js`), classes, unidades, instrutores, paralogues e seus itens, chás e pratos (`social.js`, gerado), o save de exemplo e as notas lacradas. |
 | `docs/guia-mestre.md` | O guia mestre em texto, com histórico de versões. |
 | `sw.js`, `manifest.webmanifest` | Cópia offline e instalação como app. |
 | `test/` | Testes com o runner do próprio Node. |

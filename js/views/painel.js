@@ -6,10 +6,10 @@ import { PARALOGUES } from '../../data/paralogues.js';
 import { SKILL_NAME, RECRUIT_DEADLINE } from '../../data/skills.js';
 import {
   nextSteps, bylethTraining, paralogueStatus, composition, recruitTargets, birthdaysInMonth, parseDate,
-  monthOfChapter, isRecruited, roleOf, reviewStatus, taskDone, unitState, supportIndex, prefsOf,
+  monthOfChapter, isRecruited, roleOf, reviewStatus, taskDone, unitState, supportIndex, prefsOf, paralogueItems,
 } from '../logic.js';
 import { currentNotes } from '../seal.js';
-import { avatar, taskItem, tagChip, chapterLabel, skillIcon, rank, emptyState, icon } from './ui.js';
+import { avatar, taskItem, tagChip, chapterLabel, skillIcon, rank, emptyState, icon, itemRow } from './ui.js';
 
 function deadlines(state) {
   const ch = state.chapter;
@@ -85,8 +85,19 @@ function stepsCard(state, notes) {
   </section>`;
 }
 
+/** What this month can give and who keeps it: the mission's items and the open paralogues'. */
+function itemsCard(state, notes) {
+  const list = [...(notes?.items ?? []), ...paralogueItems(state)];
+  if (!list.length) return '';
+  return html`<section class="card" aria-labelledby="it-title">
+    <h2 class="card-title" id="it-title">Itens deste capítulo</h2>
+    <p class="card-lead">Quem fica com cada item que dá para ganhar agora: a primeira da ordem que já estiver no exército. Os nomes em cinza ainda não entraram.</p>
+    <ul class="item-list">${list.map((rec) => itemRow(rec, state))}</ul>
+  </section>`;
+}
+
 function checklistCard(state, notes) {
-  if (!notes) return html`<section class="card"><h2 class="card-title">Checklist do capítulo</h2>${emptyState('As notas começam no Cap. 6.')}</section>`;
+  if (!notes) return html`<section class="card"><h2 class="card-title">Checklist do capítulo</h2>${emptyState('Sem notas para este capítulo.')}</section>`;
   return html`<section class="card">
     <h2 class="card-title">Checklist do capítulo</h2>
     <p class="card-lead">${md(notes.intro)}</p>
@@ -115,16 +126,18 @@ function reviewCard(state) {
 
 function trainingCard(state, notes) {
   const rows = bylethTraining(state, notes).slice(0, 4);
+  const none = notes?.away?.includes('*');
   return html`<section class="card">
     <h2 class="card-title">Faculty Training do Byleth</h2>
     <p class="card-lead">O plano é chegar a suporte B com cada recruta; estas são as skills que ainda faltam para o requisito de B, titulares primeiro.</p>
+    ${none ? html`<p class="warn">Ninguém dá Faculty Training neste capítulo${state.chapter < 3 ? ': ele abre no Cap. 3, com a quest Learning from the Best' : ''}. Os alvos abaixo valem para quando o treino voltar.</p>` : ''}
     ${rows.length
       ? html`<ul class="train">${rows.map((r) => html`<li>
           <div class="train-head">${skillIcon(r.skill)}<strong>${SKILL_NAME[r.skill]}</strong> ${rank(r.have)}</div>
           <p class="train-for">${r.uses.map((u) => html`<span class="for"><strong>${u.name}</strong> com B: ${u.xpAtB ? html`${rank(u.needAtB, 'need')} <small>${u.xpAtB} XP</small>` : '✓'} · ${u.support === 'none' ? 'sem suporte' : `com ${u.support}`}: ${u.xp ? html`${rank(u.need, 'need')} <small>${u.xp} XP</small>` : '✓'}</span>`)}</p>
-          <p class="train-who">${r.instructors.length
+          ${none ? '' : html`<p class="train-who">${r.instructors.length
             ? html`Este mês: ${r.instructors.map((f) => f.name).join(', ')}${r.xpAtB ? html` · ~${r.sessionsAtB.min}–${r.sessionsAtB.max} sessões até o alvo de B` : ''}`
-            : html`<span class="warn">Ninguém ensina ${SKILL_NAME[r.skill]} neste capítulo.</span>`}</p>
+            : html`<span class="warn">Ninguém ensina ${SKILL_NAME[r.skill]} neste capítulo.</span>`}</p>`}
         </li>`)}</ul>`
       : emptyState('Nenhum treino pendente para recrutamento.')}
     <p class="more"><a href="#/recrutamento">Recrutamento ${icon('arrow')}</a></p>
@@ -192,6 +205,7 @@ export function painel(state) {
     ${reviewCard(state)}
     ${tiles(state, notes)}
     <div class="cols">${stepsCard(state, notes)}${checklistCard(state, notes)}</div>
+    ${itemsCard(state, notes)}
     <div class="cols">${trainingCard(state, notes)}${deadlinesCard(state)}</div>
     <div class="cols">${birthdaysCard(state)}${progressCard(state)}</div>
   </section>`;
