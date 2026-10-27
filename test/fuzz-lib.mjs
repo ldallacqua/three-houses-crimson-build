@@ -17,6 +17,7 @@ import { classes } from '../js/views/classes.js';
 import { mosteiro } from '../js/views/mosteiro.js';
 import { dados } from '../js/views/dados.js';
 import { builds } from '../js/views/builds.js';
+import { itens } from '../js/views/itens.js';
 
 // mulberry32
 function rng(seed) {
@@ -71,6 +72,7 @@ export const PAGES = [
   ['painel', (s) => painel(s)],
   ['atualizar', (s) => atualizar(s)],
   ['esquadrao', (s) => esquadrao(s)],
+  ['itens', (s) => itens(s)],
   ['recrutamento', (s) => recrutamento(s)],
   ['capitulos', (s) => capitulos(s)],
   ['paralogues', (s) => paralogues(s)],

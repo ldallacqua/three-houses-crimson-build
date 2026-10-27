@@ -24,6 +24,8 @@ O jogo roda no Switch e o save não dá para ler, então o estado é digitado: n
 
 - **Builds para escolher.** No primeiro acesso você escolhe a build, como num site de builds: nome, autor, rota, o que ela pede e por que funciona. Hoje há uma, a **Corte Carmesim** (a waifu build da Flor Carmesim: Edelgard e as melhores aliadas de Fódlan, Byleth masculino). O guia começa no Cap. 1; dá para abrir o save de exemplo do autor (Cap. 6) para ver tudo preenchido.
 - **Quem fica com cada item.** Para cada item que vale guardar (relíquias, armas raras, anéis, gemas, stat boosters, selos), de onde ele vem e quem fica com ele, numa ordem de preferência: vai para a primeira que já estiver no exército. Acessório (anel, escudo, gema, cajado) é um por personagem: quem já usa um melhor é pulada, e o item diz quem foi pulada e por quê; o que sobra vai para o comboio. Aparece no capítulo, no painel do mês (com o card **Acessórios: um por pessoa**), no paralogue e na ficha de quem recebe.
+- **Itens, numa tela só.** A aba **Itens** mostra, para cada personagem do exército, as armas que o plano dá a ela, o único acessório que ela equipa, o battalion que lidera e os stat boosters para usar nela. O que ainda não veio aparece em itálico, com a origem.
+- **Battalions.** Cada personagem tem uma lista de battalions do melhor para o mais simples, com o rank de Authority, os bônus, o gambit e de onde vem (guild, paralogue). Ela lidera o primeiro que o exército já tem, que a Authority dela alcança e que combina com a classe (classe voadora só lidera battalion voador); cada battalion vai para uma só. A ficha mostra a lista inteira e por que cada um está ou não em uso, e o Atualizar pede a Authority quando é ela que falta.
 - **O que fazer agora.** Recrutar quem já cumpre o requisito, certificar quem já pode, terminar a maestria antes de trocar, os paralogues que fecham neste capítulo.
 - **Atualizar, uma vez por capítulo.** Uma página com o exército e as recrutas, só com os campos que as recomendações usam (nível, classe, maestria, os ranks que o plano ainda pede, suportes). Mexer numa personagem marca ela como conferida; ao avançar de capítulo, todas voltam a pendentes e o painel avisa.
 - **Goals para cada aluna.** As duas skills que mais aproximam a próxima classe do plano — ou o breakpoint que vale mais (Vengeance da Bernadetta, Physic da Hapi), com o XP que falta.
@@ -81,7 +83,7 @@ Cada unidade aparece com o retrato do jogo num anel na cor da casa; quem ainda n
 
 ## De onde vêm os dados
 
-Requisitos de classe e de recrutamento, magias e artes por rank, presentes, chás, aniversários, janelas de paralogue, disponibilidade de instrutores, baús e drops de cada missão e o efeito de cada item foram conferidos em [fe3h.com](https://www.fe3h.com), [Serenes Forest](https://serenesforest.net/three-houses/) e na [Fire Emblem Wiki](https://fireemblemwiki.org). Os planos de build e as prioridades são recomendação deste guia — estão marcados como tal no [guia mestre](docs/guia-mestre.md), junto com o que ainda é incerto.
+Requisitos de classe e de recrutamento, battalions (rank, bônus, gambit e de onde vem), magias e artes por rank, presentes, chás, aniversários, janelas de paralogue, disponibilidade de instrutores, baús e drops de cada missão e o efeito de cada item foram conferidos em [fe3h.com](https://www.fe3h.com), [Serenes Forest](https://serenesforest.net/three-houses/) e na [Fire Emblem Wiki](https://fireemblemwiki.org). Os planos de build e as prioridades são recomendação deste guia — estão marcados como tal no [guia mestre](docs/guia-mestre.md), junto com o que ainda é incerto.
 
 Os testes (`node --test`) checam que cada classe citada num plano existe, que todo personagem na página tem retrato, que os ranks são válidos, que as tabelas de recrutamento ficam mais fáceis a cada rank de suporte, que as notas lacradas abrem e citam instrutores reais, que o cache offline lista todos os arquivos e que o estado importado é limpo antes de entrar. Um teste de fuzz (`test/fuzz.test.mjs`) renderiza todas as telas com centenas de estados aleatórios (semente fixa) e falha se alguma mostrar uma seta de rank que não sobe, `undefined`/`NaN`, ids repetidos ou rótulos apontando para campos que não existem, ou se algum conselho apontar para trás (Goal já cumprido, classe já passada, recrutar quem já entrou).
 
@@ -97,7 +99,7 @@ node tools/serve.mjs
 
 Abre em http://localhost:8790. Testes: `node --test`.
 
-Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos em `notes/chapters/` (fora do git); depois de editar, `node tools/seal.mjs` valida e lacra de novo. Uma tarefa pode ter `auto` (regras em `taskAuto`, `js/logic.js`: `recruited`, `recruits`, `reached`, `mastered`, `support`, `paralogues`, `after`, `past`) para se marcar sozinha. Cada capítulo pode ter `items` (`item`, `kind`, `where`, `who` em ordem de preferência, `why`); os itens dos paralogues do Part 1 ficam em `data/paralogues.js`. Quais itens são acessório, e qual vence quando dois querem a mesma pessoa, está em `data/accessories.js`. O lacre recusa unidades, classes e tipos que não existem.
+Para editar as notas dos capítulos: `node tools/seal.mjs open` abre os arquivos em `notes/chapters/` (fora do git); depois de editar, `node tools/seal.mjs` valida e lacra de novo. Uma tarefa pode ter `auto` (regras em `taskAuto`, `js/logic.js`: `recruited`, `recruits`, `reached`, `mastered`, `support`, `paralogues`, `after`, `past`) para se marcar sozinha. Cada capítulo pode ter `items` (`item`, `kind`, `where`, `who` em ordem de preferência, `why`); os itens dos paralogues do Part 1 ficam em `data/paralogues.js`. Quais itens são acessório, e qual vence quando dois querem a mesma pessoa, está em `data/accessories.js`. Os battalions, os gambits e a lista de cada personagem estão em `data/battalions.js`; um item `battalion` numa nota só pode ir para quem tem esse battalion na própria lista (os testes conferem). O lacre recusa unidades, classes e tipos que não existem.
 
 Para refazer ou acrescentar retratos (precisa de `curl` e `ffmpeg`): `bash tools/portraits.sh petra hapi`. Um personagem novo também entra na lista `PORTRAITS` do `sw.js`.
 
@@ -110,11 +112,11 @@ Chás, assuntos do chá, respostas do comentário final, pratos, presentes, pont
 | `index.html`, `css/styles.css` | A página. O visual é CSS e SVG desenhados à mão; a única arte do jogo são os retratos. |
 | `js/controls/` | Select, tooltip e diálogo, e o posicionamento das listas flutuantes. |
 | `img/portraits/` | Retratos dos personagens (WebP, 224 px), gerados por `tools/portraits.sh`. |
-| `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, um acessório por pessoa, próximos passos. Funções puras. |
+| `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, um acessório e um battalion por pessoa, próximos passos. Funções puras. |
 | `js/store.js` | Estado no `localStorage`, exportar/importar JSON e a limpeza de tudo que entra. |
 | `js/sync.js`, `api/save.js`, `server/sync.js` | O save na nuvem: o lado do site, a função da Vercel e o que ela faz no Turso (versões numeradas, conflito, histórico). |
 | `js/views/` | Uma tela por arquivo, renderizada com um template que escapa tudo. |
-| `data/` | Builds (`builds.js`), classes, unidades, instrutores, paralogues e seus itens, acessórios (`accessories.js`), chás e pratos (`social.js`, gerado), o save de exemplo e as notas lacradas. |
+| `data/` | Builds (`builds.js`), classes, unidades, instrutores, paralogues e seus itens, acessórios (`accessories.js`), battalions (`battalions.js`), chás e pratos (`social.js`, gerado), o save de exemplo e as notas lacradas. |
 | `docs/guia-mestre.md` | O guia mestre em texto, com histórico de versões. |
 | `sw.js`, `manifest.webmanifest` | Cópia offline e instalação como app. |
 | `test/` | Testes com o runner do próprio Node. |

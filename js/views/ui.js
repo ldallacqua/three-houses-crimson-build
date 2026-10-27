@@ -4,6 +4,7 @@ import { html, md } from '../html.js';
 import { SKILL_NAME, STAT_NAME, RANKS, SUPPORTS, MONTHS } from '../../data/skills.js';
 import { HOUSES, ROLES, UNIT_BY_ID } from '../../data/units.js';
 import { ABILITY_TEXT, CLASSES, OTHER_CLASSES, TIER_LABEL } from '../../data/classes.js';
+import { GAMBITS, STAT_LABEL } from '../../data/battalions.js';
 import { monthOfChapter, taskAuto, itemHolder, isRecruited, isAccessory } from '../logic.js';
 
 /** The feminine or masculine form of a word for a character (most of the squad is female). */
@@ -227,6 +228,30 @@ export function itemRow(rec, state, { where = rec.where, from = rec.from } = {})
       ${busy.length ? html`<p class="item-busy">${busy.map((b, i) => html`${i ? ' · ' : ''}${UNIT_BY_ID[b.id].name} já usa ${b.item}`)}</p>` : ''}
     </div>
   </li>`;
+}
+
+/** A battalion's bonuses, as the game lists them: "Atk +3 · Hit +10". */
+export const battalionStats = (b) => Object.entries(b.stats)
+  .filter(([, v]) => v)
+  .map(([k, v]) => `${STAT_LABEL[k]} ${v > 0 ? '+' : '−'}${Math.abs(v)}`)
+  .join(' · ');
+
+/** The battalion's name with its gambit explained on hover or tap, and its Authority rank. */
+export function battalionName(b) {
+  return html`<span class="bt-name"><strong>${b.name}</strong> ${rank(b.auth, 'need')}<button type="button" class="chip ability" data-tip="${GAMBITS[b.gambit] ?? ''}">${b.gambit}</button>${b.flying ? html`<span class="chip bt-fly">${icon('flying')}voador</span>` : ''}</span>`;
+}
+
+/** Why a unit is not leading one of her battalions (logic.js, battalionPlan). */
+export function battalionStatus(o, auth) {
+  switch (o.status) {
+    case 'use': return 'em uso';
+    case 'free': return 'também serve';
+    case 'taken': return `com ${UNIT_BY_ID[o.by]?.name ?? o.by}`;
+    case 'rank': return auth ? `pede Authority ${o.b.auth} (tem ${auth})` : `pede Authority ${o.b.auth} (informe o rank)`;
+    case 'move': return o.b.flying ? 'só em classe voadora' : 'não serve em classe voadora';
+    case 'missed': return `perdido · ${o.src.text}`;
+    default: return o.src.text;
+  }
 }
 
 export function checkItem(id, checked, body, attrs) {

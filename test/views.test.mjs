@@ -139,3 +139,15 @@ test('the Mosteiro suggests one group task pair; paralogue rows say who gets eac
   assert.match(text(rows), /Rumored Nuptials .*Luín → Ingrid/);
   assert.match(text(rows), /Thyrsus → Constance/);
 });
+
+test('the items page lays out weapon, accessory and battalion for everyone in the army', async () => {
+  const { itens } = await import('../js/views/itens.js');
+  const s = snapshotState();
+  s.units.byleth.ranks.authority = 'C';
+  const page = text(itens(s));
+  assert.match(page, /Byleth .*Armas .*Acessório .*Battalion Empire Knights/);
+  assert.match(page, /Dorothea .*Battalion Seiros Holy Monks/, 'the Dancer leads Stride');
+  assert.match(page, /Edelgard .*Acessório Accuracy Ring/);
+  const { unidade } = await import('../js/views/unidade.js');
+  assert.match(text(unidade(s, 'ingrid')), /Battalion .*Galatea Pegasus Co\./);
+});

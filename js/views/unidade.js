@@ -15,6 +15,7 @@ import {
   itemRow, noteKeyLabel,
 } from './ui.js';
 import { recruitBlock, trainingTable } from './recrutamento.js';
+import { battalionCard } from './itens.js';
 
 /** The items the plan gives this unit, from the chapters already open and the Part 1 paralogues. */
 function itemsCard(def, state) {
@@ -197,6 +198,7 @@ export function unidade(state, id) {
     ${id === 'byleth' ? trainingTable(state, currentNotes(state.chapter)) : ''}
     ${recruited || id === 'byleth' ? html`${planCard(def, st)}<div class="cols">${stateForm(def, st)}${masteryList(def, st)}</div>` : planCard(def, st)}
     ${itemsCard(def, state)}
+    ${battalionCard(def, state)}
     <div class="cols">${learnCard(def, st)}${likesCard(def)}</div>
     ${teaCard(def)}
     <section class="card">

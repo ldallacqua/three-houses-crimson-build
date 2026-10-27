@@ -1319,6 +1319,46 @@
   .item-kind.k-ring, .item-kind.k-shield, .item-kind.k-staff { background: var(--info-bg); color: var(--info); border-color: rgb(134 182 230 / 0.35); }
   .item-kind.k-weapon { background: rgb(226 86 108 / 0.12); color: #ffc2cb; border-color: rgb(226 86 108 / 0.35); }
   .item-kind.k-seal, .item-kind.k-battalion { background: var(--ok-bg); color: var(--ok); border-color: rgb(92 199 157 / 0.35); }
+
+  /* Itens: one row per unit, her gear in four slots; the slots wrap under the name when narrow. */
+  .loadouts { list-style: none; display: grid; gap: 10px; margin-top: var(--gap); }
+  .loadout {
+    display: grid;
+    grid-template-columns: minmax(170px, 1.1fr) repeat(4, minmax(0, 1fr));
+    gap: 10px 18px;
+    align-items: start;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--panel);
+  }
+  .ld-who { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
+  .ld-id { display: grid; gap: 3px; justify-items: start; line-height: 1.2; font-size: 0.9rem; }
+  .ld-id strong { font-size: 1.05rem; }
+  .ld-slot { display: grid; gap: 3px; min-width: 0; font-size: 0.93rem; }
+  .ld-label { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 800; }
+  .ld-gear { list-style: none; display: grid; gap: 4px; }
+  .ld-gear li { display: grid; line-height: 1.25; }
+  .ld-gear li.soon strong { font-style: italic; font-weight: 600; color: var(--ink-2); }
+  .ld-from { font-size: 0.78rem; color: var(--muted); }
+  .ld-none { color: var(--muted); font-style: italic; }
+  .ld-next { font-size: 0.8rem; color: var(--warn); }
+  .bt-name { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+  .bt-name .chip { font-size: 0.74rem; }
+  .bt-fly .ico { width: 12px; height: 12px; }
+  .bt-list { list-style: none; display: grid; gap: 8px; }
+  .bt-list li { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: space-between; align-items: flex-start; padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--line-soft); background: rgb(255 255 255 / 0.025); }
+  .bt-main { display: grid; gap: 3px; flex: 1 1 260px; min-width: 0; }
+  .bt-why { font-size: 0.92rem; color: var(--ink-2); }
+  .bt-state { font-size: 0.85rem; color: var(--muted); text-align: right; max-width: 260px; margin-left: auto; }
+  .bt-list .bt-use { border-color: var(--line-strong); background: rgb(214 180 106 / 0.07); }
+  .bt-use .bt-state { color: var(--gold-hi); font-weight: 800; }
+  .bt-rank .bt-state { color: var(--warn); }
+  .bt-missed { opacity: 0.6; }
+  @media (max-width: 900px) {
+    .loadout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ld-who { grid-column: 1 / -1; }
+  }
 }
 
 @layer utilities {
