@@ -24,11 +24,13 @@ import { classes } from './views/classes.js';
 import { mosteiro } from './views/mosteiro.js';
 import { dados } from './views/dados.js';
 import { builds } from './views/builds.js';
+import { itens } from './views/itens.js';
 
 const ROUTES = {
   painel: { view: painel, title: 'Painel' },
   atualizar: { view: atualizar, title: 'Atualizar' },
   esquadrao: { view: esquadrao, title: 'Esquadrão' },
+  itens: { view: itens, title: 'Itens' },
   unidade: { view: unidade, title: (id) => UNIT_BY_ID[id]?.name ?? 'Unidade', tab: 'esquadrao' },
   recrutamento: { view: recrutamento, title: 'Recrutamento' },
   capitulos: { view: capitulos, title: 'Capítulos' },

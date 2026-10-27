@@ -1,6 +1,6 @@
 # FIRE EMBLEM: THREE HOUSES — GUIA MESTRE DO WAIFU SQUAD
 
-> **Versão 2.8 • atualizado em 21/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relatos do jogador (Death Blow ainda não liberada; o jogo só mostra suporte C/B/A/S)**
+> **Versão 2.9 • atualizado em 27/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relatos do jogador (Death Blow ainda não liberada; o jogo só mostra suporte C/B/A/S)**
 > **Progresso:** Parte 1, *White Clouds*, Capítulo 6 — **Rumors of a Reaper**, data **9/7** (antes de concluir a missão do mês).
 > **Casa:** Black Eagles; objetivo **Crimson Flower (Edelgard)**. **Byleth masculino**.
 > **DLC:** todas; *Cindered Shadows* concluída, Constance, Hapi e Anna já recrutadas.
@@ -171,7 +171,7 @@ Dominar Brigand; **Axe B** → Wyvern Rider no Lv 20 → Wyvern Lord no 30. **Re
 
 ### Bernadetta — 11 Fighter, Bow C+, Lance C
 
-**Archer agora**, dominar para **Hit +20**. Lance até **C+ → Vengeance** (Mt extra = HP que falta; não precisa ficar com 1 HP). **Persecution Complex** (pessoal): +5 de ataque depois que ela leva um golpe. **Rota confortável:** Sniper (Bow A, Lv 20) → **Hunter's Volley** (só funciona em Sniper). **Alternativa:** Paladin (Lance B + Riding B) → Bow Knight (Lv 30: Bow A, Riding A, Lance C); Riding é o budding talent dela (Pass). Parte 2: o paralogue do Hubert dá um arco relíquia que combina com a Crest dela.
+**Archer agora**, dominar para **Hit +20**. Lance até **C+ → Vengeance** (Mt extra = HP que falta; não precisa ficar com 1 HP). **Persecution Complex** (pessoal): +5 de ataque depois que ela leva um golpe. **Rota confortável:** Sniper (Bow A, Lv 20) → **Hunter's Volley** (só funciona em Sniper). **Alternativa:** Paladin (Lance B + Riding B) → Bow Knight (Lv 30: Bow A, Riding A, Lance C); Riding é o budding talent dela (Pass). Parte 2: o **Legend of the Lake** (Leonie + Linhardt) dá **The Inexhaustible**, o arco sagrado da Crest of Indech, que é a dela. Só abre com a Leonie recrutada.
 
 ### Shamir — Sniper, Bow A (recrutar agora)
 
@@ -292,13 +292,35 @@ Com Part 1 completo (até os paralogues), fica assim:
 - **Quando passa a valer:** com **Heavy Armor C**, qualquer personagem aprende **Weight −3** (equipe em Abilities), que anula um Steel Shield. Heavy Armor é ponto forte da Edelgard.
 - **Os bons são os de peso 0 da Parte 2** (Aurora, Kadmos, Lampos): +3 de proteção e anulam a fraqueza do tipo de unidade (voadora, armadura, cavalaria). Seiros Shield e Ochain Shield não saem para você nesta rota.
 
+### Battalions: um por personagem
+
+*Fato* (Fire Emblem Wiki, uma página por battalion; gambits no fe3h.com): cada personagem lidera **um** battalion, que dá bônus fixos (Atk, Mag, Hit, Crit, Avo, Prt, Rsl) e um gambit. Ela precisa de **Authority** igual ou maior que o rank do battalion; a Authority sobe sozinha com o battalion equipado em combate. **Classe voadora só lidera battalion voador**, e battalion voador só serve em classe voadora: reveja ao virar Wyvern Rider, Pegasus Knight ou Dark Flier. Os da guild são **um de cada**. Na rota da Black Eagles a guild vende os do Império (Empire Infantry, Archers, Magic Corps e Knights desde o Cap. 3; Empire Pegasus Co., Wyvern Co., Snipers e Magic Users desde o Cap. 8); os de paralogue chegam sozinhos no fim do mapa.
+
+*Recomendação.* A lista de cada uma vai do melhor para o mais simples; ela usa o primeiro que o exército já tem, que a Authority alcança e que combina com a classe. No site, a aba **Itens** mostra o battalion de cada uma ao lado da arma e do acessório, e a ficha mostra a lista inteira com o motivo de cada battalion estar ou não em uso.
+
+| Unidade | Part 1, do melhor para o mais simples | Por quê |
+|---|---|---|
+| Byleth | Indech Sword Fighters (A, Oil and Water com a Manuela) › Leicester Dicers Corps (B, Black Market Scheme com o Balthus) › Empire Knights (C) › Empire Infantry (E) | Atk e Hit; Retribution deixa o time revidar a qualquer distância |
+| Edelgard | Cichol Wyvern Co. (A, voador, An Ocean View) › Empire Wyvern Co. (C, voador, Cap. 8) › Empire Infantry enquanto for Brigand | Atk, Hit e Crit no voo |
+| Petra | Cichol Wyvern Co. se a Edelgard não estiver com ele › Empire Wyvern Co. › Empire Pegasus Co. (D, voador, Cap. 8) | Battalion de Brigid (Brigid Hunters) é de infantaria: **não serve na Petra voadora** |
+| Bernadetta | Empire Snipers (C, Cap. 8) › Empire Archers (D) › Seiros Archers | Hit e Atk para o arco |
+| Shamir | Seiros Archers (D, Sword and Shield of Seiros com ela) › Empire Snipers | Hit +10 e Avo +5 |
+| Ingrid | Galatea Pegasus Co. (B, voador, Rumored Nuptials com ela) › Empire Pegasus Co. › Seiros Pegasus Co. (D, Cap. 3) | O da família dela |
+| Dorothea | **Seiros Holy Monks** (E, Stride) | Stride dá +5 de movimento a quem estiver em volta: com a Dancer, leva o time inteiro |
+| Constance | Nuvelle Fliers Corps (B, voador, A Cursed Relic com ela) › Empire Magic Users (C) › Empire Magic Corps (D) | Mag e Rsl; o voador quando for Dark Flier |
+| Hapi | Timotheos Magi Corps (B, Black Market Scheme com ela) › Empire Magic Users › Empire Magic Corps › Seiros Sacred Monks (E, cura) | Mag e Hit (a Dark Magic erra mais) |
+| Lysithea | Gloucester Knights (B, Land of the Golden Deer) › Empire Magic Users › Empire Magic Corps | Mag +2 e Hit +10 |
+| Marianne | Cethleann Monks (A, An Ocean View) › Seiros Sacred Monks (E) | Cura em área |
+
+A partir do Cap. 12 a guild abre os battalions do Império desta rota, e a Parte 2 traz os dos paralogues; o site mostra quando você chegar lá. *Correção:* o **Oil and Water** dá o **Indech Sword Fighters** com a Manuela recrutada; o Macuil Evil Repelling Co. só vem com o Hanneman.
+
 ## 7. REGRAS PARA NÃO DESPERDIÇAR
 
 1. **Maestria ≠ nível ≠ certificação.** Maestria só sobe em batalha: +1 de XP de classe por combate na classe atual (Beginner 60, Intermediate 100, Advanced 150, Master 200). Confira em Abilities se a habilidade foi liberada **e equipada**.
 2. **Rota atual > rota teórica.** Ficar na intermediária até dominar a classe está ok.
 3. **Masteries que valem:** Brigand (Death Blow), Mage (Fiendish Blow), Archer (Hit +20), Pegasus Knight (Darting Blow), Valkyrie (Uncanny Blow). Artes presas à classe: Hunter's Volley (Sniper), Fierce Iron Fist (Grappler), Astra (Swordmaster), War Master's Strike (War Master).
 4. **Brawl ≠ Axe; Black Magic ≠ Dark Magic** (Warlock e Dark Flier só dão bônus a Black).
-5. **Battalion terrestre não serve em classe voadora.** Reveja ao virar Wyvern Rider, Pegasus Knight ou Dark Flier.
+5. **Battalion terrestre não serve em classe voadora, e o voador não serve no chão.** Reveja ao virar Wyvern Rider, Pegasus Knight ou Dark Flier. Um battalion por personagem, e Authority igual ou maior que o rank dele.
 6. **Exame só com 100%.** Selo e Abyssian Exam Pass são gastos mesmo se reprovar.
 7. **Relíquias machucam quem não tem Crest** (10 de dano após cada combate): Thyrsus, Fetters of Dromi, Luín, Vajra-Mushti.
 8. **Uma Dancer por campanha.**
@@ -351,6 +373,7 @@ Com Part 1 completo (até os paralogues), fica assim:
 - **v1.0 — 18/10/2026:** pesquisa inicial + equipe feminina de 10, sem screenshots reais.
 - **v2.0 — 18/10/2026:** baseada nas 8 telas reais do Cap. 6. Bernadetta Archer, Mage no Lv 10 para Hapi/Constance, Shamir, Flying/suporte para Ingrid, Lorenz/Thyrsus, March Ring, Byleth e maestrias não verificadas.
 - **v2.1 — 18/10/2026:** Seteth e Manuela fora do Faculty Training durante todo o Cap. 6; Ingrid via suporte B + pedido espontâneo; Flying fica para o Cap. 7.
+- **v2.9 — 27/10/2026:** **Battalions**: nova seção **Battalions: um por personagem**, com a lista de cada uma do melhor para o mais simples (Authority, voador ou não, de onde vem). No site: aba **Itens** com arma, acessório e battalion de todo o exército numa tela, e um card **Battalion** em cada ficha. *Correções:* o **Oil and Water** dá o **Indech Sword Fighters** com a Manuela (o Macuil vem só com o Hanneman); o arco da Crest da Bernadetta vem do **Legend of the Lake**, não do paralogue do Hubert. Nas notas da Parte 2: o **Brigid Hunters** é de infantaria e não serve na Petra voadora; o **Steal** do Insurmountable é da classe Thief e pede Spd maior que a do Nader; entraram os battalions que faltavam (Edmund Troops, Holst's Chosen, Hevring Prayer Troops, Sauin Militia, Secret Transport Force) e o aviso de que os cinco paralogues dos Caps. 15–17 fecham juntos no 17.
 - **v2.8 — 21/10/2026:** *Correção:* **cada personagem equipa um acessório só** (anel, escudo, gema e cajado dividem o mesmo espaço). O guia dava dois ou três para a mesma pessoa (Edelgard: Accuracy Ring e Prayer Ring; Petra: Goddess Ring e outros). Agora cada item tem uma ordem mais longa e uma importância: quem já usa um melhor é pulado, e o que sobra vai para a próxima da ordem ou para o comboio. Nova seção **Acessórios: um por personagem**, com escudos: o peso soma com o da arma e tira AS e esquiva, então não valem agora na Edelgard nem no Byleth; os de peso 0 da Parte 2 valem. No site: card **Acessórios: um por pessoa** no Painel, e cada item diz quem foi pulado e por quê. Também no site: o lembrete mensal de olhar a aba Recrutamento se marca sozinho quando o mês acaba.
 - **v2.7 — 20/10/2026:** *Correção:* **Group Task é uma por semana, sempre em dupla** (o Byleth não participa). Este guia e o site listavam várias pessoas por tarefa; agora o site indica uma dupla, pelo que o plano pede, ponto forte na skill e suporte entre as duas (dados do fe3h.com e da Fire Emblem Wiki). No site, as notas dos capítulos saíram do fundo de caderno pautado para um painel liso, e os paralogues viraram uma lista em que cada linha mostra quem fica com cada item e abre para o resto.
 - **v2.6 — 20/10/2026:** o site virou **build selecionável**: no primeiro acesso a pessoa escolhe a build (hoje só a **Corte Carmesim**, este plano) e começa no Cap. 1; este save virou o "save de exemplo". **Notas dos Caps. 1–5** (quests que liberam atividades, Faculty Training só a partir do Cap. 3, missões com baús e drops). **Quem fica com cada item**, por capítulo e por paralogue (tabela acima para o Part 1). *Correções conferidas:* cada Ashen Wolf entra no jogo principal depois de um capítulo de *Cindered Shadows* (Constance 3, Hapi 4, Balthus 5, Yuri 6), não de um capítulo do jogo; **Retribution** e **The Face Beneath** não existem na Crimson Flower; **Arrow of Indra** é uma lança que bate com magia, não um arco.

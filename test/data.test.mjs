@@ -159,3 +159,27 @@ test('every sealed task rule names things that exist', async () => {
   }
   assert.ok(rules >= 25);
 });
+
+test('battalions: real ranks and gambits, sources that exist, and item lists that match the plan', async () => {
+  const { BATTALIONS, BATTALION_BY_NAME, BATTALION_PLAN, GAMBITS } = await import('../data/battalions.js');
+  const { PARALOGUE_BY_ID } = await import('../data/paralogues.js');
+  assert.equal(Object.keys(BATTALION_BY_NAME).length, BATTALIONS.length, 'names are unique');
+  for (const b of BATTALIONS) {
+    assert.ok(isRank(b.auth), `${b.name}: rank ${b.auth}`);
+    assert.ok(GAMBITS[b.gambit], `${b.name}: gambit ${b.gambit}`);
+    const g = b.get;
+    if (g.paralogue) assert.ok(PARALOGUE_BY_ID[g.paralogue], `${b.name}: paralogue ${g.paralogue}`);
+    for (const id of [g.needs ?? []].flat()) assert.ok(UNIT_BY_ID[id], `${b.name}: unit ${id}`);
+    assert.ok(g.guild || g.auto || g.paralogue || (g.p2 && g.from), `${b.name}: where it comes from`);
+  }
+  for (const [id, list] of Object.entries(BATTALION_PLAN)) {
+    assert.ok(UNIT_BY_ID[id], `plan for unknown unit ${id}`);
+    for (const [name, why] of list) assert.ok(BATTALION_BY_NAME[name] && why, `${id}: ${name}`);
+  }
+  // A battalion an item list hands out goes to someone who has it in her own list.
+  const recs = [...PARALOGUES.flatMap((p) => p.items ?? []), ...NOTE_KEYS.flatMap((k) => openNotes(k, 99)?.items ?? [])]
+    .filter((r) => r.kind === 'battalion');
+  for (const r of recs) {
+    for (const id of r.who) assert.ok(BATTALION_PLAN[id]?.some(([n]) => n === r.item), `${r.item}: ${id} does not plan to lead it`);
+  }
+});

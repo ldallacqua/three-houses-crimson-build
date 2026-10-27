@@ -353,3 +353,45 @@ test('the week’s group task is one pair, never Byleth, for a skill the plan st
   assert.ok(next.pick.best.pair.includes('hapi'));
   assert.ok(next.pick.best.support, 'the partner has supports with Hapi');
 });
+
+test('one battalion each: Authority, flying or not, and what the army has decide it', async () => {
+  const { battalionPlan, itemHolder, keySkills } = await import('../js/logic.js');
+  const s = normalize({ ...snap(), chapter: 9 });
+  for (const id of ['edelgard', 'petra', 'ingrid', 'constance']) s.units[id] = { ...s.units[id], recruited: true };
+  s.units.edelgard.ranks.authority = 'C';
+  s.units.edelgard.cls = 'Brigand';
+  let plan = battalionPlan(s);
+  assert.equal(plan.get('edelgard').options.find((o) => o.b.name === 'Empire Wyvern Co.').status, 'move', 'a flying battalion waits until she flies');
+  s.units.edelgard.cls = 'Wyvern Rider';
+  plan = battalionPlan(s);
+  assert.equal(plan.get('edelgard').use.b.name, 'Empire Wyvern Co.');
+  s.units.petra.cls = 'Wyvern Rider';
+  s.units.petra.ranks.authority = 'C';
+  plan = battalionPlan(s);
+  assert.equal(plan.get('petra').options.find((o) => o.b.name === 'Empire Wyvern Co.').status, 'taken', 'Edelgard comes first');
+  assert.equal(plan.get('petra').use.b.name, 'Empire Pegasus Co.');
+  // Rumored Nuptials done with Ingrid: the Galatea battalion is hers once her Authority reaches B.
+  s.paralogues.nuptials = true;
+  s.units.ingrid.cls = 'Pegasus Knight';
+  s.units.ingrid.ranks.authority = 'D';
+  plan = battalionPlan(s);
+  assert.equal(plan.get('ingrid').next.b.name, 'Galatea Pegasus Co.');
+  assert.ok(keySkills(UNIT_BY_ID.ingrid, s.units.ingrid, s).includes('authority'), 'the review page asks for her Authority');
+  s.units.ingrid.ranks.authority = 'B';
+  plan = battalionPlan(s);
+  assert.equal(plan.get('ingrid').use.b.name, 'Galatea Pegasus Co.');
+  assert.equal(itemHolder({ item: 'Galatea Pegasus Co.', kind: 'battalion', who: ['ingrid'] }, s).holder, 'ingrid');
+  // Chapter 12 battalions stay out of sight before then.
+  assert.ok(!plan.get('ingrid').options.some((o) => o.b.name === 'Black Eagle Pegasus Co.'));
+  assert.ok(battalionPlan({ ...s, chapter: 12 }).get('ingrid').options.some((o) => o.b.name === 'Black Eagle Pegasus Co.'));
+});
+
+test('a Part 2 battalion is lost when its paralogue unit never joined', async () => {
+  const { battalionPlan } = await import('../js/logic.js');
+  const s = normalize({ ...snap(), chapter: 15 });
+  s.units.shamir = { ...s.units.shamir, recruited: true };
+  s.units.marianne = { ...s.units.marianne, recruited: false };
+  const edmund = battalionPlan(s).get('shamir').options.find((o) => o.b.name === 'Edmund Troops');
+  assert.equal(edmund.status, 'missed');
+  assert.match(edmund.src.text, /Forgotten Hero .*Marianne/);
+});

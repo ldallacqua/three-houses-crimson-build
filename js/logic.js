@@ -9,7 +9,8 @@ import { FACULTY } from '../data/faculty.js';
 import { PARALOGUES, PARALOGUE_BY_ID } from '../data/paralogues.js';
 import { SOCIAL } from '../data/social.js';
 import { EQUIPMENT, ACCESSORY_ORDER } from '../data/accessories.js';
-import { NOTE_KEYS, openNotes } from './seal.js';
+import { BATTALION_BY_NAME, BATTALION_PLAN } from '../data/battalions.js';
+import { NOTE_KEYS, openNotes, PART_TWO_FROM } from './seal.js';
 
 // ---------- ranks ----------
 
@@ -449,6 +450,7 @@ export function itemHolder(rec, state) {
     return slots.find((s) => sameItem(s.rec, rec));
   }
   const wanted = wantedBy(rec, state);
+  if (rec.kind === 'battalion' && BATTALION_BY_NAME[rec.item]) return battalionHolder(rec, state, wanted);
   const holder = wanted.find((id) => isRecruited(state, id)) ?? null;
   return { holder, next: holder ? null : wanted[0] ?? null, wanted, busy: [] };
 }
@@ -506,6 +508,103 @@ export function paralogueItems(state, { open = true } = {}) {
     if (open ? !['open', 'closing', 'locked'].includes(s.phase) : s.phase === 'missed') return [];
     return (p.items ?? []).map((rec) => ({ ...rec, from: p.name, paralogue: p.id }));
   });
+}
+
+// ---------- battalions ----------
+
+const ROLE_ORDER = ['titular', 'rotacao', 'reserva', 'utilitario', 'temporaria'];
+
+/** The chapter a battalion can first be had: the guild's, the paralogue window's, Part 2's. */
+const battalionOpens = (b) => b.get.guild ?? b.get.auto ?? b.get.from ?? PARALOGUE_BY_ID[b.get.paralogue]?.window[0] ?? 1;
+
+/** Battalions from Chapter 12 on stay hidden until then, like the sealed notes. */
+export const battalionVisible = (b, state) => battalionOpens(b) < 12 || state.chapter >= Math.min(battalionOpens(b), PART_TWO_FROM);
+
+/**
+ * Whether the army has a battalion by now. Returns { ok, missed, text }: `text` says where it comes
+ * from. A Part 1 paralogue gives it once marked done, if the unit it asks for was with you; a Part 2
+ * one is counted from the chapter it opens, since the page does not track those.
+ */
+export function battalionSource(b, state) {
+  const g = b.get;
+  const ch = state.chapter;
+  if (g.guild) return { ok: ch >= g.guild, missed: false, text: `Guild, a partir do Cap. ${g.guild}` };
+  if (g.auto) return { ok: ch >= g.auto, missed: false, text: g.text };
+  if (g.paralogue) {
+    const p = PARALOGUE_BY_ID[g.paralogue];
+    const s = paralogueStatus(p, state);
+    const without = Boolean(g.needs) && !isRecruited(state, g.needs) && (s.done || ch > RECRUIT_DEADLINE);
+    const text = `${p.name} (Cap. ${p.window[0]}–${p.window[1]})${g.needs ? `, com ${UNIT_BY_ID[g.needs].name} no exército` : ''}`;
+    return { ok: s.done && !without, missed: s.phase === 'missed' || without, text };
+  }
+  const missing = g.needs.filter((id) => !isRecruited(state, id));
+  return {
+    ok: ch >= g.from && !missing.length,
+    missed: ch > RECRUIT_DEADLINE && missing.length > 0,
+    text: `${g.p2} (Cap. ${g.from}–17)${missing.length ? `, precisa de ${missing.map((id) => UNIT_BY_ID[id].name).join(' e ')}` : ''}`,
+  };
+}
+
+/**
+ * One battalion per unit. Goes through the squad in order (titulares first) and gives each the first
+ * of her BATTALION_PLAN list she can lead now: the army has it, her Authority is high enough (a rank
+ * not typed in counts as E), it matches flying or not, and nobody ahead took it.
+ * Returns Map(unit id → { use, next, options, flies, auth }). Each option has a status: 'use',
+ * 'free' (could lead it, has a better one), 'taken' (by: who), 'rank', 'move', 'later' or 'missed'.
+ * `next` is the best option that only waits on her Authority.
+ */
+export function battalionPlan(state) {
+  const taken = new Map();
+  const out = new Map();
+  const units = UNITS
+    .filter((u) => BATTALION_PLAN[u.id] && roleOf(state, u.id) !== 'ignorar')
+    .sort((a, b) => ROLE_ORDER.indexOf(roleOf(state, a.id)) - ROLE_ORDER.indexOf(roleOf(state, b.id)));
+  for (const def of units) {
+    const st = unitState(state, def.id);
+    const flies = Boolean(CLASS_BY_NAME[st.cls]?.flying);
+    const auth = st.ranks?.authority ?? null;
+    const options = BATTALION_PLAN[def.id]
+      .map(([name, why]) => ({ b: BATTALION_BY_NAME[name], why }))
+      .filter((o) => battalionVisible(o.b, state))
+      .map((o) => {
+        const src = battalionSource(o.b, state);
+        let status = 'ok';
+        if (src.missed) status = 'missed';
+        else if (!src.ok) status = 'later';
+        else if (o.b.flying !== flies) status = 'move';
+        else if (taken.has(o.b.name)) status = 'taken';
+        else if (!meetsRank(auth ?? 'E', o.b.auth)) status = 'rank';
+        return { ...o, src, status, by: taken.get(o.b.name) ?? null };
+      });
+    const use = isRecruited(state, def.id) ? options.find((o) => o.status === 'ok') ?? null : null;
+    for (const o of options) if (o.status === 'ok') o.status = o === use ? 'use' : 'free';
+    if (use) taken.set(use.b.name, def.id);
+    const before = use ? options.slice(0, options.indexOf(use)) : options;
+    out.set(def.id, { use, next: before.find((o) => o.status === 'rank') ?? null, options, flies, auth });
+  }
+  return out;
+}
+
+/**
+ * Who keeps a battalion an item list names: whoever leads it in battalionPlan, else the first of
+ * its order in the army who does not lead one she ranks higher (`busy` names who it skipped).
+ */
+function battalionHolder(rec, state, wanted) {
+  const plan = battalionPlan(state);
+  const user = [...plan].find(([, p]) => p.use?.b.name === rec.item)?.[0];
+  if (user) return { holder: user, next: null, wanted, busy: [] };
+  const rankOf = (id, name) => BATTALION_PLAN[id]?.findIndex(([n]) => n === name) ?? -1;
+  const better = (id) => {
+    const use = plan.get(id)?.use;
+    const mine = rankOf(id, rec.item);
+    return use && (mine < 0 || rankOf(id, use.b.name) < mine);
+  };
+  const holder = wanted.find((id) => isRecruited(state, id) && !better(id)) ?? null;
+  const busy = wanted.slice(0, holder ? wanted.indexOf(holder) : wanted.length)
+    .filter((id) => isRecruited(state, id) && better(id))
+    .map((id) => ({ id, item: plan.get(id).use.b.name }));
+  const next = holder ? null : wanted.find((id) => !isRecruited(state, id)) ?? null;
+  return { holder, next, wanted, busy };
 }
 
 // ---------- the chapter ----------
@@ -604,6 +703,7 @@ export function keySkills(def, st, state) {
   const set = new Set([...suggestGoals(def, st, status).map((g) => g.skill), ...skillNeeds(def, st, status)]);
   for (const item of status?.next?.check.items ?? []) if (!item.any) set.add(item.skill);
   if (def.id === 'byleth') for (const e of bylethTraining(state)) set.add(e.skill);
+  if (battalionPlan(state).get(def.id)?.next) set.add('authority');
   const cls = CLASS_BY_NAME[st.cls];
   if (!set.size && cls) for (const skill of Object.keys(cls.reqs)) set.add(skill);
   return SKILLS.map((s) => s.id).filter((id) => set.has(id));
