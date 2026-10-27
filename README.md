@@ -26,6 +26,7 @@ O jogo roda no Switch e o save não dá para ler, então o estado é digitado: n
 - **Quem fica com cada item.** Para cada item que vale guardar (relíquias, armas raras, anéis, gemas, stat boosters, selos), de onde ele vem e quem fica com ele, numa ordem de preferência: vai para a primeira que já estiver no exército. Acessório (anel, escudo, gema, cajado) é um por personagem: quem já usa um melhor é pulada, e o item diz quem foi pulada e por quê; o que sobra vai para o comboio. Aparece no capítulo, no painel do mês (com o card **Acessórios: um por pessoa**), no paralogue e na ficha de quem recebe.
 - **Itens, numa tela só.** A aba **Itens** mostra, para cada personagem do exército, as armas que o plano dá a ela, o único acessório que ela equipa, o battalion que lidera e os stat boosters para usar nela. O que ainda não veio aparece em itálico, com a origem.
 - **Battalions.** Cada personagem tem uma lista de battalions do melhor para o mais simples, com o rank de Authority, os bônus, o gambit e de onde vem (guild, paralogue). Ela lidera o primeiro que o exército já tem, que a Authority dela alcança e que combina com a classe (classe voadora só lidera battalion voador); cada battalion vai para uma só. A ficha mostra a lista inteira e por que cada um está ou não em uso, e o Atualizar pede a Authority quando é ela que falta.
+- **Adjutants.** Quem fica fora do mapa vai junto de uma titular: uma curandeira no Byleth, magia ou arco nas que atacam de 2 casas, nenhum nas voadoras (só levam adjutant voador). A aba Itens mostra o par e o espaço (Professor Level C, B, A), e a ficha explica o que o adjutant faz pela classe dele e quanto o suporte muda.
 - **O que fazer agora.** Recrutar quem já cumpre o requisito, certificar quem já pode, terminar a maestria antes de trocar, os paralogues que fecham neste capítulo.
 - **Atualizar, uma vez por capítulo.** Uma página com o exército e as recrutas, só com os campos que as recomendações usam (nível, classe, maestria, os ranks que o plano ainda pede, suportes). Mexer numa personagem marca ela como conferida; ao avançar de capítulo, todas voltam a pendentes e o painel avisa.
 - **Goals para cada aluna.** As duas skills que mais aproximam a próxima classe do plano — ou o breakpoint que vale mais (Vengeance da Bernadetta, Physic da Hapi), com o XP que falta.
@@ -112,11 +113,11 @@ Chás, assuntos do chá, respostas do comentário final, pratos, presentes, pont
 | `index.html`, `css/styles.css` | A página. O visual é CSS e SVG desenhados à mão; a única arte do jogo são os retratos. |
 | `js/controls/` | Select, tooltip e diálogo, e o posicionamento das listas flutuantes. |
 | `img/portraits/` | Retratos dos personagens (WebP, 224 px), gerados por `tools/portraits.sh`. |
-| `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, um acessório e um battalion por pessoa, próximos passos. Funções puras. |
+| `js/logic.js` | As contas: requisitos de classe, plano por unidade, Goals, recrutamento, treino do Byleth, paralogues, um acessório, um battalion e um adjutant por pessoa, próximos passos. Funções puras. |
 | `js/store.js` | Estado no `localStorage`, exportar/importar JSON e a limpeza de tudo que entra. |
 | `js/sync.js`, `api/save.js`, `server/sync.js` | O save na nuvem: o lado do site, a função da Vercel e o que ela faz no Turso (versões numeradas, conflito, histórico). |
 | `js/views/` | Uma tela por arquivo, renderizada com um template que escapa tudo. |
-| `data/` | Builds (`builds.js`), classes, unidades, instrutores, paralogues e seus itens, acessórios (`accessories.js`), battalions (`battalions.js`), chás e pratos (`social.js`, gerado), o save de exemplo e as notas lacradas. |
+| `data/` | Builds (`builds.js`), classes, unidades, instrutores, paralogues e seus itens, acessórios (`accessories.js`), battalions (`battalions.js`), adjutants (`adjutants.js`), chás e pratos (`social.js`, gerado), o save de exemplo e as notas lacradas. |
 | `docs/guia-mestre.md` | O guia mestre em texto, com histórico de versões. |
 | `sw.js`, `manifest.webmanifest` | Cópia offline e instalação como app. |
 | `test/` | Testes com o runner do próprio Node. |

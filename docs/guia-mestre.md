@@ -1,6 +1,6 @@
 # FIRE EMBLEM: THREE HOUSES — GUIA MESTRE DO WAIFU SQUAD
 
-> **Versão 2.9 • atualizado em 27/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relatos do jogador (Death Blow ainda não liberada; o jogo só mostra suporte C/B/A/S)**
+> **Versão 2.10 • atualizado em 27/10/2026 • estado real confirmado por 8 screenshots (Cap. 6) + relatos do jogador (Death Blow ainda não liberada; o jogo só mostra suporte C/B/A/S)**
 > **Progresso:** Parte 1, *White Clouds*, Capítulo 6 — **Rumors of a Reaper**, data **9/7** (antes de concluir a missão do mês).
 > **Casa:** Black Eagles; objetivo **Crimson Flower (Edelgard)**. **Byleth masculino**.
 > **DLC:** todas; *Cindered Shadows* concluída, Constance, Hapi e Anna já recrutadas.
@@ -314,6 +314,26 @@ Com Part 1 completo (até os paralogues), fica assim:
 
 A partir do Cap. 12 a guild abre os battalions do Império desta rota, e a Parte 2 traz os dos paralogues; o site mostra quando você chegar lá. *Correção:* o **Oil and Water** dá o **Indech Sword Fighters** com a Manuela recrutada; o Macuil Evil Repelling Co. só vem com o Hanneman.
 
+### Adjutants: quem vai junto
+
+*Fato* (Fire Emblem Wiki, página Adjutant): quem fica fora do mapa pode ir junto de uma unidade em campo (Y na tela de deploy). O **primeiro espaço abre no Professor Level C**, o segundo no B e o terceiro no A. **Unidade voadora só leva adjutant voador.** O adjutant ganha **metade da EXP** de quem acompanha, EXP de arma e de magia inteira (menos Authority), EXP de maestria inteira e pontos de suporte com ela; se ela cair, ele sai do mapa ileso. O que ele faz depende da classe:
+
+- **Cura** (Monk, Priest, Bishop, Holy Knight): no começo do turno, se a unidade estiver com metade do HP ou menos, usa Heal nela. 1 vez por batalha sem suporte, 2 no C, 3 no B, 4 no A, 5 no S.
+- **Guarda** (armaduras, Brawler, Grappler, War Monk/Cleric): corta o dano do segundo golpe do inimigo (10% sem suporte, até 50% no S), e esse golpe deixa a unidade com 1 HP em vez de matar.
+- **Ataque extra** (as outras classes): depois que a unidade ataca no próprio turno, o adjutant pode atacar uma vez com metade do dano, se alcançar o inimigo de onde ela está. 10% sem suporte, 20% no C, 30% no B, 40% no A, 50% no S. Não acontece na fase inimiga.
+
+*Recomendação.* Fora a cura, o ganho em combate é pequeno: o valor do adjutant é **treinar as reservas sem risco** e subir suporte. Os espaços vão nesta ordem:
+
+| Espaço | Unidade | Adjutant, do melhor para o mais simples | Por quê |
+|---|---|---|---|
+| 1º (Professor Level C) | Byleth | Marianne (Bishop, quando fica fora do mapa) › Mercedes › Manuela (Bishop) | Ele apanha mais; e o suporte com a Marianne abre o **Forgotten Hero** (C antes do Cap. 15) |
+| 2º (B) | Lysithea | Annette (magia) › Leonie (arco) | Ela ataca de 2 casas: só magia ou arco alcança dali |
+| 3º (A) | Constance | Leonie (arco) › Annette | Idem |
+| — | Bernadetta, Shamir, Hapi | Leonie ou Annette | Se uma das de cima não estiver em campo |
+| — | Edelgard, Petra, Ingrid | nenhum | Voam e só levam adjutant voador; ninguém no banco do plano voa |
+
+A Dorothea fica sem: a Dancer não deve entrar em combate. No site, a aba **Itens** tem a coluna **Adjutant**, e a ficha de cada unidade do par mostra com quem ela vai e por quê.
+
 ## 7. REGRAS PARA NÃO DESPERDIÇAR
 
 1. **Maestria ≠ nível ≠ certificação.** Maestria só sobe em batalha: +1 de XP de classe por combate na classe atual (Beginner 60, Intermediate 100, Advanced 150, Master 200). Confira em Abilities se a habilidade foi liberada **e equipada**.
@@ -373,6 +393,7 @@ A partir do Cap. 12 a guild abre os battalions do Império desta rota, e a Parte
 - **v1.0 — 18/10/2026:** pesquisa inicial + equipe feminina de 10, sem screenshots reais.
 - **v2.0 — 18/10/2026:** baseada nas 8 telas reais do Cap. 6. Bernadetta Archer, Mage no Lv 10 para Hapi/Constance, Shamir, Flying/suporte para Ingrid, Lorenz/Thyrsus, March Ring, Byleth e maestrias não verificadas.
 - **v2.1 — 18/10/2026:** Seteth e Manuela fora do Faculty Training durante todo o Cap. 6; Ingrid via suporte B + pedido espontâneo; Flying fica para o Cap. 7.
+- **v2.10 — 27/10/2026:** **Adjutants**: nova seção **Adjutants: quem vai junto** (quando abrem os espaços, o que cada classe faz, quanto o suporte muda) e quem vai com quem: uma curandeira no Byleth, magia ou arco nas que atacam de 2 casas, nada nas voadoras. No site: coluna **Adjutant** na aba Itens e um card **Adjutant** nas fichas.
 - **v2.9 — 27/10/2026:** **Battalions**: nova seção **Battalions: um por personagem**, com a lista de cada uma do melhor para o mais simples (Authority, voador ou não, de onde vem). No site: aba **Itens** com arma, acessório e battalion de todo o exército numa tela, e um card **Battalion** em cada ficha. *Correções:* o **Oil and Water** dá o **Indech Sword Fighters** com a Manuela (o Macuil vem só com o Hanneman); o arco da Crest da Bernadetta vem do **Legend of the Lake**, não do paralogue do Hubert. Nas notas da Parte 2: o **Brigid Hunters** é de infantaria e não serve na Petra voadora; o **Steal** do Insurmountable é da classe Thief e pede Spd maior que a do Nader; entraram os battalions que faltavam (Edmund Troops, Holst's Chosen, Hevring Prayer Troops, Sauin Militia, Secret Transport Force) e o aviso de que os cinco paralogues dos Caps. 15–17 fecham juntos no 17.
 - **v2.8 — 21/10/2026:** *Correção:* **cada personagem equipa um acessório só** (anel, escudo, gema e cajado dividem o mesmo espaço). O guia dava dois ou três para a mesma pessoa (Edelgard: Accuracy Ring e Prayer Ring; Petra: Goddess Ring e outros). Agora cada item tem uma ordem mais longa e uma importância: quem já usa um melhor é pulado, e o que sobra vai para a próxima da ordem ou para o comboio. Nova seção **Acessórios: um por personagem**, com escudos: o peso soma com o da arma e tira AS e esquiva, então não valem agora na Edelgard nem no Byleth; os de peso 0 da Parte 2 valem. No site: card **Acessórios: um por pessoa** no Painel, e cada item diz quem foi pulado e por quê. Também no site: o lembrete mensal de olhar a aba Recrutamento se marca sozinho quando o mês acaba.
 - **v2.7 — 20/10/2026:** *Correção:* **Group Task é uma por semana, sempre em dupla** (o Byleth não participa). Este guia e o site listavam várias pessoas por tarefa; agora o site indica uma dupla, pelo que o plano pede, ponto forte na skill e suporte entre as duas (dados do fe3h.com e da Fire Emblem Wiki). No site, as notas dos capítulos saíram do fundo de caderno pautado para um painel liso, e os paralogues viraram uma lista em que cada linha mostra quem fica com cada item e abre para o resto.

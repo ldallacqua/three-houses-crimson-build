@@ -395,3 +395,35 @@ test('a Part 2 battalion is lost when its paralogue unit never joined', async ()
   assert.equal(edmund.status, 'missed');
   assert.match(edmund.src.text, /Forgotten Hero .*Marianne/);
 });
+
+test('adjutants: a healer for Byleth, range for the mages, three slots and only off-map units', async () => {
+  const { adjutantPlan } = await import('../js/logic.js');
+  const s = normalize({ ...snap(), chapter: 13 });
+  for (const id of ['lysithea', 'constance', 'shamir', 'marianne', 'annette', 'leonie', 'mercedes']) s.units[id] = { ...s.units[id], recruited: true };
+  s.units.marianne.cls = 'Bishop';
+  s.units.marianne.support = 'B';
+  let plan = adjutantPlan(s);
+  const of = (lead) => plan.find((p) => p.lead === lead);
+  assert.equal(of('byleth').use.id, 'marianne', 'Marianne is on rotation, so she can ride along');
+  assert.equal(of('byleth').slot, 'C');
+  assert.equal(of('lysithea').use.id, 'annette', 'Annette has no class typed in: her plan starts as Mage');
+  assert.equal(of('constance').use.id, 'leonie');
+  assert.equal(of('bernadetta').use, null, 'both of hers are taken');
+  assert.equal(of('bernadetta').options[0].status, 'taken');
+  assert.ok(!plan.some((p) => p.lead === 'edelgard'), 'flyers are not in the plan');
+  // Marianne goes on the map: Mercedes heals instead, if she is in a class that heals.
+  s.units.marianne.role = 'titular';
+  s.units.mercedes.cls = 'Mage';
+  plan = adjutantPlan(s);
+  assert.equal(of('byleth').options.find((o) => o.id === 'marianne').status, 'deployed');
+  assert.equal(of('byleth').options.find((o) => o.id === 'mercedes').status, 'class');
+  s.units.mercedes.cls = 'Priest';
+  plan = adjutantPlan(s);
+  assert.equal(of('byleth').use.id, 'mercedes');
+  // A fourth pair has no slot.
+  s.units.manuela = { ...s.units.manuela, recruited: true, cls: 'Gremory' };
+  s.units.byleth.cls = 'Brigand';
+  plan = adjutantPlan(s);
+  assert.equal(plan.filter((p) => p.use).length, 3);
+  assert.ok(plan.filter((p) => !p.use).every((p) => p.full || p.options.every((o) => o.status !== 'free')));
+});
