@@ -151,3 +151,17 @@ test('the items page lays out weapon, accessory and battalion for everyone in th
   const { unidade } = await import('../js/views/unidade.js');
   assert.match(text(unidade(s, 'ingrid')), /Battalion .*Galatea Pegasus Co\./);
 });
+
+test('adjutants show on the items page and on both sheets of a pair', async () => {
+  const { itens } = await import('../js/views/itens.js');
+  const { unidade } = await import('../js/views/unidade.js');
+  const s = snapshotState();
+  s.units.marianne = { ...s.units.marianne, recruited: true, cls: 'Bishop', support: 'C' };
+  const page = text(itens(s));
+  assert.match(page, /Byleth .*Adjutant Marianne · cura 1º espaço · Professor Level C · 2 curas por batalha/);
+  assert.match(page, /Marianne .*Adjutant Vai com Byleth/);
+  assert.match(page, /Adjutants: quem vai junto/);
+  assert.match(text(unidade(s, 'byleth')), /Adjutant Agora: Marianne/);
+  assert.match(text(unidade(s, 'marianne')), /Adjutant Fora do mapa, vai junto do Byleth/);
+  assert.doesNotMatch(text(unidade(s, 'dorothea')), /Adjutant/);
+});

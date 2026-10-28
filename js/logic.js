@@ -10,6 +10,7 @@ import { PARALOGUES, PARALOGUE_BY_ID } from '../data/paralogues.js';
 import { SOCIAL } from '../data/social.js';
 import { EQUIPMENT, ACCESSORY_ORDER } from '../data/accessories.js';
 import { BATTALION_BY_NAME, BATTALION_PLAN } from '../data/battalions.js';
+import { ADJUTANT_PLAN, ADJUTANT_SLOTS, adjutantKind } from '../data/adjutants.js';
 import { NOTE_KEYS, openNotes, PART_TWO_FROM } from './seal.js';
 
 // ---------- ranks ----------
@@ -605,6 +606,47 @@ function battalionHolder(rec, state, wanted) {
     .map((id) => ({ id, item: plan.get(id).use.b.name }));
   const next = holder ? null : wanted.find((id) => !isRecruited(state, id)) ?? null;
   return { holder, next, wanted, busy };
+}
+
+// ---------- adjutants ----------
+
+/** What a unit does as an adjutant: her class's kind, or her plan's first class's while none is typed in. */
+function adjutantKindOf(def, st) {
+  return adjutantKind(st.cls ?? planOf(def, st)?.stages[0]?.cls);
+}
+
+/**
+ * Who rides along with whom (data/adjutants.js). Goes through ADJUTANT_PLAN in order and skips a lead
+ * who is not on the map (titulares are). Each lead gets the first of her list who is in the army,
+ * off the map, flies if she flies, does what she wants (heal, attack) and is not with someone above.
+ * The game has three slots: once they are taken, the leads below get none (`full`).
+ * Returns [{ lead, want, why, use, slot, full, options }]; `slot` is the Professor Level that opens
+ * it. Each option has a status: 'use', 'free', 'taken' (by), 'deployed', 'move', 'class' or 'later'.
+ */
+export function adjutantPlan(state) {
+  const taken = new Map();
+  const out = [];
+  for (const pair of ADJUTANT_PLAN) {
+    if (!isRecruited(state, pair.lead) || roleOf(state, pair.lead) !== 'titular') continue;
+    const flies = Boolean(CLASS_BY_NAME[unitState(state, pair.lead).cls]?.flying);
+    const options = pair.from.map(([id, why]) => {
+      const st = unitState(state, id);
+      const kind = adjutantKindOf(UNIT_BY_ID[id], st);
+      let status = 'ok';
+      if (!isRecruited(state, id) || roleOf(state, id) === 'ignorar') status = 'later';
+      else if (roleOf(state, id) === 'titular') status = 'deployed';
+      else if (taken.has(id)) status = 'taken';
+      else if (flies && !CLASS_BY_NAME[st.cls]?.flying) status = 'move';
+      else if (kind && kind !== pair.want) status = 'class';
+      return { id, why, kind, status, by: taken.get(id) ?? null };
+    });
+    const full = taken.size >= ADJUTANT_SLOTS.length;
+    const use = full ? null : options.find((o) => o.status === 'ok') ?? null;
+    for (const o of options) if (o.status === 'ok') o.status = o === use ? 'use' : 'free';
+    if (use) taken.set(use.id, pair.lead);
+    out.push({ ...pair, use, slot: use ? ADJUTANT_SLOTS[taken.size - 1] : null, full, options });
+  }
+  return out;
 }
 
 // ---------- the chapter ----------

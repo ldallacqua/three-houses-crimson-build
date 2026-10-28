@@ -52,6 +52,7 @@ const FILES = [
   'data/paralogues.js',
   'data/accessories.js',
   'data/battalions.js',
+  'data/adjutants.js',
   'data/skills.js',
   'data/snapshot.js',
   'data/social.js',

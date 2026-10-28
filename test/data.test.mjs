@@ -183,3 +183,19 @@ test('battalions: real ranks and gambits, sources that exist, and item lists tha
     for (const id of r.who) assert.ok(BATTALION_PLAN[id]?.some(([n]) => n === r.item), `${r.item}: ${id} does not plan to lead it`);
   }
 });
+
+test('adjutants: every pair names real units, a known effect and reasons', async () => {
+  const { ADJUTANT_PLAN, ADJUTANT_KIND, adjutantKind } = await import('../data/adjutants.js');
+  const { CLASS_BY_NAME } = await import('../data/classes.js');
+  const leads = new Set();
+  for (const p of ADJUTANT_PLAN) {
+    assert.ok(UNIT_BY_ID[p.lead] && !leads.has(p.lead), `lead ${p.lead}`);
+    leads.add(p.lead);
+    assert.ok(ADJUTANT_KIND[p.want] && p.why, `${p.lead}: want ${p.want}`);
+    for (const [id, why] of p.from) assert.ok(UNIT_BY_ID[id] && id !== p.lead && why, `${p.lead}: ${id}`);
+  }
+  for (const cls of ['Bishop', 'Holy Knight', 'Priest', 'Monk']) assert.equal(adjutantKind(cls), 'heal', cls);
+  assert.equal(adjutantKind('Grappler'), 'guard');
+  assert.equal(adjutantKind('Gremory'), 'attack');
+  for (const cls of ['Bishop', 'Grappler', 'Gremory']) assert.ok(CLASS_BY_NAME[cls], `${cls} is a class here`);
+});
